@@ -6,7 +6,7 @@ function FooterLinks({ links }) {
     <nav>
       <ul className="flex flex-col">
         {Object.entries(links).map(([key, value]) => (
-          <li key={key} className="mr-4 hover:text-accent">
+          <li key={key} className="mr-4 hover:text-accent max-w-0">
             <Link href={value}>{key}</Link>
           </li>
         ))}
@@ -24,11 +24,11 @@ function Footer() {
   };
 
   return (
-    <footer className="grid grid-cols-2 gap-4">
-      <div className="ps-8">
+    <footer className="grid grid-cols-2 gap-4 w-screen bg-primary text-primary">
+      <div className="ps-8 mt-2">
         <FooterLinks links={links} />
       </div>
-      <div className="">
+      <div className="me-4 mt-2">
         <SocialLinks />
       </div>
       <div className="flex items-center justify-center col-span-2">

@@ -14,6 +14,7 @@ function HeaderLinks({ links }) {
             <Link href={value}>{key}</Link>
           </li>
         ))}
+        <UserProfile />
       </ul>
     </nav>
   );
@@ -27,8 +28,8 @@ const Header = () => {
   };
 
   return (
-    <header className="max-w-screen-xl mx-auto">
-      <nav className="flex p-4">
+    <header className="bg-primary w-screen text-primary">
+      <nav className="flex p-4 max-w-screen-xl mx-auto">
         <div>
           <Link href="/">
             <Image src={logo} alt="Logo" width={150} height={150} />
@@ -37,9 +38,7 @@ const Header = () => {
         <div className="ms-auto">
           <HeaderLinks links={links} />
         </div>
-        <div className="ms-6">
-          <UserProfile />
-        </div>
+        <div className="ms-6"></div>
         <LoginButtons user={user} />
       </nav>
     </header>
