@@ -7,11 +7,11 @@ function SocialLinks() {
   return (
     <ul className="flex flex-col justify-end space-y-2">
       <li className="ms-auto">
-        <div className="bg-accentGrey bg-opacity-50 p-3 text-2xl rounded-md mr-4 hover:text-accent hover:bg-opacity-90 ms-auto">
-          <Link href="https://www.facebook.com/">
+        <Link href="https://www.facebook.com/">
+          <div className="bg-accentGrey bg-opacity-50 p-3 text-2xl rounded-md mr-4 hover:text-accent hover:bg-opacity-90 ms-auto">
             <SiFacebook />
-          </Link>
-        </div>
+          </div>
+        </Link>
       </li>
 
       <li className="ms-auto">

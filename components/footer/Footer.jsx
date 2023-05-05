@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import SocialLinks from './SocialLinks';
+import AuthLinks from '../AuthLinks';
 
 function FooterLinks({ links }) {
   return (
@@ -19,14 +20,13 @@ function Footer() {
   const links = {
     About: '/about',
     Contact: '/contact',
-    Login: '/login',
-    Register: '/register',
   };
 
   return (
     <footer className="grid grid-cols-2 gap-4 w-screen bg-primary text-primary">
-      <div className="ps-8 mt-2">
+      <div className="ps-8 mt-2 flex flex-col">
         <FooterLinks links={links} />
+        <AuthLinks />
       </div>
       <div className="me-4 mt-2">
         <SocialLinks />

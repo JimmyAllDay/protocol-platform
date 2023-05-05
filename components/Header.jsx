@@ -1,27 +1,24 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from '../public/assets/images/PULogo - white.png';
-import UserProfile from './UserProfile';
-import LoginButtons from './LoginButtons';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import UserProfileLink from './UserProfileLink';
+import AuthButtons from './AuthButtons';
 
 function HeaderLinks({ links }) {
   return (
     <nav className="h-full flex">
-      <ul className="flex my-auto space-x-4 justify-around">
+      <ul className="flex my-auto justify-around">
         {Object.entries(links).map(([key, value]) => (
-          <li key={key} className="hover:text-accent">
+          <li key={key} className="hover:text-accent ms-4">
             <Link href={value}>{key}</Link>
           </li>
         ))}
-        <UserProfile />
       </ul>
     </nav>
   );
 }
 
 const Header = () => {
-  const { user, error, isLoading } = useUser();
   const links = {
     About: '/about',
     Contact: '/contact',
@@ -38,8 +35,9 @@ const Header = () => {
         <div className="ms-auto">
           <HeaderLinks links={links} />
         </div>
-        <div className="ms-6"></div>
-        <LoginButtons user={user} />
+        <div className="ms-4 flex my-auto"></div>
+        <AuthButtons />
+        <UserProfileLink />
       </nav>
     </header>
   );
