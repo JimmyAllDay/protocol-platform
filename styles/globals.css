@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.primary-button {
+  @apply border border-accent px-3 rounded-md text-accent bg-accent bg-opacity-20 hover:bg-opacity-30;
+}
