@@ -21,9 +21,9 @@ export default function UserDetailsForm({ userData, authDetails }) {
     phoneNumber,
     email,
     isCheckedPromo,
-    instagram,
+    instagramHandle,
     isCheckedInstagram,
-    facebook,
+    facebookName,
     isCheckedFacebook,
   }) => {
     event.preventDefault();
@@ -38,9 +38,9 @@ export default function UserDetailsForm({ userData, authDetails }) {
         phoneNumber,
         email,
         isCheckedPromo,
-        instagram,
+        instagramHandle,
         isCheckedInstagram,
-        facebook,
+        facebookName,
         isCheckedFacebook,
       });
     } catch (err) {
@@ -63,6 +63,7 @@ export default function UserDetailsForm({ userData, authDetails }) {
           type="text"
           className="bg-primary border border-white p-1 rounded"
           id="firstName"
+          placeholder="Kaneda"
           autoFocus
           {...register('firstName', {
             required: 'Please enter first name',
@@ -80,6 +81,7 @@ export default function UserDetailsForm({ userData, authDetails }) {
           type="text"
           className="bg-primary border border-white p-1 rounded"
           id="surname"
+          placeholder="Shotaro"
           autoFocus
           {...register('surname', {
             required: 'Please enter surname',
@@ -141,6 +143,7 @@ export default function UserDetailsForm({ userData, authDetails }) {
           type="email"
           className="bg-primary border border-white p-1 rounded"
           id="email"
+          placeholder="ArasakaHLR12-12X@gmail.com"
           defaultValue={authDetails?.email}
           autoFocus
           {...register('email', {
@@ -192,7 +195,6 @@ export default function UserDetailsForm({ userData, authDetails }) {
             type="checkbox"
             name="isCheckedPromo"
             className="accent-black bg-black border border-white"
-            onClick={() => setIsCheckedPromo(!isCheckedPromo)}
             {...register('isCheckedPromo', {
               required: true,
             })}
@@ -205,28 +207,39 @@ export default function UserDetailsForm({ userData, authDetails }) {
         )}
       </div>
       <div className="flex flex-col justify-items-center space-y-2">
-        <label htmlFor="instagram" className="flex items-center justify-center">
+        <label
+          htmlFor="instagramHandle"
+          className="flex items-center justify-center"
+        >
           Instagram Handle
         </label>
         <input
           type="text"
           className="bg-primary border border-white p-1 rounded"
-          id="instagram"
+          id="instagramHandle"
+          placeholder="protocol__underground"
           autoFocus
-          {...register('instagram', {
+          {...register('instagramHandle', {
             required: 'Please enter an Instagram handle',
             pattern: {
               value: /^[a-zA-Z0-9._]{1,}$/i,
-              message: 'Please enter a valid Instagram handle',
+              message: 'Please enter an unbroken string',
+            },
+            pattern: {
+              value: /^(?!@).*/,
+              message:
+                'Please do not enter an `@` sign at the start of your handle',
             },
           })}
         />
-        {errors.instagram && (
-          <div className="text-accent2 text-xs">{errors.instagram.message}</div>
+        {errors.instagramHandle && (
+          <div className="text-accent2 text-xs">
+            {errors.instagramHandle.message}
+          </div>
         )}
       </div>
       <div className="flex flex-col justify-items-center space-y-2">
-        <label>
+        <label className="text-xs">
           <input
             type="checkbox"
             name="isCheckedInstagram"
@@ -240,24 +253,29 @@ export default function UserDetailsForm({ userData, authDetails }) {
         )}
       </div>
       <div className="flex flex-col justify-items-center space-y-2">
-        <label htmlFor="facebook" className="flex items-center justify-center">
+        <label
+          htmlFor="facebookName"
+          className="flex items-center justify-center"
+        >
           Facebook Name
         </label>
         <input
           type="text"
           className="bg-primary border border-white p-1 rounded"
-          id="facebook"
+          id="facebookName"
+          placeholder="Shotaro Kaneda"
           autoFocus
-          {...register('facebook', {
+          {...register('facebookName', {
             required: 'Please enter a Facebook user name',
           })}
         />
       </div>
       <div className="flex flex-col justify-items-center space-y-2">
-        <label>
+        <label className="text-xs">
           <input
             type="checkbox"
             name="isCheckedFacebook"
+            className="accent-black bg-black border border-white"
             {...register('isCheckedFacebook', { required: true })}
           />
           I have followed protocol.underground on facebook.
