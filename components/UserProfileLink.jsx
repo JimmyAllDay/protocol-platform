@@ -27,7 +27,7 @@ export default function Profile() {
       <div className={`${hover ? 'text-accent' : ''}`}>
         <Link href="/profile">
           <div
-            className={`flex ms-4 mt-2 me-4`}
+            className={`flex ms-4 mt-2`}
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >
