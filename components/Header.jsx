@@ -7,7 +7,7 @@ import AuthButtons from './AuthButtons';
 function HeaderLinks({ links }) {
   return (
     <nav className="h-full flex">
-      <ul className="flex my-auto justify-around">
+      <ul className="flex my-auto">
         {Object.entries(links).map(([key, value]) => (
           <li key={key} className="hover:text-accent ms-4">
             <Link href={value}>{key}</Link>
@@ -35,9 +35,8 @@ const Header = () => {
         <div className="ms-auto">
           <HeaderLinks links={links} />
         </div>
-        <div className="ms-4 flex my-auto"></div>
-        <AuthButtons />
         <UserProfileLink />
+        <AuthButtons />
       </nav>
     </header>
   );

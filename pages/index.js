@@ -6,15 +6,15 @@ import championLogo from '../public/assets/images/PULogo - cutout - abbrev.png';
 export default function Home() {
   return (
     <Layout>
-      <main className="flex flex-col items-center justify-center h-full bg-primary text-primary font-mono">
+      <main className="flex flex-col items-center justify-center h-full bg-primary text-primary font-mono p-6">
         <Image
           src={championLogo}
           alt="Logo"
-          width={1000}
+          width="auto"
           height="auto"
-          className=""
+          className="max-w-[1000px]"
         />
-        <h3 className="text-xl text-accent">
+        <h3 className="text-xl text-accent p-4">
           We are currently looking for DJs. To apply, sign up and upload a mix
           on your user profile page.
         </h3>
