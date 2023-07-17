@@ -114,19 +114,22 @@ export default function UserDetailsForm({ userData, authDetails }) {
         )}
       </div>
       <div className="flex flex-col justify-items-center space-y-2">
-        <label htmlFor="phone" className="flex items-center justify-center">
+        <label
+          htmlFor="phoneNumber"
+          className="flex items-center justify-center"
+        >
           Phone Number
         </label>
         <input
           type="tel"
           className="bg-primary border border-white p-1 rounded"
-          id="phone"
+          id="phoneNumber"
           autoFocus
           {...register('phoneNumber', {
-            required: 'Please enter a phone number',
-            pattern: {
-              message: 'Please enter a valid phone number',
-            },
+            required: true,
+            minLength: 6,
+            maxLength: 12,
+            message: 'Please enter a valid phone number',
           })}
         />
         {errors.phoneNumber && (
