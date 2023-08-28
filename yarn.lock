@@ -36,6 +36,11 @@
   dependencies:
     regenerator-runtime "^0.13.11"
 
+"@emailjs/nodejs@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/@emailjs/nodejs/-/nodejs-2.2.0.tgz"
+  integrity sha512-R5V14yCNmdQ5CrzE09BlsV/5s2DN8UcmxgBTo/Jk4T8TKxYT6s8lcEBUgfHSSvPRv/GGsNUknW7MNypgibVOpA==
+
 "@eslint-community/eslint-utils@^4.2.0":
   version "4.4.0"
   resolved "https://registry.npmjs.org/@eslint-community/eslint-utils/-/eslint-utils-4.4.0.tgz"

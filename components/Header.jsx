@@ -3,6 +3,7 @@ import Link from 'next/link';
 import logo from '../public/assets/images/PULogo - white.png';
 import UserProfileLink from './UserProfileLink';
 import AuthButtons from './AuthButtons';
+import AdminLink from './AdminLink';
 
 function HeaderLinks({ links }) {
   return (
@@ -29,13 +30,14 @@ const Header = () => {
       <nav className="flex p-4 max-w-screen-xl mx-auto">
         <div>
           <Link href="/">
-            <Image src={logo} alt="Logo" width={150} height={150} />
+            <Image src={logo} alt="Logo" width={150} height={'auto'} />
           </Link>
         </div>
         <div className="ms-auto">
           <HeaderLinks links={links} />
         </div>
         <UserProfileLink />
+        <AdminLink />
         <AuthButtons />
       </nav>
     </header>

@@ -14,10 +14,7 @@ export default function Home() {
           height="auto"
           className="max-w-[1000px]"
         />
-        <h3 className="text-xl text-accent p-4">
-          We are currently looking for DJs. To apply, sign up and upload a mix
-          on your user profile page.
-        </h3>
+        <h1 className="text-accent text-lg">Welcome to the lower level.</h1>
       </main>
     </Layout>
   );

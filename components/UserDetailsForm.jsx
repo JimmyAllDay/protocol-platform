@@ -197,7 +197,7 @@ export default function UserDetailsForm({ userData, authDetails }) {
           <input
             type="checkbox"
             name="isCheckedPromo"
-            className="accent-black bg-black border border-white"
+            className="accent-black bg-black border border-white mr-2"
             {...register('isCheckedPromo', {
               required: true,
             })}
@@ -246,7 +246,7 @@ export default function UserDetailsForm({ userData, authDetails }) {
           <input
             type="checkbox"
             name="isCheckedInstagram"
-            className="accent-black bg-black border border-white"
+            className="accent-black bg-black border border-white mr-2"
             {...register('isCheckedInstagram', { required: true })}
           />
           I have followed protocol.underground on instagram.
@@ -278,7 +278,7 @@ export default function UserDetailsForm({ userData, authDetails }) {
           <input
             type="checkbox"
             name="isCheckedFacebook"
-            className="accent-black bg-black border border-white"
+            className="accent-black bg-black border border-white mr-2"
             {...register('isCheckedFacebook', { required: true })}
           />
           I have followed protocol.underground on facebook.

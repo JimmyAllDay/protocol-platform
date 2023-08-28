@@ -10,33 +10,30 @@ const Layout = ({ title, children }) => {
   const { user, error, isLoading, userProfile } = useUser();
 
   return (
-    console.log(user, userProfile),
-    (
-      <>
-        <Head>
-          <title>{title ? title + ' - Pro.ground' : 'Pro.ground'}</title>
-          <meta name="description" content="Ecommerce Website" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+    <>
+      <Head>
+        <title>{title ? title + ' - Pro.ground' : 'Pro.ground'}</title>
+        <meta name="description" content="Ecommerce Website" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <ToastContainer
-          position="bottom-center"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="colored"
-        />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
 
-        <Header />
-        <main className="h-screen">{children}</main>
-        <Footer />
-      </>
-    )
+      <Header />
+      <main className="h-screen font-mono min-h-screen">{children}</main>
+      <Footer />
+    </>
   );
 };
 
