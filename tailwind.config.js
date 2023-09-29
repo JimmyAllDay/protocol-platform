@@ -28,12 +28,13 @@ module.exports = {
         accent: '#B4FEE7',
         accent2: '#FFADD3',
         accentGrey: '#3C3C3C',
+        background: '#000000',
       },
       backgroundColor: {
-        primary: '#000000', // Set the default background color to black
+        primary: '#000000',
       },
       textColor: {
-        primary: '#ffffff', // Set the default text color to white
+        primary: '#ffffff',
       },
       animation: {
         marquee: 'marquee 25s linear infinite',

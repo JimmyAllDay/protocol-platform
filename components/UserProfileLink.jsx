@@ -3,7 +3,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { FaRegUserCircle } from 'react-icons/fa';
 import Link from 'next/link';
 
-export default function Profile() {
+export default function UserProfileLink() {
   const { user, error, isLoading } = useUser();
   const [hover, setHover] = useState(false);
 
@@ -24,19 +24,35 @@ export default function Profile() {
 
   return (
     user && (
-      <div className={`${hover ? 'text-accent' : ''}`}>
+      <div className="relative">
         <Link href="/profile">
           <div
             className={`flex ms-4 mt-2`}
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >
-            <h2>Hi, {user.nickname}</h2>
+            <h2 className="hover:text-accent">Hi, {user.nickname}</h2>
             <div className={iconStyles}>
               <FaRegUserCircle />
             </div>
           </div>
         </Link>
+        {hover && (
+          <div
+            className="absolute w-[185px] pt-2 left-4"
+            onMouseEnter={handleHoverEnter}
+            onMouseLeave={handleHoverLeave}
+          >
+            <div className="border border-primary p-2 flex flex-col">
+              <Link href="/profile" className="hover:text-accent border-b">
+                Profile
+              </Link>
+              <Link href="/uploads" className="hover:text-accent">
+                Uploads
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     )
   );

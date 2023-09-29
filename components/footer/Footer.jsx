@@ -41,8 +41,9 @@ function Footer() {
         </div>
       </div>
       <div className="flex items-center justify-center col-span-2">
-        <p className="text-xs mt-4">
+        <p className="text-xs mt-4 flex flex-col">
           &copy; 2023 Protocol Underground. All rights reserved.
+          <span className="mx-auto">An All Day project.</span>
         </p>
       </div>
     </footer>

@@ -1,13 +1,18 @@
+import React, { useState, useContext, useEffect } from 'react';
+import { AuthContext } from 'context/AuthContext';
+
 import Head from 'next/head';
 import Header from './Header';
 import Footer from './footer/Footer';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import Banner from 'components/Banner';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Layout = ({ title, children }) => {
-  const { user, error, isLoading, userProfile } = useUser();
+  const [showBanner, setShowBanner] = useState(true);
+  const { user, error, loading, isLoading, redirect, userDetails } =
+    useContext(AuthContext);
 
   return (
     <>
@@ -29,9 +34,11 @@ const Layout = ({ title, children }) => {
         pauseOnHover
         theme="colored"
       />
-
+      {showBanner && <Banner />}
       <Header />
-      <main className="h-screen font-mono min-h-screen">{children}</main>
+      <main className="font-mono min-h-screen bg-background flex flex-col">
+        {loading || isLoading ? <p>Please wait...</p> : children}
+      </main>
       <Footer />
     </>
   );
