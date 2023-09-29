@@ -6,7 +6,7 @@ const dbName = 'protocol-platform';
 
 async function handler(req, res) {
   console.log(
-    `mongUpdateUser route called:${new Date().toISOString()}, `,
+    `uppdateUser route called:${new Date().toISOString()}, `,
     req.body
   );
   if (req.method !== 'POST') {
@@ -96,6 +96,7 @@ async function handler(req, res) {
     res.status(500).json({ message: 'Internal server error' });
   }
   await client.close();
+  console.log('server disconnected');
 }
 
 export default handler;

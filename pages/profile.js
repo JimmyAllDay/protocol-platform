@@ -5,11 +5,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { AuthContext } from 'context/AuthContext';
+import { ToastContext } from 'context/ToastContext';
 import { useForm } from 'react-hook-form';
 import { getError } from '../utils/error';
 
 export function UserDetailsForm({ userDetails }) {
   console.log('user details form props: ', userDetails);
+  const { setUserDetails } = useContext(AuthContext);
+  const { globalToastMessage, setGlobalToastMessage } =
+    useContext(ToastContext);
   const {
     createdAt,
     email,
@@ -39,10 +43,12 @@ export function UserDetailsForm({ userDetails }) {
 
   const submitHandler = async (event, allValues) => {
     event.preventDefault();
+    console.log('form Values: ', allValues);
     setButtonLoading(true);
     try {
       const res = await axios.post('/api/updateUser', allValues);
       console.log(res);
+      setUserDetails(res.data.updatedUser.value);
       toast.success(res.data.message);
     } catch (err) {
       console.log(err);
@@ -55,8 +61,8 @@ export function UserDetailsForm({ userDetails }) {
     <form
       onSubmit={handleSubmit((append) => {
         append.createdAt = createdAt;
-        append.updatedAt = new Date().toISOString();
-        append.userProfileComplete = true;
+        append.updatedAt = [...updatedAt, new Date().toISOString()];
+        append.userProfileComplete = true; //TODO: you probably want to update this at the time of updating the mongo document, rather than on the client
         append.__v = __v;
         append._id = _id;
         submitHandler(event, append);
@@ -72,7 +78,6 @@ export function UserDetailsForm({ userDetails }) {
           type="text"
           className="bg-primary border border-white p-1 rounded"
           id="firstName"
-          placeholder="Kaneda"
           autoFocus
           defaultValue={userDetails?.firstName}
           {...register('firstName', {
@@ -91,7 +96,6 @@ export function UserDetailsForm({ userDetails }) {
           type="text"
           className="bg-primary border border-white p-1 rounded"
           id="surname"
-          placeholder="Shotaro"
           defaultValue={userDetails?.surname}
           autoFocus
           {...register('surname', {
@@ -136,8 +140,8 @@ export function UserDetailsForm({ userDetails }) {
           autoFocus
           {...register('phone', {
             required: true,
-            minLength: 6,
-            maxLength: 12,
+            minLength: 8,
+            maxLength: 13,
             message: 'Please enter a valid phone number',
           })}
         />
@@ -177,7 +181,7 @@ export function UserDetailsForm({ userDetails }) {
             type="checkbox"
             name="isCheckedPromo"
             className="accent-black bg-black border border-white mr-2"
-            defaultValue={userDetails?.isCheckedPromo}
+            // defaultValue={userDetails?.isCheckedPromo}
             {...register('isCheckedPromo', {
               required: true,
             })}
@@ -228,7 +232,7 @@ export function UserDetailsForm({ userDetails }) {
             type="checkbox"
             name="isCheckedInstagram"
             className="accent-black bg-black border border-white mr-2"
-            defaultValue={userDetails?.isCheckedInstagram}
+            // defaultValue={userDetails?.isCheckedInstagram}
             {...register('isCheckedInstagram', { required: true })}
             checked={userDetails?.isCheckedInstagram}
           />
@@ -262,7 +266,7 @@ export function UserDetailsForm({ userDetails }) {
             type="checkbox"
             name="isCheckedFacebook"
             className="accent-black bg-black border border-white mr-2"
-            defaultValue={userDetails?.isCheckedFacebook}
+            // defaultValue={userDetails?.isCheckedFacebook}
             {...register('isCheckedFacebook', { required: true })}
             checked={userDetails?.isCheckedFacebook}
           />

@@ -15,7 +15,8 @@ const AuthProvider = ({ children }) => {
     const checkUser = async () => {
       setLoading(true);
       try {
-        const res = await axios.post('/api/mongGetUser', { user });
+        const res = await axios.post('/api/getUser', { user });
+        console.log(res);
         setUserDetails(res.data.existingUser);
       } catch (error) {
         console.error(error);
@@ -24,7 +25,7 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     };
 
-    //TODO: This block may not handle all cases
+    //TODO: This block will need to be updated
     if (user !== undefined && limitCall === false) {
       setLimitCall(true);
       checkUser();

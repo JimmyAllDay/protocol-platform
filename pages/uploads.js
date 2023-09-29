@@ -1,27 +1,27 @@
-import Layout from '../components/Layout';
-import UserDetailsForm from '../components/UserDetailsForm';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/router';
 import axios from 'axios';
+import Layout from '../components/Layout';
+import { useState, useEffect, useContext } from 'react';
+import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
+import { AuthContext } from 'context/AuthContext';
 
-export default function Profile({ user }) {
-  const [userCanUpload, setUserCanUpload] = useState(false);
-  const [userDetails, setUserDetails] = useState(null);
-  const [loading, setLoading] = useState(null);
+export default function Uploads() {
+  const { userDetails } = useContext(AuthContext);
+  console.log(userDetails);
 
-  //Handle redirect if not signed in
+  const { userProfileComplete } = userDetails;
+  console.log('uploads - user profile complete: ', userProfileComplete);
+  //Handle redirect if user profile not completed
   const router = useRouter();
   const { redirect } = router.query;
 
   useEffect(() => {
-    if (!user) {
-      router.push(redirect || '/');
+    if (!userProfileComplete) {
+      toast.info('User profile must be complete before uploading');
+      // router.push(redirect || '/profile');
     }
-  }, [router, user, redirect]);
-
-  if (loading) return <div>Loading...</div>;
+  }, [userProfileComplete, redirect, router]);
 
   return (
     <Layout>
@@ -35,15 +35,4 @@ export default function Profile({ user }) {
   );
 }
 
-export const getServerSideProps = withPageAuthRequired({
-  async getServerSideProps(context) {
-    const session = await getSession(context.req, context.res);
-    console.log(session);
-    const user = session?.user;
-    return {
-      props: {
-        user: user || null,
-      },
-    };
-  },
-});
+export const getServerSideProps = withPageAuthRequired();

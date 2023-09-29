@@ -5,7 +5,7 @@ const client = new MongoClient(uri);
 const dbName = 'protocol-platform';
 
 async function handler(req, res) {
-  console.log('mongGetUser API called at:', new Date().toISOString());
+  console.log('getUser API called at:', new Date().toISOString());
   if (req.method !== 'POST') {
     return;
   }
@@ -55,12 +55,13 @@ async function handler(req, res) {
     console.log(existingUser);
     res.status(200).json({ existingUser });
   } catch (error) {
-    //! An error will throw here if too many calls are being made to the database from the client side Context useEffect hook updating.
+    //TODO: An error will throw here if too many calls are being made to the database from the client side AuthContext useEffect hook. Have built in client side protection but this is likely a suboptimal solution
     console.error('500 error message: ', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 
   await client.close();
+  console.log('Server disconnected');
 }
 
 export default handler;
