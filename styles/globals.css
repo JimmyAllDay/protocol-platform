@@ -8,3 +8,13 @@
 .inactive-button {
   @apply border border-accentGrey px-3 rounded-md text-accentGrey bg-accentGrey bg-opacity-20;
 }
+
+::file-selector-button {
+  @apply sr-only;
+}
+::-webkit-file-upload-button {
+  @apply sr-only;
+}
+::-ms-browse {
+  @apply sr-only;
+}

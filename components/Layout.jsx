@@ -2,9 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from 'context/AuthContext';
 
 import Head from 'next/head';
-import Header from './Header';
+import Header from './header/Header';
 import Footer from './footer/Footer';
-import Banner from 'components/Banner';
+import Banner from 'components/header/Banner';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

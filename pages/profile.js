@@ -5,15 +5,14 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { AuthContext } from 'context/AuthContext';
-import { ToastContext } from 'context/ToastContext';
+
 import { useForm } from 'react-hook-form';
 import { getError } from '../utils/error';
 
 export function UserDetailsForm({ userDetails }) {
   console.log('user details form props: ', userDetails);
   const { setUserDetails } = useContext(AuthContext);
-  const { globalToastMessage, setGlobalToastMessage } =
-    useContext(ToastContext);
+
   const {
     createdAt,
     email,
@@ -43,15 +42,13 @@ export function UserDetailsForm({ userDetails }) {
 
   const submitHandler = async (event, allValues) => {
     event.preventDefault();
-    console.log('form Values: ', allValues);
     setButtonLoading(true);
     try {
       const res = await axios.post('/api/updateUser', allValues);
-      console.log(res);
       setUserDetails(res.data.updatedUser.value);
       toast.success(res.data.message);
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error(getError(err));
     }
     setButtonLoading(false);

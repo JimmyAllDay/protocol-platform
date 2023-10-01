@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from '../public/assets/images/PULogo - white.png';
+import logo from 'public/assets/images/PULogo - white.png';
 import UserProfileLink from './UserProfileLink';
 import AuthButtons from './AuthButtons';
 import AdminLink from './AdminLink';
@@ -23,6 +23,7 @@ const Header = () => {
   const links = {
     About: '/about',
     Contact: '/contact',
+    Events: '/events',
   };
 
   return (

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import SocialLinks from './SocialLinks';
-import AuthLinks from '../AuthLinks';
+import AuthLinks from './AuthLinks';
 import Image from 'next/image';
 import logo from 'public/assets/images/PULogo - white.png';
 
