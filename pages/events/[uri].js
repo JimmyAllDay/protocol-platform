@@ -2,17 +2,24 @@ import { client } from '../../lib/apollo';
 import { gql } from '@apollo/client';
 import Layout from 'components/Layout';
 
-export default function SlugPage({ post }) {
+export default function Page({ post }) {
+  console.log(post);
   return (
     <Layout>
-      <main className="text-primary">
+      <main className="text-primary flex flex-col space-y-4 p-4">
         <h1 className="text-8xl">{post?.title}</h1>
-        <p>
-          {`${post?.author.node.firstName} ${post?.author.node.lastName}`} |
-          &nbsp;{new Date(post?.date).toLocaleDateString()}
-        </p>
+        <div className="flex">
+          <div>
+            <p>{post?.tags.nodes[2].name}</p>
+            <p>{post?.tags.nodes[0].name}</p>
+          </div>
+          <p className="text-4xl ms-auto">{post?.tags.nodes[1].name}</p>
+        </div>
 
-        <article dangerouslySetInnerHTML={{ __html: post?.content }}></article>
+        <article
+          className="border"
+          dangerouslySetInnerHTML={{ __html: post?.content }}
+        ></article>
       </main>
     </Layout>
   );
@@ -25,13 +32,18 @@ export async function getStaticProps({ params }) {
         title
         content
         date
-        author {
-          node {
-            firstName
-            lastName
+        uri
+        slug
+        tags {
+          nodes {
+            name
           }
         }
-        slug
+        featuredImage {
+          node {
+            uri
+          }
+        }
       }
     }
   `;
@@ -41,8 +53,8 @@ export async function getStaticProps({ params }) {
       id: params.uri,
     },
   });
+  console.log(response);
   const post = response?.data?.post;
-  console.log(post);
   return {
     props: {
       post,

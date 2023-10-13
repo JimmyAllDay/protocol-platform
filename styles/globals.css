@@ -5,6 +5,10 @@
 .primary-button {
   @apply border border-accent px-3 rounded-md text-accent bg-accent bg-opacity-20 hover:bg-opacity-30;
 }
+.secondary-button {
+  @apply bg-accentGrey bg-opacity-50 rounded-md hover:text-accent hover:bg-opacity-90;
+}
+
 .inactive-button {
   @apply border border-accentGrey px-3 rounded-md text-accentGrey bg-accentGrey bg-opacity-20;
 }
@@ -17,4 +21,15 @@
 }
 ::-ms-browse {
   @apply sr-only;
+}
+
+.max-w-content {
+  max-width: fit-content;
+}
+.card {
+  @apply mb-5 block w-[250px] font-mono mx-auto rounded hover:scale-105 duration-300 ease-in-out bg-[linear-gradient(45deg,transparent_25%,rgba(80,80,80,.3)_50%,transparent_75%,transparent_100%)] relative bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[750ms];
+}
+
+.link {
+  @apply text-accent2 hover:text-accent hover:cursor-pointer;
 }

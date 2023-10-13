@@ -4,6 +4,7 @@ import logo from 'public/assets/images/PULogo - white.png';
 import UserProfileLink from './UserProfileLink';
 import AuthButtons from './AuthButtons';
 import AdminLink from './AdminLink';
+import Cart from './Cart';
 
 function HeaderLinks({ links }) {
   return (
@@ -24,11 +25,12 @@ const Header = () => {
     About: '/about',
     Contact: '/contact',
     Events: '/events',
+    Shop: '/shop',
   };
 
   return (
-    <header className="bg-primary w-screen text-primary">
-      <nav className="flex p-4 max-w-screen-xl mx-auto">
+    <header className="bg-primary w-screen text-primary flex flex-col">
+      <div className="flex ps-4 pe-4 pt-4 pb-1 max-w-screen-xl mx-auto w-full">
         <div>
           <Link href="/">
             <Image src={logo} alt="Logo" width={150} height={'auto'} priority />
@@ -39,7 +41,10 @@ const Header = () => {
         </div>
         <UserProfileLink />
         <AuthButtons />
-      </nav>
+        <div className="ms-3 pt-2">
+          <Cart />
+        </div>
+      </div>
     </header>
   );
 };

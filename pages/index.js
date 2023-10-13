@@ -15,7 +15,7 @@ export default function Home() {
           className="max-w-[1000px]"
           priority
         />
-        <h1 className="text-accent text-lg">Welcome to the lower level.</h1>
+        <h1 className="text-primary text-lg">Welcome to the lower level.</h1>
       </div>
     </Layout>
   );

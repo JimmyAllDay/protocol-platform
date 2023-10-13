@@ -3,6 +3,7 @@ import SocialLinks from './SocialLinks';
 import AuthLinks from './AuthLinks';
 import Image from 'next/image';
 import logo from 'public/assets/images/PULogo - white.png';
+import MailListForm from './MailListForm';
 
 function FooterLinks({ links }) {
   return (
@@ -25,9 +26,9 @@ function Footer() {
   };
 
   return (
-    <footer className="grid grid-cols-2 gap-4 w-screen bg-primary text-primary">
-      <div className="ps-8 mt-2 flex flex-col">
-        <Link href="/" className="mb-4">
+    <footer className="grid grid-cols-2 w-screen bg-primary text-primary">
+      <div className="ps-8 flex flex-col space-y-2">
+        <Link href="/">
           <Image src={logo} alt="Logo" width={200} height={'auto'} />
         </Link>
         <div className="flex flex-col ps-4">
@@ -35,12 +36,17 @@ function Footer() {
           <AuthLinks />
         </div>
       </div>
+
       <div className="me-4 mt-2 flex">
+        <div className="w-2/3 mt-auto">
+          <MailListForm />
+        </div>
         <div className="ms-auto pr-6">
           <SocialLinks col={true} />
         </div>
       </div>
-      <div className="flex items-center justify-center col-span-2">
+
+      <div className="flex items-center justify-center col-span-2 pt-12">
         <p className="text-xs mt-4 flex flex-col">
           &copy; 2023 Protocol Underground. All rights reserved.
           <span className="mx-auto">An All Day project.</span>
