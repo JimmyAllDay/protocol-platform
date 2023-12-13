@@ -1,118 +1,173 @@
-import axios from 'axios';
 import Layout from '../components/Layout';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import { withPageAuthRequired, getSession } from '@auth0/nextjs-auth0';
 import { AuthContext } from 'context/AuthContext';
+import axios, { Axios } from 'axios';
+import { useEdgeStore } from 'lib/edgestore';
+import { useForm, Controller } from 'react-hook-form';
 
-//AudioUploadForm.js
-import { useForm } from 'react-hook-form';
+import useSWR from 'swr';
 
-export function AudioUploadForm({ email }) {
-  const { register, handleSubmit } = useForm();
-
-  const [buttonLoading, setButtonLoading] = useState(false);
-
-  const submitHandler = async (event, allValues) => {
-    event.preventDefault();
-    console.log('form Values: ', allValues);
-    setButtonLoading(true);
-    try {
-      const res = await axios.post('/api/uploadMix', allValues);
-      console.log(res);
-      // You'll need to set values here
-      // toast.success(res.data.message);
-    } catch (err) {
-      console.error(err);
-      toast.error(getError(err));
-    }
-    setButtonLoading(false);
-  };
-
-  return (
-    <form
-      onSubmit={handleSubmit((append) => {
-        append.userEmail = email;
-        submitHandler(event, append);
-      })}
-      className="flex flex-col p-4 space-y-4 "
-    >
-      <div className="flex flex-col space-y-2">
-        <label className="flex flex-col" htmlFor="uploadInput">
-          Mix name:
-        </label>
-        <input
-          id="mixname"
-          type="text"
-          placeholder="(Optional)"
-          {...register('name')}
-          className="bg-primary border border-white p-1 rounded"
-        />
-      </div>
-      <div className="flex flex-col space-y-2">
-        <label className="flex flex-col" htmlFor="uploadInput">
-          Select Audio File:
-        </label>
-        <input
-          id="uploadInput"
-          type="file"
-          accept="audio/*"
-          {...register('audio')}
-          className="border border-accent bg-accent bg-opacity-10 hover:bg-opacity-20 text-accent rounded-lg p-2 hover:cursor-pointer "
-        />
-      </div>
-      <button type="submit" className="primary-button p-2">
-        {buttonLoading ? 'Submitting...' : 'Submit'}
-      </button>
-    </form>
-  );
-}
+const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function Uploads() {
-  //Get relevant props
-  const { userDetails } = useContext(AuthContext);
-  const { userProfileComplete, email } = userDetails;
-  //Handle redirect if user profile not completed
-  const [redirecting, setRedirecting] = useState(false);
-  const router = useRouter();
-  const { redirect } = router.query;
+  const { control, handleSubmit, reset } = useForm();
+  const [progress, setProgress] = useState('0%');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!userProfileComplete) {
-      toast.info('User profile must be complete before uploading');
-      setRedirecting(true);
-      setTimeout(() => router.push(redirect || '/profile'), 3000);
+  //TODO: Below userDetails destructure is for development only you will need to update before deployment, once Auth solution finalised.
+  let { userDetails } = useContext(AuthContext);
+  userDetails = userDetails[0];
+
+  const { edgestore } = useEdgeStore();
+
+  const { data, error, isLoading, mutate } = useSWR(
+    '/api/user/[id]/uploadMix',
+    fetcher
+  );
+
+  const fileCleanUpRef = useRef();
+
+  async function audioUpload(file) {
+    if (file) {
+      try {
+        const res = await edgestore.publicFiles.upload({
+          file,
+          onProgressChange: (progress) => {
+            setProgress(`${progress}%`);
+          },
+        });
+        return res.url;
+      } catch (err) {
+        console.error(err);
+      }
     }
-    return () => setRedirecting(false);
-  }, [userProfileComplete, redirect, router]);
-
-  if (redirecting) {
-    return (
-      <Layout>
-        <main className="flex flex-col items-center justify-center min-h-full bg-primary text-primary font-mono space-y-4">
-          <h1 className="text-3xl">
-            Redirecting... <br />
-            Please wait...
-          </h1>
-        </main>
-      </Layout>
-    );
   }
+
+  const onSubmit = async (data) => {
+    try {
+      const fileUrl = await audioUpload(data.file);
+
+      const updatedData = {
+        fileUrl: fileUrl,
+        firstName: userDetails.firstName,
+        surname: userDetails.surname,
+        username: userDetails.username,
+        _id: userDetails._id,
+      };
+
+      const jsonData = JSON.stringify(updatedData);
+
+      const res = axios.post('/api/user/audio/audioUpload', jsonData);
+
+      console.log(res.body);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      reset();
+      if (fileCleanUpRef.current) {
+        fileCleanUpRef.current.value = '';
+      }
+      setProgress('0%');
+    }
+  };
+
+  const handleDelete = async (id, url) => {
+    try {
+      setLoadingHandler(true);
+      await deleteImageFile(url);
+      const res = await axios.delete(`/api/products/deleteProduct/${id}`);
+      mutate(res.data.products);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoadingHandler(false);
+    }
+  };
 
   return (
     <Layout>
       <main className="flex flex-col items-center justify-center bg-primary text-primary font-mono space-y-4">
         <h1 className="text-3xl">Uploads</h1>
         <div className="max-w-xl w-full border border-primary rounded">
-          <AudioUploadForm email={email} />
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col p-4 space-y-4 "
+          >
+            <div className="flex flex-col space-y-2">
+              <label className="flex flex-col" htmlFor="uploadInput">
+                Mix name:
+                <Controller
+                  name="name"
+                  control={control}
+                  defaultValue=""
+                  placeholder="(Required)"
+                  rules={{ required: 'Mix name is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <input
+                        className="form-input"
+                        placeholder="(Required)"
+                        {...field}
+                      />
+                      {fieldState?.error && (
+                        <p className="text-accent2">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </>
+                  )}
+                />
+              </label>
+            </div>
+            <div className="flex flex-col space-y-2">
+              <label className="flex flex-col" htmlFor="uploadInput">
+                Select Audio File:
+                <Controller
+                  name="file"
+                  control={control}
+                  defaultValue=""
+                  rules={{ required: 'Audio file is required' }}
+                  render={({ field, fieldState }) => (
+                    <>
+                      <input
+                        type="file"
+                        className="file-upload-form-input"
+                        onChange={(e) => field.onChange(e.target.files[0])}
+                        ref={(e) => {
+                          field.ref(e);
+                          fileCleanUpRef.current = e;
+                        }}
+                      />
+                      {fieldState?.error && (
+                        <p className="text-accent2">
+                          {fieldState.error.message}
+                        </p>
+                      )}
+                    </>
+                  )}
+                />
+              </label>
+              <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
+                <div
+                  className="h-full bg-accent transition-all duration-150"
+                  style={{ width: progress }}
+                ></div>
+              </div>
+            </div>
+            <button type="submit" className="primary-button p-2">
+              {loading ? 'Submitting...' : 'Submit'}
+            </button>
+          </form>
         </div>
         <div className="max-w-xl w-full border border-primary rounded p-4">
-          Render media players here
+          Render media files here
         </div>
       </main>
     </Layout>
   );
 }
 
-export const getServerSideProps = withPageAuthRequired();
+// export const getServerSideProps = withPageAuthRequired();

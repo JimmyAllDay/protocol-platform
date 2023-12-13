@@ -5,7 +5,6 @@ const client = new MongoClient(uri);
 const dbName = 'protocol-platform';
 
 async function handler(req, res) {
-  console.log('getUser API called at:', new Date().toISOString());
   if (req.method !== 'POST') {
     return;
   }
@@ -40,7 +39,6 @@ async function handler(req, res) {
 
   try {
     await client.connect();
-    console.log('Server connected');
     const db = client.db(dbName);
     const collection = db.collection('userdetails');
     const query = { email: email };
@@ -48,20 +46,16 @@ async function handler(req, res) {
     if (!existingUser) {
       console.log('no existing user');
       const createdUser = await collection.insertOne(newUserData);
-      res
-        .status(201)
-        .json({ message: 'New profile created', data: createdUser });
+      res.status(201).json({ message: 'New profile created', createdUser });
     }
-    console.log(existingUser);
     res.status(200).json({ existingUser });
   } catch (error) {
-    //TODO: An error will throw here if too many calls are being made to the database from the client side AuthContext useEffect hook. Have built in client side protection but this is likely a suboptimal solution
+    //TODO: Think about how to handle this
     console.error('500 error message: ', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 
   await client.close();
-  console.log('Server disconnected');
 }
 
 export default handler;

@@ -1,7 +1,8 @@
 import Layout from 'components/Layout';
 import Link from 'next/link';
-import { client } from '../../lib/apollo';
-import { gql } from '@apollo/client';
+import { use, useState } from 'react';
+import { toast } from 'react-toastify';
+import { connectToDatabase } from 'utils/mongodb';
 
 export default function Events({ posts }) {
   return (
@@ -11,11 +12,11 @@ export default function Events({ posts }) {
         <div className="border-t pt-2 pb-6">
           {posts.map((post) => {
             return (
-              console.log(post.uri),
+              console.log(post),
               (
                 <Link
                   key={post.title}
-                  href={`events/${post.uri}`}
+                  href={`events/${post._id}`}
                   className="hover:text-accent flex"
                 >
                   <div className="border-b py-4 ps-4 flex w-full">
@@ -23,16 +24,10 @@ export default function Events({ posts }) {
                       {post.title}
                     </h3>
                     <div className=" flex flex-col ms-auto flex-shrink whitespace-nowrap overflow-hidde me-8">
-                      <h3 className="mt-auto ms-auto">
-                        {post?.tags?.nodes[2]?.name || null}
-                      </h3>
-                      <h3 className="mb-4">
-                        {post?.tags?.nodes[0]?.name || null}
-                      </h3>
+                      <h3 className="mt-auto ms-auto">{post.tags || null}</h3>
                     </div>
-
-                    <h3 className="mt-auto mb-2 text-8xl flex-shrink">
-                      {post?.tags?.nodes[1]?.name}
+                    <h3 className="mt-auto ms-auto text-8xl">
+                      {post.date || null}
                     </h3>
                   </div>
                 </Link>
@@ -45,29 +40,15 @@ export default function Events({ posts }) {
   );
 }
 
-export async function getStaticProps() {
-  const GET_POSTS = gql`
-    query GetAllPosts {
-      posts {
-        nodes {
-          title
-          slug
-          uri
-          tags {
-            nodes {
-              name
-            }
-          }
-        }
-      }
-    }
-  `;
-  const response = await client.query({ query: GET_POSTS });
+export async function getServerSideProps() {
+  const { client, db } = await connectToDatabase();
+  try {
+    const events = await db.collection('events').find({}).toArray();
 
-  const posts = response?.data?.posts?.nodes || null;
-  return {
-    props: {
-      posts,
-    },
-  };
+    return {
+      props: { posts: JSON.parse(JSON.stringify(events)) },
+    };
+  } catch (error) {
+    console.error('Server error');
+  }
 }

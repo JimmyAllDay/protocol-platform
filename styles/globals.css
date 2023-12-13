@@ -13,6 +13,14 @@
   @apply border border-accentGrey px-3 rounded-md text-accentGrey bg-accentGrey bg-opacity-20;
 }
 
+.form-input {
+  @apply text-primary border border-accent p-1 bg-primary rounded;
+}
+
+.file-upload-form-input {
+  @apply border border-accent bg-accent bg-opacity-10 hover:bg-opacity-20 text-accent rounded p-2 hover:cursor-pointer;
+}
+
 ::file-selector-button {
   @apply sr-only;
 }

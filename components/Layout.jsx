@@ -36,7 +36,7 @@ const Layout = ({ title, children }) => {
       />
       {showBanner && <Banner />}
       <Header />
-      <main className="font-mono min-h-screen bg-background flex flex-col py-24">
+      <main className="font-mono min-h-screen bg-background flex flex-col">
         {loading || isLoading ? <p>Please wait...</p> : children}
       </main>
       <Footer />

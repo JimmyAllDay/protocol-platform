@@ -26,7 +26,7 @@ function Footer() {
   };
 
   return (
-    <footer className="grid grid-cols-2 w-screen bg-primary text-primary">
+    <footer className="grid grid-cols-2 w-screen bg-primary text-primary pt-10">
       <div className="ps-8 flex flex-col space-y-2">
         <Link href="/">
           <Image src={logo} alt="Logo" width={200} height={'auto'} />
