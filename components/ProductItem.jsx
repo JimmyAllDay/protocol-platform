@@ -5,10 +5,10 @@ import Image from 'next/image';
 
 export default function ProductItem({ product, addToCartHandler }) {
   return (
-    <Link href={`shop/product/${product.slug}`}>
+    <Link href={`shop/product/${product._id}`}>
       <div className="card">
         <Image
-          src={product.image}
+          src={product.imageUrl}
           width={300}
           height={500}
           alt={product.name}

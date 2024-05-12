@@ -25,11 +25,10 @@ const Header = () => {
     About: '/about',
     Contact: '/contact',
     Events: '/events',
-    Shop: '/shop',
   };
 
   return (
-    <header className="bg-primary w-screen text-primary flex flex-col">
+    <header className="bg-primary w-screen text-primary flex flex-col pb-4">
       <div className="flex ps-4 pe-4 pt-4 pb-1 max-w-screen-xl mx-auto w-full">
         <div>
           <Link href="/">
@@ -42,7 +41,7 @@ const Header = () => {
         <UserProfileLink />
         <AuthButtons />
         <div className="ms-3 pt-2">
-          <Cart />
+          {/*Cart goes here when store is up and running*/}
         </div>
       </div>
     </header>

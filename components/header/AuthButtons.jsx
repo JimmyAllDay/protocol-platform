@@ -1,15 +1,23 @@
+'use client';
+import { useContext } from 'react';
+import { AuthContext } from 'context/AuthContext';
+
 import Link from 'next/link';
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 export default function LoginButtons() {
-  const { user } = useUser();
+  const { user, signOut } = useContext(AuthContext);
+
   return (
-    <button className="primary-button ms-4">
+    <div className="flex flex-col justify-center p-2">
       {user ? (
-        <Link href="/api/auth/logout">Logout</Link>
+        <button onClick={signOut} className="primary-button w-[85px] p-1">
+          Logout
+        </button>
       ) : (
-        <Link href="/api/auth/login">Login</Link>
+        <Link href="/auth/login">
+          <button className="primary-button w-[85px] p-1">Login</button>
+        </Link>
       )}
-    </button>
+    </div>
   );
 }

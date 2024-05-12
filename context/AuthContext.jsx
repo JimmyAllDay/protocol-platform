@@ -1,45 +1,22 @@
 import { createContext, useState, useEffect } from 'react';
-import { useUser } from '@auth0/nextjs-auth0/client';
-import axios from 'axios';
+
+import { register } from 'lib/firebase/client/auth/register';
+import { manageSignIn } from 'lib/firebase/client/auth/signIn';
+import { signOutUser } from 'lib/firebase/client/auth/signOut';
+
+import useFirebaseAuth from 'components/auth/useFirebaseAuth';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const { user, error, isLoading } = useUser();
-  const [loading, setLoading] = useState(false);
-  const [redirect, setRedirect] = useState(false);
-  const [userDetails, setUserDetails] = useState({});
-  const [limitCall, setLimitCall] = useState(false);
-
-  useEffect(() => {
-    const checkUser = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.post('/api/getUser', { user });
-        console.log(res);
-        setUserDetails(res.data.existingUser);
-      } catch (error) {
-        console.error(error);
-      }
-
-      setLoading(false);
-    };
-
-    //TODO: This block will need to be updated
-    if (user !== undefined && limitCall === false) {
-      setLimitCall(true);
-      checkUser();
-    }
-  }, [user, limitCall]);
+  const { userProfile, profileComplete } = useFirebaseAuth();
 
   const contextValue = {
-    user,
-    error,
-    loading,
-    isLoading,
-    redirect,
-    userDetails,
-    setUserDetails,
+    createUser: register,
+    signIn: manageSignIn,
+    signOut: signOutUser,
+    user: userProfile,
+    profileComplete,
   };
 
   return (

@@ -37,6 +37,9 @@ module.exports = {
       textColor: {
         primary: '#ffffff',
       },
+      gridTemplateRows: {
+        10: 'repeat(10, minmax(0, 1fr))',
+      },
     },
   },
   plugins: [],

@@ -9,7 +9,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-center bg-primary text-primary font-mono p-6 my-auto">
         <Image
           src={championLogo}
-          alt="Logo"
+          alt="Protocol Underground logo abbreviated to Pro.ground"
           width="auto"
           height="auto"
           className="max-w-[1000px]"

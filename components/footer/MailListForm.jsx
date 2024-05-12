@@ -1,35 +1,29 @@
-import { useEffect } from 'react';
-import axios from 'axios';
-import { getError } from 'utils/error';
-import { ToastContainer, toast } from 'react-toastify';
+'use client';
+import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
+import { useState } from 'react';
+
+import { addToMailList } from 'lib/firebase/client/mailingList';
 
 export default function SubscribeToMailingList() {
   const {
     handleSubmit,
     register,
     formState: { errors },
+    reset,
   } = useForm();
+
   const submitHandler = async ({ email }) => {
+    //TODO: there is currently no security on this function other than client side validation - you should update it when you get a chance.
     try {
-      await axios
-        .post('/api/mailinglist', {
-          email,
-        })
-        .then((result) => {
-          toast.success(result.data.message);
-        })
-        .catch((err) => {
-          toast.error(getError(err));
-        });
-    } catch (err) {
-      toast.error(getError(err));
+      const added = await addToMailList(email);
+      if (added) toast.info('Added to mailing list');
+    } catch (error) {
+      toast.error('Error adding to mail list. Please wait and try again.');
+    } finally {
+      reset();
     }
   };
-
-  useEffect(() => {
-    //TODO: reset form handler
-  }, []);
 
   return (
     <form
@@ -52,7 +46,7 @@ export default function SubscribeToMailingList() {
       ></input>
       <button className="secondary-button p-1">Subscribe</button>
       {errors.email && (
-        <div className="text-red-500">{errors.email.message}</div>
+        <div className="text-accent2">{errors.email.message}</div>
       )}
     </form>
   );
