@@ -25,7 +25,6 @@ const Header = () => {
     About: '/about',
     Contact: '/contact',
     Events: '/events',
-    Store: '/store',
   };
 
   return (
@@ -42,7 +41,7 @@ const Header = () => {
         <UserProfileLink />
         <AuthButtons />
         <div className="ms-3 pt-2">
-          <Cart />
+          {/*Cart goes here when store is up and running*/}
         </div>
       </div>
     </header>

@@ -1,8 +1,11 @@
 import Link from 'next/link';
-import { useUser } from '@auth0/nextjs-auth0/client';
+
+import { useContext } from 'react';
+import { AuthContext } from 'context/AuthContext';
 
 export default function LoginButtons() {
-  const { user } = useUser();
+  const { user, error, loading, signOut } = useContext(AuthContext);
+
   return (
     <div className="hover:text-accent">
       {user ? (

@@ -4,7 +4,7 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from 'components/Layout';
-import { AuthContext } from 'context/AuthContext';
+// import { AuthContext } from 'context/AuthContext';
 import axios, { Axios } from 'axios';
 
 import useSWR from 'swr';
@@ -13,16 +13,18 @@ import DashMenu from 'components/dashboard/DashboardMenu';
 
 import Image from 'next/image';
 
-import { useEdgeStore } from 'lib/edgestore';
-
 import { MdOutlineEmail } from 'react-icons/md';
+
+import useUser from '/data/useUser.js';
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function PatronsDashboard() {
-  const { userDetails } = useContext(AuthContext);
+  const { user, loading: userLoading } = useUser(); //TODO: Temp auth solution - this may need to be fixed
   const router = useRouter();
-  if (userDetails.isAdmin === false || userDetails === {}) {
+  //TODO: fix this when auth solution is fixed
+  //TODO: this won't cover all cases
+  if (user?.isAdmin === false || user === {}) {
     router.push('/');
   }
 

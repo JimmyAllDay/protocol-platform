@@ -16,6 +16,9 @@
 .form-input {
   @apply text-primary border border-accent p-1 bg-primary rounded;
 }
+.form-input-primary {
+  @apply text-primary border border-white p-1 bg-primary rounded;
+}
 
 .file-upload-form-input {
   @apply border border-accent bg-accent bg-opacity-10 hover:bg-opacity-20 text-accent rounded p-2 hover:cursor-pointer;

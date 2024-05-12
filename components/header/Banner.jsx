@@ -6,13 +6,13 @@ export default function Banner() {
 
   return (
     <div className="bg-primary items-center justify-center flex">
-      <h1
+      <h2
         className={`bg-primary text-accent2 text-center text-sm tracking-wider w-full whitespace-nowrap my-2 ${
           scrolling ? 'animate-marquee' : ''
         }`}
       >
         {bannerMessage}
-      </h1>
+      </h2>
     </div>
   );
 }

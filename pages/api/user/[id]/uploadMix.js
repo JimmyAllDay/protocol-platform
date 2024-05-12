@@ -5,58 +5,52 @@ const client = new MongoClient(uri);
 const dbName = 'protocol-platform';
 
 async function handler(req, res) {
-  console.log(`uploadMix route called:${new Date().toISOString()}, `, req.body);
   if (req.method !== 'POST') {
     return;
   }
 
-  const {
-    email,
-    //! add other properties to destructure
-  } = req.body;
+  const { url, email, _id, name } = req.body;
 
-  if (
-    !email
-    //! add other properties to validate
-  ) {
+  if (!email || !url || !_id || !name) {
     res.status(422).json({
       message: 'Validation error.',
     });
     return;
   }
 
-  const mixData = {
-    //! add mix information here
-  };
+  try {
+    await client.connect();
+    console.log('Server connected');
+    const db = client.db(dbName);
+    //TODO: Change userdetails to just users - you'll need to change all the paths that access this collection
+    const collection = db.collection('userdetails');
+    const query = { email: email };
 
-  //   try {
-  //     await client.connect();
-  //     console.log('Server connected');
-  //     const db = client.db(dbName);
-  //     const collection = db.collection('userdetails');
-  //     const query = { email: email };
-  //     const updatedUser = await collection.findOneAndUpdate(
-  //       query,
-  //       { $set: userData },
-  //       {
-  //         returnDocument: 'after',
-  //       }
-  //     );
-  //     if (!updatedUser) {
-  //    // The user should always be there - what should happen if user is not found?
-  //       res.status(404).json({ message: 'User not found.' });
-  //     }
+    let foundUser = await collection.findOne(query);
+    if (!foundUser) {
+      res.status(404).json({ message: 'User not found.' });
+    }
 
-  //     res.status(200).json({
-  //       message: 'User profile updated!',
-  //       updatedUser,
-  //     });
-  //   } catch (error) {
-  //     console.error('500 error message: ', error);
-  //     res.status(500).json({ message: 'Internal server error' });
-  //   }
-  await client.close();
-  console.log('server disconnected');
+    foundUser.mixData = [];
+
+    foundUser.mixData.push({ name: name, url: url });
+
+    const updatedUser = await collection.findOneAndUpdate(
+      query,
+      { $set: foundUser },
+      {
+        returnDocument: 'after',
+      }
+    );
+
+    res.status(200).json({
+      message: 'User profile updated!',
+      updatedUser,
+    });
+  } catch (error) {
+    console.error('500 error message: ', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 export default handler;

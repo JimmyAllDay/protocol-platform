@@ -4,8 +4,6 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from 'components/Layout';
-import { AuthContext } from 'context/AuthContext';
-import axios, { Axios } from 'axios';
 
 import useSWR from 'swr';
 
@@ -13,7 +11,9 @@ import DashMenu from 'components/dashboard/DashboardMenu';
 
 import Image from 'next/image';
 
-import { useEdgeStore } from 'lib/edgestore';
+import axios from 'axios';
+
+import useUser from '/data/useUser.js';
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
@@ -71,7 +71,7 @@ export function DashboardProduct({
       </Link>
       <button
         className="border border-accent px-1 bg-accent bg-opacity-20 hover:bg-opacity-30 text-accent rounded-tr rounded-br text-xs"
-        onClick={() => handleDelete(id)}
+        onClick={() => handleDelete(id, imageUrl)}
         disabled={loading}
       >
         Delete
@@ -81,13 +81,14 @@ export function DashboardProduct({
 }
 
 export default function ProductsDashboard() {
-  //TODO: You need to refactor the Edgestore handlers so that the uploaded files aren't public - protect them with admin privelages
-  const { userDetails } = useContext(AuthContext);
+  const { user, loading: userLoading } = useUser(); //TODO: Temp auth solution - this may need to be fixed
   const router = useRouter();
-  if (userDetails.isAdmin === false || userDetails === {}) {
+  //TODO: fix this when auth solution is fixed
+  //TODO: this won't cover all cases
+  if (user?.isAdmin === false || user === {}) {
     router.push('/');
   }
-  const { edgestore } = useEdgeStore();
+
   const { data, error, isLoading, mutate } = useSWR(
     '/api/products/getProducts',
     fetcher
@@ -129,13 +130,6 @@ export default function ProductsDashboard() {
   async function imageUpload(file) {
     if (file) {
       try {
-        const res = await edgestore.publicFiles.upload({
-          file,
-          onProgressChange: (progress) => {
-            setProgress(`${progress}%`);
-          },
-        });
-        return res.url;
       } catch (err) {
         console.error(err);
       }
@@ -185,10 +179,8 @@ export default function ProductsDashboard() {
 
   async function deleteImageFile(url) {
     try {
-      await edgestore.publicFiles.delete({
-        url: url,
-      });
     } catch (err) {
+      //TODO: Use Toast to display error
       console.error(err);
     }
   }
@@ -199,7 +191,7 @@ export default function ProductsDashboard() {
       setLoadingHandler(true);
       await deleteImageFile(url);
       const res = await axios.delete(`/api/products/deleteProduct/${id}`);
-      mutate(res.data.products);
+      return mutate(res.data.products);
     } catch (error) {
       console.error(error);
     } finally {
@@ -208,135 +200,144 @@ export default function ProductsDashboard() {
   };
 
   return (
-    <Layout>
-      <div className="flex">
-        <div className="w-[125px]">
-          <DashMenu />
-        </div>
-        <div className="w-full text-primary p-4">
-          <div className="text-primary">
-            <div className="flex flex-col">
-              <div>
-                <div className="flex px-10 p-4">
-                  <h1 className="text-primary my-auto text-xl w-1/4">
-                    Add Product
-                  </h1>
-                  {(isLoading || loading) && (
-                    <h1 className="my-auto text-xl w-1/2 flex items-center justify-center text-accent2">
-                      Please wait...
+    console.log('products data: ', data),
+    (
+      <Layout>
+        <div className="flex">
+          <div className="w-[125px]">
+            <DashMenu />
+          </div>
+          <div className="w-full text-primary p-4">
+            <div className="text-primary">
+              <div className="flex flex-col">
+                <div>
+                  <div className="flex px-10 p-4">
+                    <h1 className="text-primary my-auto text-xl w-1/4">
+                      Add Product
                     </h1>
-                  )}
-                </div>
+                    {loading && (
+                      <h1 className="my-auto text-xl w-1/2 flex items-center justify-center text-accent2">
+                        Please wait...
+                      </h1>
+                    )}
+                  </div>
 
-                <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
-                  <div
-                    className="h-full bg-accent transition-all duration-150"
-                    style={{ width: progress }}
-                  ></div>
+                  <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
+                    <div
+                      className="h-full bg-accent transition-all duration-150"
+                      style={{ width: progress }}
+                    ></div>
+                  </div>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <form
-                  className="flex flex-col bg-primary space-y-2"
-                  onSubmit={handleSubmit}
-                >
-                  <input
-                    type="text"
-                    placeholder="Product/event name"
-                    className="form-input"
-                    name="name"
-                    onChange={handleFormChange}
-                    value={formInputs.name}
-                    required
-                  ></input>
-                  <select
-                    className="form-input"
-                    name="productType"
-                    onChange={handleFormChange}
-                    value={formInputs.productType}
-                    required
+                <div className="grid grid-cols-2 gap-4">
+                  <form
+                    className="flex flex-col bg-primary space-y-2"
+                    onSubmit={handleSubmit}
                   >
-                    <option value="" disabled hidden>
-                      Select Type
-                    </option>
-                    <option>Ticket</option>
-                    <option>Merch</option>
-                  </select>
-
-                  <input
-                    type="text"
-                    placeholder="Price"
-                    className="form-input"
-                    name="price"
-                    onChange={handleFormChange}
-                    value={formInputs.price}
-                    required
-                  ></input>
-
-                  <textarea
-                    type="text"
-                    rows="10"
-                    cols="30"
-                    placeholder="Description"
-                    className="form-input"
-                    name="description"
-                    onChange={handleFormChange}
-                    value={formInputs.venueName}
-                    required
-                  ></textarea>
-                  <label htmlFor="date" className=" text-primary flex">
-                    <p className="m-auto w-1/6">Date:</p>
                     <input
-                      type="date"
-                      id="datePicker"
-                      className="form-input w-full ms-4"
-                      name="date"
+                      type="text"
+                      placeholder="Product/event name"
+                      className="form-input"
+                      name="name"
                       onChange={handleFormChange}
-                      value={formInputs.date}
+                      value={formInputs.name}
                       required
                     ></input>
-                  </label>
-                  <label
-                    htmlFor="imageFile"
-                    className="flex w-full text-primary"
-                  >
-                    <p className="m-auto w-1/6">Image:</p>
+                    <select
+                      className="form-input"
+                      name="productType"
+                      onChange={handleFormChange}
+                      value={formInputs.productType}
+                      required
+                    >
+                      <option value="" disabled hidden>
+                        Select Type
+                      </option>
+                      <option>Ticket</option>
+                      <option>Merch</option>
+                    </select>
+
                     <input
-                      type="file"
-                      className="w-full ms-4 file-upload-form-input"
-                      name="imageFile"
-                      onChange={handleImageChange}
-                      ref={fileCleanUpRef}
+                      type="text"
+                      placeholder="Price"
+                      className="form-input"
+                      name="price"
+                      onChange={handleFormChange}
+                      value={formInputs.price}
                       required
                     ></input>
-                  </label>
-                  <button
-                    className="primary-button p-2"
-                    disabled={isLoading || loading}
-                  >
-                    Submit
-                  </button>
-                </form>
-                <div className="rounded text-primary flex flex-col space-y-4">
-                  {data?.map((product) => {
-                    return (
-                      <DashboardProduct
-                        key={product._id}
-                        id={product._id}
-                        imageUrl={product.imageUrl}
-                        name={product.name}
-                        productType={product.productType}
-                        date={product.date}
-                        handleDelete={handleDelete}
-                      />
-                    );
-                  })}
+
+                    <textarea
+                      type="text"
+                      rows="10"
+                      cols="30"
+                      placeholder="Description"
+                      className="form-input"
+                      name="description"
+                      onChange={handleFormChange}
+                      value={formInputs.venueName}
+                      required
+                    ></textarea>
+                    <label htmlFor="date" className=" text-primary flex">
+                      <p className="m-auto w-1/6">Date:</p>
+                      <input
+                        type="date"
+                        id="datePicker"
+                        className="form-input w-full ms-4"
+                        name="date"
+                        onChange={handleFormChange}
+                        value={formInputs.date}
+                        required
+                      ></input>
+                    </label>
+                    <label
+                      htmlFor="imageFile"
+                      className="flex w-full text-primary"
+                    >
+                      <p className="m-auto w-1/6">Image:</p>
+                      <input
+                        type="file"
+                        className="w-full ms-4 file-upload-form-input"
+                        name="imageFile"
+                        onChange={handleImageChange}
+                        ref={fileCleanUpRef}
+                        required
+                      ></input>
+                    </label>
+                    <button
+                      className="primary-button p-2"
+                      disabled={isLoading || loading}
+                    >
+                      Submit
+                    </button>
+                  </form>
+                  <div className="rounded text-primary flex flex-col space-y-4">
+                    {data && data.length !== 0 ? (
+                      data?.map((product) => {
+                        return (
+                          <DashboardProduct
+                            key={product._id}
+                            id={product._id}
+                            imageUrl={product.imageUrl}
+                            name={product.name}
+                            productType={product.productType}
+                            date={product.date}
+                            handleDelete={handleDelete}
+                          />
+                        );
+                      })
+                    ) : (
+                      <p className="text-accent text-center">
+                        Add a product to see details
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    )
   );
 }

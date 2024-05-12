@@ -4,12 +4,12 @@ import SocialLinks from 'components/footer/SocialLinks';
 import React, { useState } from 'react';
 
 export default function Contact() {
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  async function onSubmit(event) {
-    event.preventDefault();
+  async function onSubmit(e) {
+    e.preventDefault();
     setIsLoading(true);
     setError(null); // Clear previous errors when a new request starts
     setSubmitted(false); // Clear previous submission;
@@ -40,7 +40,7 @@ export default function Contact() {
       );
       return;
     }
-    event.target.reset();
+    e.target.reset();
     setSubmitted(true);
     setIsLoading(false);
   }

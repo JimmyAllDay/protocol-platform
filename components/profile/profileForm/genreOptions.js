@@ -1,0 +1,18 @@
+export const genreOptions = [
+  { value: '2step', label: '2 Step' },
+  { value: 'afro', label: 'Afro' },
+  { value: `breaks`, label: `Breaks` },
+  { value: `d'n'b`, label: `D'n'B` },
+  { value: 'dubstep', label: 'Dubstep' },
+  { value: 'electro', label: 'Electro' },
+  { value: `electronica`, label: `Electronica` },
+  { value: `funk`, label: `Funk` },
+  { value: 'garage', label: 'Garage' },
+  { value: 'hiphop', label: 'Hip Hop' },
+  { value: 'house', label: 'House' },
+  { value: 'tech', label: 'Tech House' },
+  { value: 'techno', label: 'Techno' },
+  { value: `liquid`, label: `Liquid D'n'B` },
+  { value: 'trance', label: 'Trance' },
+  { value: 'all', label: 'All Genres' },
+];
