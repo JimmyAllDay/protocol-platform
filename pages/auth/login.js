@@ -1,31 +1,62 @@
 import { useState, useContext, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-
 import Layout from '../../components/Layout';
 import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/assets/images/PULogo - white.png';
-
+import { parseCookies, destroyCookie } from 'nookies';
 import { toast } from 'react-toastify';
-
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
 import { AuthContext } from 'context/AuthContext';
 import { useRouter } from 'next/router';
 
-const Register = () => {
+const Login = () => {
   const [uiMessage, setUiMessage] = useState('');
   const [progress, setProgress] = useState('0%');
-  const { signIn, user } = useContext(AuthContext);
+  const { signIn, user, loading } = useContext(AuthContext); // Add loading
   const router = useRouter();
 
+  const { reason } = router.query;
+  const cookies = parseCookies();
+
+  console.log(
+    'Login component rendered, user:',
+    user,
+    'reason:',
+    reason,
+    'loading:',
+    loading
+  );
+
   useEffect(() => {
-    if (user) {
+    if (loading) return; // Wait for loading to be false before running effect
+    console.log('First useEffect triggered');
+    console.log('user:', user);
+    console.log('reason:', reason);
+    if (user && reason !== 'session_expired') {
       router.push({
         pathname: '/',
       });
     }
-  }, [user, router]);
+  }, [user, reason, router, loading]); // Add loading as dependency
+
+  useEffect(() => {
+    if (loading) return; // Wait for loading to be false before running effect
+    console.log('Second useEffect triggered');
+    console.log('user:', user);
+    console.log('reason:', reason);
+    if (reason && cookies.redirect_reason) {
+      toast.info(cookies.redirect_reason);
+      destroyCookie(null, 'redirect_reason', { path: '/' });
+      if (
+        reason === 'session_expired' ||
+        reason === 'invalid_token' ||
+        reason === 'no_token'
+      ) {
+        destroyCookie(null, 'token', { path: '/' });
+      }
+    }
+  }, [reason, cookies, user, loading]); // Add loading as dependency
 
   const displayError = (errorMessage) => {
     return toast.error(errorMessage);
@@ -54,7 +85,6 @@ const Register = () => {
   };
 
   return (
-    // console.log('login user profile: ', user),
     <Layout>
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -132,4 +162,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default Login;

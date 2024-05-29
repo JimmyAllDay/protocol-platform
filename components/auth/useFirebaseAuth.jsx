@@ -31,6 +31,7 @@ const useFirebaseAuth = () => {
           }
 
           const token = await user.getIdToken();
+          console.log('Setting token cookie:', token);
           setCookie(null, 'token', token, {
             maxAge: 30 * 24 * 60 * 60,
             path: '/',
@@ -52,6 +53,34 @@ const useFirebaseAuth = () => {
 
     // Cleanup subscription on unmount
     return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    const checkTokenExpiration = async () => {
+      console.log('checking token expiration');
+      const currentUser = auth.currentUser;
+
+      if (currentUser) {
+        const token = await currentUser.getIdToken(true);
+        const tokenResult = await currentUser.getIdTokenResult();
+
+        const isExpired =
+          tokenResult.expirationTime <= new Date().toISOString();
+        if (isExpired) {
+          await signOut(auth);
+          setUserProfile(null);
+          setProfileComplete(false);
+          destroyCookie(null, 'token', { path: '/' });
+          toast.error('Session expired. Please log in again.');
+        }
+      }
+    };
+
+    checkTokenExpiration();
+
+    const interval = setInterval(checkTokenExpiration, 5 * 60 * 1000); // Check every 5 minutes
+
+    return () => clearInterval(interval);
   }, []);
 
   return {
