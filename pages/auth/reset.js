@@ -8,7 +8,7 @@ import logo from 'public/assets/images/PULogo - white.png';
 
 import { toast } from 'react-toastify';
 
-import { auth } from '/lib/firebase/config';
+import { auth } from '/lib/firebase/client/config';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 
 const Reset = () => {
