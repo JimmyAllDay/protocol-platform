@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useContext, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
@@ -8,34 +7,36 @@ import axios from 'axios';
 
 import DashMenu from 'components/dashboard/DashboardMenu';
 
-import useUser from '/data/useUser.js';
+import { AuthContext } from 'context/AuthContext';
+import { LoadingContext } from 'context/LoadingContext';
 
-//TODO: fix auth solution
-//TODO: ensure route to admin page is protected (loading spinner, redirect)
+// pages/protected-page.js
+import admin from 'lib/firebase/server/config';
+
 //TODO: use meta api to return facebook info
 //TODO: use meta api to return instagram info
-//TODO: protect upload routes
-//TODO: get user profile and social details on backend interface
-//TODO: get git working properly for firebase implementation
-//TODO: Temp auth solution - this may need to be fixed
 
-export default function Dashboard() {
-  const { user, loading: userLoading } = useUser();
-  const [loading, setLoading] = useState(false);
-  const [uiError, setUiError] = useState('');
-
-  const setDataHandler = (data) => {
-    return setData(data);
-  };
-
-  const setLoadingHandler = (loading) => {
-    return setLoading(loading);
-  };
-
+export default function Dashboard({ user }) {
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
-  if (user?.isAdmin === false || user === {}) {
-    router.push('/');
+  useEffect(() => {
+    if (user) {
+      setLoading(false);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (loading) {
+      return;
+    }
+    if (!user || (user && !user.isAdmin)) {
+      router.push('/');
+    }
+  }, [user, loading, router]);
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -46,8 +47,68 @@ export default function Dashboard() {
         </div>
         <div className="w-full text-primary p-4">
           This is the main dashboard page
+          <br />
+          <br />
+          Possible information to go here: <br />
+          Number of users <br />
+          Users signed up over time? <br />
+          Next event date <br />
+          patrons attended events patrons mapped over events and music genre
+          Engagement metrics re: promotional material - social posts, etc
+          <br />
         </div>
       </div>
     </Layout>
   );
 }
+
+export const getServerSideProps = async (context) => {
+  const { req } = context;
+  const { cookies } = req;
+
+  // Assuming you store the Firebase Auth ID token in a cookie called 'token'
+  const token = cookies.token || '';
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const uid = decodedToken.uid;
+    const userDoc = await admin
+      .firestore()
+      .collection('userProfiles')
+      .doc(uid)
+      .get();
+
+    const userData = userDoc.data();
+
+    if (!userDoc.exists || !userData.isAdmin) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+
+    // Convert Firestore Timestamp to a serializable format
+    const serializableUserData = {
+      ...userData,
+      createdAt: userData.createdAt.toDate().toISOString(),
+      updatedAt: userData.updatedAt.toDate().toISOString(),
+      // Convert any other Timestamp fields similarly
+    };
+
+    return {
+      props: {
+        user: serializableUserData,
+      },
+    };
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+};

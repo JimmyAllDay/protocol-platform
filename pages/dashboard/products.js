@@ -5,17 +5,14 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from 'components/Layout';
 
-import useSWR from 'swr';
-
 import DashMenu from 'components/dashboard/DashboardMenu';
 
 import Image from 'next/image';
 
 import axios from 'axios';
+import admin from 'lib/firebase/server/config';
 
-import useUser from '/data/useUser.js';
-
-const fetcher = (url) => axios.get(url).then((res) => res.data);
+import { getAllDocs } from 'lib/firebase/server/queries/getAllDocs';
 
 export function DashboardProduct({
   id,
@@ -80,19 +77,13 @@ export function DashboardProduct({
   );
 }
 
-export default function ProductsDashboard() {
-  const { user, loading: userLoading } = useUser(); //TODO: Temp auth solution - this may need to be fixed
+export default function ProductsDashboard(user, data) {
   const router = useRouter();
   //TODO: fix this when auth solution is fixed
   //TODO: this won't cover all cases
   if (user?.isAdmin === false || user === {}) {
     router.push('/');
   }
-
-  const { data, error, isLoading, mutate } = useSWR(
-    '/api/products/getProducts',
-    fetcher
-  );
 
   const fileCleanUpRef = React.useRef();
 
@@ -107,6 +98,8 @@ export default function ProductsDashboard() {
     date: '',
     imageUrl: '',
   });
+
+  const [products, setProducts] = useState([]);
 
   const handleFormChange = (e) => {
     setFormInputs({
@@ -304,20 +297,17 @@ export default function ProductsDashboard() {
                         required
                       ></input>
                     </label>
-                    <button
-                      className="primary-button p-2"
-                      disabled={isLoading || loading}
-                    >
+                    <button className="primary-button p-2" disabled={loading}>
                       Submit
                     </button>
                   </form>
                   <div className="rounded text-primary flex flex-col space-y-4">
-                    {data && data.length !== 0 ? (
-                      data?.map((product) => {
+                    {products?.length !== 0 ? (
+                      products.map((product) => {
                         return (
                           <DashboardProduct
-                            key={product._id}
-                            id={product._id}
+                            key={product.id}
+                            id={product.id}
                             imageUrl={product.imageUrl}
                             name={product.name}
                             productType={product.productType}
@@ -341,3 +331,49 @@ export default function ProductsDashboard() {
     )
   );
 }
+
+export const getServerSideProps = async (context) => {
+  const { req } = context;
+  const { cookies } = req;
+
+  // Assuming you store the Firebase Auth ID token in a cookie called 'token'
+  const token = cookies.token || '';
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    const uid = decodedToken.uid;
+    const userDoc = await admin
+      .firestore()
+      .collection('userProfiles')
+      .doc(uid)
+      .get();
+
+    if (!userDoc.exists || !userDoc.data().isAdmin) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+
+    const products = await getAllDocs('products');
+
+    console.log('getServerSideProps: ', products);
+
+    return {
+      props: {
+        user: decodedToken,
+        data: products,
+      },
+    };
+  } catch (error) {
+    console.error('Error verifying token:', error);
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
+};
