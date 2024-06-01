@@ -5,8 +5,6 @@ import { useRouter } from 'next/router';
 import React, { useContext } from 'react';
 import { toast } from 'react-toastify';
 import Layout from 'components/Layout';
-import { ObjectId } from 'mongodb';
-import { connectToDatabase } from 'utils/mongodb';
 
 import { Store } from 'context/Store';
 
@@ -80,19 +78,4 @@ export default function ProductScreen(props) {
       </div>
     </Layout>
   );
-}
-
-export async function getServerSideProps(context) {
-  const { client, db } = await connectToDatabase();
-  const productId = context.params.uri;
-  try {
-    const product = await db
-      .collection('products')
-      .findOne({ _id: new ObjectId(productId) });
-    return {
-      props: { product: JSON.parse(JSON.stringify(product)) },
-    };
-  } catch (error) {
-    console.error('Server error');
-  }
 }
