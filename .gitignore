@@ -35,7 +35,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-next.config.js
-
 # Firebase Service Account File
 protocol-underground-7a1f0-firebase-adminsdk-j5o3y-5d0b168eab.json
