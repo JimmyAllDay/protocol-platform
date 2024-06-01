@@ -27,33 +27,30 @@ export default function Dashboard({ user, userProfiles }) {
   }
 
   return (
-    console.log(profiles),
-    (
-      <Layout>
-        <div className="flex">
-          <div className="w-[125px]">
-            <DashMenu />
-          </div>
-          <div className="w-full text-primary p-4">
-            Users
-            <div className="border">
-              {userProfiles.map((profile, i) => {
-                return (
-                  <div
-                    key={`userProfile${i}`}
-                  >{`${profile.firstName} ${profile.surname}`}</div>
-                );
-              })}
-            </div>
-            {loading && (
-              <h1 className="my-auto text-xl w-1/2 flex items-center justify-center text-accent2">
-                Please wait...
-              </h1>
-            )}
-          </div>
+    <Layout>
+      <div className="flex">
+        <div className="w-[125px]">
+          <DashMenu />
         </div>
-      </Layout>
-    )
+        <div className="w-full text-primary p-4">
+          Users
+          <div className="border">
+            {userProfiles.map((profile, i) => {
+              return (
+                <div
+                  key={`userProfile${i}`}
+                >{`${profile.firstName} ${profile.surname}`}</div>
+              );
+            })}
+          </div>
+          {loading && (
+            <h1 className="my-auto text-xl w-1/2 flex items-center justify-center text-accent2">
+              Please wait...
+            </h1>
+          )}
+        </div>
+      </div>
+    </Layout>
   );
 }
 

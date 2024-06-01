@@ -58,7 +58,6 @@ export default function PatronsDashboard({ user, patronsList, eventsList }) {
       const res = await axios.post('/api/patrons/createPatron', {
         email: email,
       });
-      console.log('patrons data returned from api: ', res.data);
       setPatrons(res.data.data);
     } catch (error) {
       console.error(error);
@@ -204,8 +203,6 @@ export const getServerSideProps = async (context) => {
 
     const patrons = await getAllDocs('patrons');
     const events = await getAllDocs('events');
-
-    console.log(events, patrons);
 
     return {
       props: {

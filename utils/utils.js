@@ -4,7 +4,7 @@ export default function replaceHyphens(inputString) {
 }
 
 export function extractPath(url) {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+  const baseUrl = process.env.BASE_URL;
   const index = url.indexOf(baseUrl);
 
   if (index !== -1) {

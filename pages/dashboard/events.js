@@ -126,7 +126,7 @@ export default function EventsDashboard({ user, data }) {
 
       const message = res.data.message;
       const events = res.data.data;
-      console.log(events);
+
       toast.success(message);
       setEvents(events);
     } catch (error) {

@@ -8,7 +8,7 @@ import { LoadingContext } from 'context/LoadingContext';
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const { userProfile, profileComplete } = useFirebaseAuth();
+  const { userProfile, profileComplete, fetchUserProfile } = useFirebaseAuth();
   const { loading } = useContext(LoadingContext);
 
   const contextValue = {
@@ -17,6 +17,7 @@ const AuthProvider = ({ children }) => {
     signOut: signOutUser,
     user: userProfile,
     profileComplete,
+    fetchUserProfile,
     loading,
   };
 
