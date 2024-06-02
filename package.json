@@ -8,8 +8,9 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "lint": "next lint",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
+    "test:emulators": "firebase emulators:start"
   },
   "dependencies": {
     "@emailjs/nodejs": "^2.2.0",
@@ -44,7 +45,10 @@
     "ws": "^8.17.0"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "^6.4.2",
+    "@babel/core": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-react": "^7.24.6",
+    "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^14.2.1",
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.38",

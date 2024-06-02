@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 import { register } from 'lib/firebase/client/auth/register';
 import { manageSignIn } from 'lib/firebase/client/auth/signIn';
 import { signOutUser } from 'lib/firebase/client/auth/signOut';

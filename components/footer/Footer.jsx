@@ -1,3 +1,4 @@
+import React from 'react';
 import Link from 'next/link';
 import SocialLinks from './SocialLinks';
 import AuthLinks from './AuthLinks';
@@ -48,7 +49,7 @@ function Footer() {
 
       <div className="flex items-center justify-center col-span-2 pt-12">
         <p className="text-xs mt-4 flex flex-col">
-          &copy; 2023 Protocol Underground. All rights reserved.
+          &copy; 2024 Protocol Underground. All rights reserved.
           <span className="mx-auto">An All Day project.</span>
         </p>
       </div>
