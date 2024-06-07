@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 const Recaptcha = ({ onVerify }) => {
   useEffect(() => {

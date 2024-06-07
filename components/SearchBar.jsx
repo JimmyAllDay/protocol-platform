@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import Router from 'next/router';
 
 export default function SearchBar({ searchHandler }) {

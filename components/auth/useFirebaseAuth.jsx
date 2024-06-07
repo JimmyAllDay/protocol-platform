@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { getUserProfile } from 'lib/firebase/client/auth/signIn';
 import { auth, db } from 'lib/firebase/client/config'; // Ensure db is properly exported from your Firebase config
 import { onIdTokenChanged } from 'firebase/auth';

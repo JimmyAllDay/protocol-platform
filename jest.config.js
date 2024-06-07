@@ -1,4 +1,15 @@
-module.exports = {
+const nextJest = require('next/jest');
+
+/** @type {import('jest').Config} */
+const createJestConfig = nextJest({
+  dir: './',
+});
+
+// Add any custom config to be passed to Jest
+const config = {
+  coverageProvider: 'v8',
+  testEnvironment: 'jsdom',
+  // Add more setup options before each test is run
   setupFilesAfterEnv: ['<rootDir>/__tests__/setupTests.js'],
   moduleNameMapper: {
     '^firebase/app$': '<rootDir>/__mocks__/firebase/firebaseAppMock.js',
@@ -16,5 +27,6 @@ module.exports = {
     '/node_modules/',
     '<rootDir>/__tests__/setupTests.js',
   ],
-  testEnvironment: 'jsdom',
 };
+
+module.exports = createJestConfig(config);

@@ -1,5 +1,5 @@
 import Layout from '../../components/Layout';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 
 import ProfileForm from 'components/profile/profileForm/ProfileForm';

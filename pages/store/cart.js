@@ -1,6 +1,6 @@
+import React, { useContext } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useContext } from 'react';
 import { XCircleIcon } from '@heroicons/react/outline';
 import Layout from '../../components/Layout';
 import { Store } from '../../context/Store';

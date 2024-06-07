@@ -1,7 +1,7 @@
+import React, { useContext, useState, useEffect } from 'react';
 import Layout from 'components/Layout';
 import ProductItem from 'components/ProductItem';
 import { Store } from 'context/Store';
-import { useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 

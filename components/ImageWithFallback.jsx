@@ -1,3 +1,4 @@
+import React from 'react';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import PULogo from 'public/assets/images/PULogo - white.png';
