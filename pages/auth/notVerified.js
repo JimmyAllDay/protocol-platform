@@ -26,7 +26,7 @@ const NotVerified = () => {
       console.log(user);
       if (!user || user === null) {
         router.push('/');
-        signOut(auth); //TODO: do I need to handle errors here?
+        signOut(auth); //TODO:Error: do I need to handle errors here?
       }
       if (user?.emailVerified) {
         router.push('auth/login');

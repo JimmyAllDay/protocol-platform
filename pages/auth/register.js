@@ -52,7 +52,7 @@ const Register = () => {
         }
       } catch (error) {
         console.error(error);
-        //TODO: Error handling goes here. One option: throw errors in the register functions and handle them on the page.
+        //TODO: Error: Error handling goes here. One option: throw errors in the register functions and handle them on the page.
       }
     } else {
       displayError('Passwords do not match');

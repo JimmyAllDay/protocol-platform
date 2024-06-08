@@ -15,6 +15,7 @@ const nextConfig = {
     ],
   },
   env: {
+    HOTJARID: process.env.HOTJARID,
     BASE_URL: process.env.BASE_URL,
     RECAPTCHA_SECRET_KEY: process.env.RECAPTCHA_SECRET_KEY,
     RECAPTCHA_SITE_KEY: process.env.RECAPTCHA_SITE_KEY,

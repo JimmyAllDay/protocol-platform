@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 
-import { addToMailList } from 'lib/firebase/client/mailingList';
+import { addToMailList } from 'utils/addToMailList';
 
 export default function SubscribeToMailingList() {
   const {
@@ -15,7 +15,6 @@ export default function SubscribeToMailingList() {
   } = useForm();
 
   const submitHandler = async ({ email }) => {
-    //TODO: there is currently no security on this function other than client side validation - you should update it when you get a chance.
     try {
       const added = await addToMailList(email);
       if (added) toast.info('Added to mailing list');

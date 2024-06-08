@@ -37,7 +37,7 @@ export default async function handler(req, res) {
         newsletters: true,
         promotions: true,
       },
-      source: 'attended event',
+      source: 'attendedEvent',
       lastEmailSentDate: '2024-05-28T12:34:56Z',
       engagementMetrics: {},
       segments: ['new patron'],

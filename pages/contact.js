@@ -21,7 +21,7 @@ export default function Contact() {
 
     console.log(name, email, phone, message);
 
-    const res = await fetch(`/api/contact`, {
+    const res = await fetch(`/api/contact/contact`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
