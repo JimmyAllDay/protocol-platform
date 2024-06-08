@@ -9,7 +9,7 @@ import { StoreProvider } from 'context/Store';
 export default function MyApp({ Component, pageProps }) {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      hotjar.initialize(5016933, 6);
+      hotjar.initialize(process.env.HOTJARID, process.env.HOTJARSV);
     }
   }, []);
 
