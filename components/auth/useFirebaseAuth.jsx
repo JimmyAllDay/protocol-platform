@@ -59,7 +59,6 @@ const useFirebaseAuth = () => {
           }
 
           const token = await user.getIdToken();
-          console.log('Setting token cookie:', token);
           setCookie(null, 'token', token, {
             maxAge: 30 * 24 * 60 * 60,
             path: '/',
@@ -85,7 +84,6 @@ const useFirebaseAuth = () => {
 
   useEffect(() => {
     const checkTokenExpiration = async () => {
-      console.log('checking token expiration');
       const currentUser = auth.currentUser;
 
       if (currentUser) {

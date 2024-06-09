@@ -25,7 +25,6 @@ const Layout = ({ title, children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <GoogleAnalytics />
-      <HotJar />
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
