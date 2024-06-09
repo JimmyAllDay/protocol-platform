@@ -16,19 +16,19 @@ const Layout = ({ title, children }) => {
   const [showBanner, setShowBanner] = useState(true);
   const { loading } = useContext(LoadingContext);
 
-  const hotjarId = process.env.NEXT_PUBLIC_HOTJARID;
-  const hotjarSv = process.env.NEXT_PUBLIC_HOTJARSV;
-  const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLEANALYTICSID;
+  const hotjarId = 5016933;
+  const hotjarSv = 6;
+  const googleAnalyticsId = 'G-MCYH6WMHBX';
 
   return (
     <>
       <Script
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
       />
       <Script
         id="google-analytics-script"
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             window.dataLayer = window.dataLayer || [];
@@ -41,7 +41,7 @@ const Layout = ({ title, children }) => {
       />
       <Script
         id="hotjar-script"
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `
             (function(h,o,t,j,a,r){
