@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import Head from 'next/head';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
-import HotJar from './analytics/HotJar';
+import HotJarAnalytics from './analytics/HotJarAnalytics';
 
 import Header from './header/Header';
 import Footer from './footer/Footer';
@@ -25,6 +25,7 @@ const Layout = ({ title, children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <GoogleAnalytics />
+      <HotJarAnalytics />
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
