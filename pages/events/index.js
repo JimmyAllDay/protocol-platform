@@ -27,11 +27,14 @@ export default function Events() {
       <Layout>
         <main className="text-primary flex flex-col">
           <h1 className="text-3xl my-8 ps-4">Upcoming Events</h1>
-          <div className="border-t pt-2 pb-6">
-            {events?.map((post) => {
-              return (
-                console.log('events data: ', post),
-                (
+          <div className="pt-2 pb-6 flex flex-col items-center justify-center h-screen">
+            {events !== false || events.length !== 0 ? (
+              <div className="text-accent ps-4 text-3xl mx-auto">
+                Upcoming events will be announced soon
+              </div>
+            ) : (
+              events?.map((post) => {
+                return (
                   <Link
                     key={post.title}
                     href={`events/${post.id}`}
@@ -49,9 +52,9 @@ export default function Events() {
                       </h3>
                     </div>
                   </Link>
-                )
-              );
-            })}
+                );
+              })
+            )}
           </div>
         </main>
       </Layout>

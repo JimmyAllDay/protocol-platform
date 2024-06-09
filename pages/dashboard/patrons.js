@@ -17,7 +17,7 @@ import { getAllDocs } from 'lib/firebase/server/queries/getAllDocs';
 
 //TODO: does the delete function work? How should it work?
 //TODO: You should set up a QR code so people can scan when they arrive.
-//TODO: Error handling for different errors in getServerSideProps needs updating. Error handling for failure of coded token will be different to if the patrons collection isn't fetched
+//TODO: Error handling for different errors in getServerSideProps needs updating. Error handling for failure of coded token will be different to if.the patrons collection isn't fetched
 
 export default function PatronsDashboard({ user, patronsList, eventsList }) {
   const router = useRouter();
