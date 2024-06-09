@@ -18,15 +18,16 @@ const Layout = ({ title, children }) => {
 
   const hotjarId = process.env.NEXT_PUBLIC_HOTJARID;
   const hotjarSv = process.env.NEXT_PUBLIC_HOTJARSV;
+  const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLEANALYTICSID;
 
   return (
     <>
       <Script
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLEANALYTICSID}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}
       />
       <Script
-        id="google-analytics"
+        id="google-analytics-script"
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -34,7 +35,7 @@ const Layout = ({ title, children }) => {
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', ${process.env.NEXT_PUBLIC_GOOGLEANALYTICSID});
+            gtag('config', '${googleAnalyticsId}');
           `,
         }}
       />
@@ -43,15 +44,15 @@ const Layout = ({ title, children }) => {
         strategy="afterInteractive"
         dangerouslySetInnerHTML={{
           __html: `
-                    (function(h,o,t,j,a,r){
-                        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                        h._hjSettings={hjid:${hotjarId},hjsv:${hotjarSv}};
-                        a=o.getElementsByTagName('head')[0];
-                        r=o.createElement('script');r.async=1;
-                        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                        a.appendChild(r);
-                    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-                `,
+            (function(h,o,t,j,a,r){
+                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                h._hjSettings={hjid:${hotjarId},hjsv:${hotjarSv}};
+                a=o.getElementsByTagName('head')[0];
+                r=o.createElement('script');r.async=1;
+                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+          `,
         }}
       />
       <Head>
