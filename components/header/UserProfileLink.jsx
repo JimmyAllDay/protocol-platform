@@ -23,12 +23,12 @@ export default function UserLink() {
 
   if (loading) return <div className="my-auto text-sm p-2">Loading...</div>;
 
-  const iconStyles = `mx-auto text-2xl text-accent2 bg-accent2 ${
-    hover ? 'bg-opacity-50' : 'bg-opacity-30'
+  const iconStyles = `mx-auto text-2xl text-primary dark:text-accentDark dark:bg-accentDark ${
+    hover ? 'dark:bg-opacity-50' : 'dark:bg-opacity-30'
   } rounded-xl ms-2`;
 
   return (
-    user?.email && (
+    user && (
       <div className="relative flex flex-col">
         <Link href="/user/profile" className="my-auto mx-4">
           <div
@@ -36,7 +36,7 @@ export default function UserLink() {
             onMouseLeave={handleHoverLeave}
             className="flex"
           >
-            <h2 className="hover:text-accent">
+            <h2 className="hover:text-primaryDark hover:dark:text-accentDark dark">
               Hi,{' '}
               {user.displayName ||
                 user?.email.substring(0, user?.email.indexOf('@')) ||
@@ -49,27 +49,27 @@ export default function UserLink() {
         </Link>
         {hover && (
           <div
-            className="absolute w-[185px] pt-2 top-8 left-4"
+            className="absolute w-[160px] top-7 left-4 bg-primary dark:bg-primaryDark dark:border-white dark:text-primaryDark dark:hover:text-accentDark"
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >
-            <div className="border-t border-s border-e border-primary flex flex-col">
+            <div className="border-t border-s border-e border dark:border-white border-black flex flex-col">
               <Link
                 href="/user/profile"
-                className="hover:text-accent border-b p-1"
+                className="text-primary hover:text-primaryDark border-b border-black  dark:border-white dark:text-primaryDark dark:hover:text-accentDark p-1"
               >
                 Profile
               </Link>
               <Link
                 href="/user/uploads"
-                className="hover:text-accent border-b p-1"
+                className="text-primary hover:text-primaryDark border-b dark:border-white dark:text-primaryDark dark:hover:text-accentDark border-black p-1"
               >
                 Uploads
               </Link>
               {user.isAdmin && (
                 <Link
                   href="/dashboard"
-                  className="hover:text-accent border-b p-1"
+                  className="text-primary hover:text-primaryDark dark:border-white dark:text-primaryDark dark:hover:text-accentDark p-1"
                 >
                   Dashboard
                 </Link>

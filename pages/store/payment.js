@@ -66,11 +66,11 @@ export default function PaymentScreen() {
           <button
             onClick={() => router.push('/shipping')}
             type="button"
-            className="secondary-button p-2"
+            className="button-secondary p-2"
           >
             Back
           </button>
-          <button className="secondary-button p-2">Next</button>
+          <button className="button-secondary p-2">Next</button>
         </div>
       </form>
     </Layout>

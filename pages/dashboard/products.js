@@ -290,14 +290,14 @@ export default function ProductsDashboard(user, data) {
                       <p className="m-auto w-1/6">Image:</p>
                       <input
                         type="file"
-                        className="w-full ms-4 file-upload-form-input"
+                        className="w-full ms-4 form-input-file-upload"
                         name="imageFile"
                         onChange={handleImageChange}
                         ref={fileCleanUpRef}
                         required
                       ></input>
                     </label>
-                    <button className="primary-button p-2" disabled={loading}>
+                    <button className="button-primary p-2" disabled={loading}>
                       Submit
                     </button>
                   </form>

@@ -3,15 +3,15 @@ import '../styles/globals.css';
 
 import { AuthProvider } from 'context/AuthContext';
 import { LoadingProvider } from 'context/LoadingContext';
-import { StoreProvider } from 'context/Store';
+import { ThemeProvider } from 'context/ThemeContext';
 
 export default function MyApp({ Component, pageProps }) {
   return (
     <LoadingProvider>
       <AuthProvider>
-        <StoreProvider>
+        <ThemeProvider>
           <Component {...pageProps} />
-        </StoreProvider>
+        </ThemeProvider>
       </AuthProvider>
     </LoadingProvider>
   );

@@ -1,53 +1,66 @@
 import React from 'react';
 import Link from 'next/link';
-import SocialLinks from './SocialLinks';
+import SocialLinks from '../socialLinks/SocialLinks';
 import AuthLinks from './AuthLinks';
 import Image from 'next/image';
-import logo from 'public/assets/images/PULogo - white.png';
+import logo from 'public/assets/images/PULogo - black.png';
+import logoDark from 'public/assets/images/PULogo - white.png';
+
+import { useTheme } from 'context/ThemeContext';
+
 import MailListForm from './MailListForm';
 
-function FooterLinks({ links }) {
-  return (
-    <nav>
-      <ul className="flex flex-col">
-        {Object.entries(links).map(([key, value]) => (
-          <li key={key} className="mr-4 hover:text-accent max-w-0">
-            <Link href={value}>{key}</Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
-
-function Footer() {
-  const links = {
-    About: '/about',
-    Contact: '/contact',
-  };
+function Footer({ links }) {
+  const { theme } = useTheme();
 
   return (
-    <footer className="grid grid-cols-2 w-screen bg-primary text-primary pt-10">
-      <div className="ps-8 flex flex-col space-y-2">
-        <Link href="/">
-          <Image src={logo} alt="Logo" width={200} height={'auto'} />
-        </Link>
+    <footer className="grid grid-cols-6 w-screen bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark pt-24">
+      <div className="flex flex-col space-y-2 col-span-4 sm:col-span-2 order-2 lg:col-span-2 lg:order-1 m-4">
+        <div className="ms-4">
+          {theme === 'light' ? (
+            <Link href="/">
+              <Image src={logo} alt="Logo" width={200} height={'auto'} />
+            </Link>
+          ) : (
+            <Link href="/">
+              <Image src={logoDark} alt="Logo" width={200} height={'auto'} />
+            </Link>
+          )}
+        </div>
         <div className="flex flex-col ps-4">
-          <FooterLinks links={links} />
-          <AuthLinks />
+          <ul className="flex flex-col ms-4">
+            {links.map((link, i) => {
+              return (
+                <li key={i} className="mb-2 inline-block">
+                  <Link
+                    smooth
+                    key={i}
+                    href={link.href}
+                    className="link inline-block"
+                  >
+                    {link.name}
+                  </Link>
+                </li>
+              );
+            })}
+            <AuthLinks />
+          </ul>
         </div>
       </div>
 
-      <div className="me-4 mt-2 flex">
-        <div className="w-2/3 mt-auto">
+      <div className="flex col-span-6 sm:col-span-4 order-1 sm:order-2 lg:col-span-3 lg:order-1 mb-16 sm:mb-0">
+        <div className="m-auto">
           <MailListForm />
         </div>
-        <div className="ms-auto pr-6">
-          <SocialLinks col={true} />
+      </div>
+
+      <div className="col-span-2 order-2 flex sm:col-span-6 sm:order-3 lg:col-span-1 lg:order-1 sm:mt-16 lg:mt-0 pe-2">
+        <div className="ms-auto me-4 sm:mx-auto lg:ms-auto lg:me-6">
+          <SocialLinks />
         </div>
       </div>
 
-      <div className="flex items-center justify-center col-span-2 pt-12">
+      <div className="flex items-center justify-center col-span-6 pt-12 order-4">
         <p className="text-xs mt-4 flex flex-col">
           &copy; 2024 Protocol Underground. All rights reserved.
           <span className="mx-auto">An All Day project.</span>

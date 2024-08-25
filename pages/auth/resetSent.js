@@ -22,7 +22,7 @@ const Registered = () => {
         <h1>Please check your inbox.</h1>
         <h1>{`(It might take a minute or two)`}</h1>
         <Link href="/auth/login">
-          <button className="primary-button mt-8 text-2xl p-1">Log In</button>
+          <button className="button-primary mt-8 text-2xl p-1">Log In</button>
         </Link>
       </div>
     </Layout>

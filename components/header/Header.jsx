@@ -1,48 +1,73 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from 'public/assets/images/PULogo - white.png';
+import logo from 'public/assets/images/PULogo - black.png';
+import logoDark from 'public/assets/images/PULogo - white.png';
 import UserProfileLink from './UserProfileLink';
 import AuthButtons from './AuthButtons';
 import AdminLink from './AdminLink';
 import Cart from './Cart';
+import ThemeToggle from 'components/themetoggle/ThemeToggle';
+import { useTheme } from 'context/ThemeContext';
 
-function HeaderLinks({ links }) {
-  return (
-    <nav className="h-full flex">
-      <ul className="flex my-auto">
-        {Object.entries(links).map(([key, value]) => (
-          <li key={key} className="hover:text-accent ms-4">
-            <Link href={value}>{key}</Link>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  );
-}
+import { Spin as Hamburger } from 'hamburger-react';
 
-const Header = () => {
-  const links = {
-    About: '/about',
-    Contact: '/contact',
-    Events: '/events',
-  };
+const Header = ({ showNav, setShowNav, showNavMenu, links }) => {
+  const { theme } = useTheme();
 
   return (
-    <header className="bg-primary w-screen text-primary flex flex-col pb-4">
-      <div className="flex ps-4 pe-4 pt-4 pb-1 max-w-screen-xl mx-auto w-full">
-        <div>
-          <Link href="/">
+    <header className="bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark p-6 w-screen">
+      <div className="flex max-w-7xl mx-auto">
+        <Link href="/">
+          {theme === 'light' ? (
             <Image src={logo} alt="Logo" width={150} height={'auto'} priority />
-          </Link>
+          ) : (
+            <Image
+              src={logoDark}
+              alt="Logo"
+              width={150}
+              height={'auto'}
+              priority
+            />
+          )}
+        </Link>
+
+        <nav className="ms-auto h-full hidden md:flex max-w-xl my-auto">
+          <ul className="flex my-auto">
+            {links.map((link, i) => {
+              return (
+                <Link
+                  key={i}
+                  href={link.href}
+                  className="hover:text-white dark:hover:text-accentDark mx-2"
+                >
+                  {link.name}
+                </Link>
+              );
+            })}
+          </ul>
+          <UserProfileLink />
+          <div className="hidden md:flex col-span-1">
+            <AuthButtons />
+          </div>
+        </nav>
+        <div
+          className={`ms-auto md:hidden border-2 rounded dark:border-white z-50 w-13 w-[52px] ${
+            showNav ? 'text-primaryDark border-white' : 'border-black'
+          }`}
+        >
+          <Hamburger
+            toggled={showNav}
+            toggle={setShowNav}
+            onToggle={(toggled) => showNavMenu()}
+            size={29}
+          />
         </div>
-        <div className="ms-auto">
-          <HeaderLinks links={links} />
-        </div>
-        <UserProfileLink />
-        <AuthButtons />
-        <div className="ms-3 pt-2">
-          {/*Cart goes here when store is up and running*/}
+      </div>
+
+      <div className="hidden md:flex max-w-7xl mx-auto pt-2">
+        <div className="ml-auto">
+          <ThemeToggle />
         </div>
       </div>
     </header>

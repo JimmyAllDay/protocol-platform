@@ -124,7 +124,7 @@ export default function ShippingScreen() {
             <div className="text-accent2">{errors.country.message}</div>
           )}
         </div>
-        <button className="secondary-button p-1 w-full">Next</button>
+        <button className="button-secondary p-1 w-full">Next</button>
       </form>
     </Layout>
   );

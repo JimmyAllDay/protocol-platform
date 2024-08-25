@@ -19,6 +19,7 @@ const config = {
     '^firebase/storage$': '<rootDir>/__mocks__/firebase/firebaseStorageMock.js',
     '^./checkVerificationEmail$':
       '<rootDir>/__mocks__/checkVerificationEmail.js',
+    '^lib/(.*)$': '<rootDir>/lib/$1',
   },
   transform: {
     '^.+\\.jsx?$': 'babel-jest',

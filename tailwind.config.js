@@ -1,11 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
-
-    // Or if using `src` directory:
     './src/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
@@ -25,17 +24,26 @@ module.exports = {
         black: 900,
       },
       colors: {
-        accent: '#B4FEE7',
-        accent2: '#FFADD3',
-        accent3: '#6495ED',
+        accent: '#C0C0C0',
+        accentDark: '#B4FEE7',
+        accent2: '#404040',
+        accent2Dark: '#FFADD3',
+        accent3: '#00000066',
+        accent3Dark: '#6495ED',
         accentGrey: '#3C3C3C',
-        background: '#000000',
+        accentGreyDark: '#3C3C3C',
+        background: '#FF6347',
+        backgroundDark: '#000000',
+        border: '#000000',
+        borderDark: '#FFFFFF',
       },
       backgroundColor: {
-        primary: '#000000',
+        primary: '#FF6347',
+        primaryDark: '#000000',
       },
       textColor: {
-        primary: '#ffffff',
+        primary: '#000000',
+        primaryDark: '#ffffff',
       },
       gridTemplateRows: {
         10: 'repeat(10, minmax(0, 1fr))',

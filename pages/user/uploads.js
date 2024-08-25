@@ -16,23 +16,32 @@ import { useForm, Controller } from 'react-hook-form';
 
 import handleUpload from 'lib/firebase/client/uploads/upload.js';
 import fetchUploads from 'lib/firebase/client/uploads/fetch.js';
-import deleteUpload from 'lib/firebase/client/uploads/delete.js';
+import deleteUploads from 'lib/firebase/client/uploads/delete.js';
 
-//TODO: See if you can stream audio directly to interface using a player component - not part of mvp
+import ProgressBar from 'components/forms/formComponents/progressBar/ProgressBar';
+import AudioFileListItem from 'components/forms/formComponents/audioFileListItem/AudioFileListItem';
+import Tooltip from 'components/forms/formComponents/tooltip/Tooltip';
+import ConfirmationModal from 'components/forms/formComponents/confirmationModal/ConfirmationModal';
+
+//TODO: See if you can stream audio directly to interface using a player component - not part of MVP
 
 export default function Uploads() {
   const { user, profileComplete } = useContext(AuthContext);
   const { loading: userLoading } = useContext(LoadingContext);
 
-  const [progress, setProgress] = useState({ progress: '0%', message: '' });
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const { control, handleSubmit, reset, getValues, watch } = useForm();
   const [uploads, setUploads] = useState([]);
-  const [uploadedFileUrl, setUploadedFileUrl] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState({ progress: '0%', message: '' });
+  const [pendingUpload, setPendingUpload] = useState(null);
   const fileCleanUpRef = useRef();
 
-  const { control, handleSubmit, reset } = useForm();
-
-  const router = useRouter();
+  // WATCH THE INPUT VALUES TO DETERMINE IF THEY'RE FILLED
+  const watchMixName = watch('name');
+  const watchFile = watch('file');
 
   useEffect(() => {
     if (!profileComplete) {
@@ -59,24 +68,73 @@ export default function Uploads() {
   }, [user]);
 
   const onSubmit = async (data) => {
-    console.log('form submission data: ', data);
-    const file = data.file;
+    const mixName = data.name;
+    const file = data.file[0]; // Access the file array properly
+
     if (!file) {
-      console.error('No file selected');
       toast.error('No file selected');
       return;
     }
+
+    if (!mixName) {
+      toast.error('Mix name is required');
+      return;
+    }
+
     if (!file.type.startsWith('audio/')) {
-      console.error('The file is not an audio file');
       toast.error('The selected file is not an audio file');
       return;
     }
 
+    // ONLY SHOW MODAL IF BOTH FIELDS ARE FILLED AND THERE ARE EXISTING UPLOADS
+    if (uploads.length !== 0 && mixName.trim() && file) {
+      setPendingUpload({ mixName, file }); // Store the pending upload data
+      setIsModalOpen(true);
+      return;
+    }
+
+    // If no existing uploads, proceed directly with the upload
+    await handleFileUpload(mixName, file);
+  };
+
+  const handleFileUpload = async (mixName, file) => {
     try {
       setLoading(true);
-      const res = await handleUpload(file, user, setProgress);
+      const res = await handleUpload(mixName, file, user, setProgress);
       const newUploads = res.uploads;
-      setUploads(newUploads);
+      if (newUploads) {
+        toast.success('Upload succeeded.');
+        setUploads([...newUploads]);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.message);
+    } finally {
+      // Always clear the file input and reset the form state, whether successful or not
+      if (fileCleanUpRef.current) {
+        fileCleanUpRef.current.value = null;
+      }
+      reset(); // Clear form state
+      setProgress({ progress: '0%', message: '' });
+      setLoading(false);
+    }
+  };
+
+  const confirmReplace = async () => {
+    setIsModalOpen(false);
+
+    if (pendingUpload) {
+      // Proceed with the upload using the stored pending data
+      await handleFileUpload(pendingUpload.mixName, pendingUpload.file);
+      setPendingUpload(null); // Clear the pending upload data
+    }
+  };
+
+  const handleDelete = async (uid, url) => {
+    try {
+      setLoading(true);
+      const res = await deleteUploads(uid, url);
+      setUploads(res);
     } catch (error) {
       console.error(error);
       toast.error(error.message);
@@ -86,28 +144,17 @@ export default function Uploads() {
     }
   };
 
-  const handleDelete = async (uid, url) => {
-    try {
-      setLoading(true);
-      const res = await deleteUpload(uid, url);
-      setUploads(res);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setProgress({ progress: '0%', message: '' });
-      setLoading(false);
-    }
-  };
-
   return (
     <Layout>
-      <main className="flex flex-col items-center justify-center bg-primary text-primary font-mono space-y-4">
+      <main className="flex flex-col items-center justify-center font-mono space-y-4 p-4">
         <h1 className="text-3xl">Uploads</h1>
-        <div className="max-w-xl w-full border border-primary rounded">
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col p-4 space-y-4 "
-          >
+        <div className="max-w-xl w-full">
+          <ConfirmationModal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={confirmReplace}
+          />
+          <form onSubmit={handleSubmit(onSubmit)} className="form">
             <div className="flex flex-col space-y-2">
               <label className="flex flex-col" htmlFor="uploadInput">
                 Mix name:
@@ -116,7 +163,19 @@ export default function Uploads() {
                   control={control}
                   defaultValue=""
                   placeholder="(Required)"
-                  rules={{ required: 'Mix name is required' }}
+                  rules={{
+                    required: 'Mix name is required',
+                    maxLength: {
+                      value: 40,
+                      message: 'Mix name cannot exceed 40 characters',
+                    },
+                    validate: (value) => {
+                      if (!value.trim()) {
+                        return 'Mix name cannot be empty or contain only spaces';
+                      }
+                      return true;
+                    },
+                  }}
                   render={({ field, fieldState }) => (
                     <>
                       <input
@@ -125,7 +184,7 @@ export default function Uploads() {
                         {...field}
                       />
                       {fieldState?.error && (
-                        <p className="text-accent2">
+                        <p className="text-accent2 dark:text-accent2Dark">
                           {fieldState.error.message}
                         </p>
                       )}
@@ -135,85 +194,85 @@ export default function Uploads() {
               </label>
             </div>
             <div className="flex flex-col space-y-2">
-              <label className="flex flex-col" htmlFor="uploadInput">
+              <label className="flex" htmlFor="uploadInput">
                 Select Audio File:
-                <Controller
-                  name="file"
-                  control={control}
-                  defaultValue=""
-                  rules={{ required: 'Audio file is required' }}
-                  render={({ field, fieldState }) => (
-                    <>
-                      <input
-                        type="file"
-                        className="file-upload-form-input"
-                        onChange={(e) => field.onChange(e.target.files[0])}
-                        ref={(e) => {
-                          field.ref(e);
-                          fileCleanUpRef.current = e;
-                        }}
-                      />
-                      {fieldState?.error && (
-                        <p className="text-accent2">
-                          {fieldState.error.message}
-                        </p>
-                      )}
-                    </>
-                  )}
-                />
+                <Tooltip message="We have only allowed users to upload 1 mix each at this time. Choose your best one!" />
               </label>
+              <Controller
+                name="file"
+                control={control}
+                defaultValue=""
+                rules={{ required: 'Audio file is required' }}
+                render={({ field, fieldState }) => (
+                  <>
+                    <input
+                      type="file"
+                      accept="audio/*"
+                      className="form-input-file-upload"
+                      onChange={(e) => {
+                        field.onChange(e.target.files); // Update the React Hook Form state with the file
+                        if (
+                          uploads.length !== 0 &&
+                          watchMixName.trim() &&
+                          e.target.files.length
+                        ) {
+                          setPendingUpload({
+                            mixName: watchMixName,
+                            file: e.target.files[0],
+                          });
+                          setIsModalOpen(true);
+                        }
+                      }}
+                      ref={(e) => {
+                        field.ref(e);
+                        fileCleanUpRef.current = e;
+                      }}
+                    />
+                    {fieldState?.error && (
+                      <p className="text-accent2 dark:text-accent2Dark">
+                        {fieldState.error.message}
+                      </p>
+                    )}
+                  </>
+                )}
+              />
             </div>
             <button
               type="submit"
-              className="primary-button p-2"
+              className="button-primary p-2"
               disabled={loading}
             >
               {loading ? 'Please wait...' : 'Submit'}
             </button>
-            <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
-              <div
-                className="h-full bg-accent transition-all duration-150"
-                style={{ width: progress.progress }}
-              ></div>
-            </div>
-            <p className="text-accent2 text-sm">{progress.message}</p>
+
+            <ProgressBar progress={progress} />
           </form>
         </div>
-        <div className="max-w-xl w-full rounded">
-          {uploads.length === 0 ? (
-            <div>
-              <p className="text-primary text-lg">Upload a mix</p>
+        <div className="max-w-xl w-full">
+          {uploads.length === 0 && !loading ? (
+            <div className="flex">
+              <p className="text-lg mx-auto text-primary dark:text-primaryDark">
+                Upload a demo mix
+              </p>
             </div>
           ) : (
             uploads.map((mix, i) => {
               return (
-                <div key={`${user._id}-mix-${i}`} className="flex">
-                  <div className="text-primary flex border-t border-s border-b rounded-tl rounded-bl w-full p-1">
-                    <h2 className="text-md my-auto ms-2">{mix.name}</h2>
-                  </div>
-                  <Link
-                    href={mix.url}
-                    className="text-accent ms-auto border-t border-b border-s border-accent py-1 px-3 bg-accent bg-opacity-20 hover:bg-opacity-30 flex"
-                    target="_blank"
-                  >
-                    <div className="text-3xl flex my-auto">
-                      <FaPlayCircle />
-                    </div>
-                  </Link>
-                  <button
-                    className="border border-accent px-1 bg-accent bg-opacity-20 hover:bg-opacity-30 text-accent rounded-tr rounded-br text-xs ms-auto"
-                    onClick={() => handleDelete(user.uid, mix.url)}
-                    disabled={loading}
-                  >
-                    Delete
-                  </button>
-                </div>
+                <AudioFileListItem
+                  key={`${mix.mixName}-${i}`}
+                  user={user}
+                  mix={mix}
+                  handleDelete={handleDelete}
+                  loading={loading}
+                />
               );
             })
           )}
         </div>
         {loading || userLoading ? (
-          <h1 className="text-2xl text-accent2">Please wait...</h1>
+          <h1 className="text-2xl text-primary dark:text-accent2Dark">
+            Please wait...
+          </h1>
         ) : null}
       </main>
     </Layout>

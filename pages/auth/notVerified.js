@@ -78,7 +78,7 @@ const NotVerified = () => {
         <div className="flex flex-col w-1/2 mx-auto space-y-4">
           <button
             type="submit"
-            className="primary-button h-[35px] text-lg"
+            className="button-primary h-[35px] text-lg"
             value="Send Email"
             onClick={clickHandler}
           >

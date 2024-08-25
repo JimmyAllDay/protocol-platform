@@ -7,11 +7,11 @@ import { AuthContext } from 'context/AuthContext';
 
 import { updateUserProfile } from 'lib/firebase/client/userProfile/updateUserProfile';
 
-import Heading from './heading/Heading';
-import InputField from './inputField/InputField';
-import Tooltip from './tooltip/Tooltip';
-import SelectList from './selectList/SelectList';
-import CheckInput from './checkInput/CheckInput';
+import Heading from '../formComponents/heading/Heading';
+import InputField from '../formComponents/inputField/InputField';
+import Tooltip from '../formComponents/tooltip/Tooltip';
+import SelectList from '../formComponents/selectList/SelectList';
+import CheckInput from '../formComponents/checkInput/CheckInput';
 
 import { toast } from 'react-toastify';
 
@@ -82,7 +82,7 @@ export default function ProfileForm({ user }) {
       <FormProvider>
         <form
           onSubmit={handleSubmit(submitHandler)}
-          className="flex flex-col space-y-4 p-4 max-w-xl border border-primary rounded"
+          className="flex flex-col space-y-4 p-4 max-w-xl border border-primary rounded form"
         >
           <Heading label="Personal" />
 
@@ -305,15 +305,16 @@ export default function ProfileForm({ user }) {
             register={register}
             errors={errors}
           />
-
-          <button
-            type="submit"
-            className="primary-button p-1"
-            onClick={handleSubmit}
-            disabled={buttonLoading}
-          >
-            {buttonLoading ? 'Submitting...' : 'Submit'}
-          </button>
+          <div className="w-full flex flex-col pt-6 pb-4">
+            <button
+              type="submit"
+              className="button-primary p-1"
+              onClick={handleSubmit}
+              disabled={buttonLoading}
+            >
+              {buttonLoading ? 'Submitting...' : 'Submit'}
+            </button>
+          </div>
         </form>
       </FormProvider>
     )

@@ -9,18 +9,29 @@ import { toast } from 'react-toastify';
 import { signOut } from 'firebase/auth';
 
 const useFirebaseAuth = () => {
+  // State to store the user profile
   const [userProfile, setUserProfile] = useState(null);
-  const [profileComplete, setProfileComplete] = useState(false); // State to track if the profile is complete
+  // State to track if the profile is complete
+  const [profileComplete, setProfileComplete] = useState(false);
+  // Get the handleLoading function from the LoadingContext
   const { handleLoading } = useContext(LoadingContext);
 
-  const user = auth.currentUser;
-
+  // Function to fetch the user profile from Firestore
   const fetchUserProfile = useCallback(async (uid) => {
+    console.log('FETCH USER PROFILE CALLED with UID:', uid);
     try {
+      if (!uid) {
+        throw new Error('No UID provided for fetching user profile');
+      }
+
+      // Fetch user profile using the provided UID
       const profile = await getUserProfile(uid);
+      console.log('FETCH USER PROFILE RESPONSE:', profile);
+
+      // Set the fetched profile to the state
       setUserProfile(profile);
 
-      //This is here for safety but the userProfileUpdates.complete property should always be complete if the parent function is called
+      // Safety check to see if the profile is complete
       const userDocRef = doc(db, 'userManagement', uid);
       const userDoc = await getDoc(userDocRef);
       if (userDoc.exists() && userDoc.data().userProfileUpdates?.complete) {
@@ -29,43 +40,52 @@ const useFirebaseAuth = () => {
         setProfileComplete(false);
       }
 
-      const token = await user.getIdToken();
-      setCookie(null, 'token', token, {
-        maxAge: 30 * 24 * 60 * 60,
-        path: '/',
-        secure: process.env.NODE_ENV === 'production',
-      });
+      // Get the current user from Firebase Auth
+      const user = auth.currentUser;
+      if (user) {
+        // Get the ID token of the current user
+        const token = await user.getIdToken();
+        // Set the token as a cookie
+        setCookie(null, 'token', token, {
+          maxAge: 30 * 24 * 60 * 60, // 30 days
+          path: '/',
+          secure: process.env.NODE_ENV === 'production', // Secure cookie in production
+        });
+      }
     } catch (error) {
-      console.error('An error occurred during profile fetch: ', error);
+      console.error('An error occurred during profile fetch:', error);
       toast.error(error.message);
     }
   }, []);
 
   useEffect(() => {
+    if (userProfile) {
+      console.log('SET USER PROFILE UPDATE: ', userProfile);
+      // Perform any additional actions needed after userProfile is set
+    }
+  }, [userProfile]);
+
+  // Effect to handle the user authentication state changes
+  useEffect(() => {
     handleLoading(true);
+
     const unsubscribe = onIdTokenChanged(auth, async (user) => {
       try {
-        if (user && user.emailVerified) {
-          const profile = await getUserProfile(user.uid);
-          setUserProfile(profile);
+        if (user) {
+          const providerId = user.providerData[0]?.providerId;
+          const isEmailVerified = user.emailVerified;
 
-          // Check the userProfileUpdates.complete property
-          const userDocRef = doc(db, 'userManagement', user.uid);
-          const userDoc = await getDoc(userDocRef);
-          if (userDoc.exists() && userDoc.data().userProfileUpdates?.complete) {
-            setProfileComplete(true);
+          // Check if the user signed in with Facebook
+          const isFacebookUser = providerId === 'facebook.com';
+
+          if (isFacebookUser || isEmailVerified) {
+            await fetchUserProfile(user.uid);
           } else {
+            setUserProfile(null);
             setProfileComplete(false);
+            destroyCookie(null, 'token', { path: '/' });
           }
-
-          const token = await user.getIdToken();
-          setCookie(null, 'token', token, {
-            maxAge: 30 * 24 * 60 * 60,
-            path: '/',
-            secure: process.env.NODE_ENV === 'production',
-          });
         } else {
-          // User is signed out.
           setUserProfile(null);
           setProfileComplete(false);
           destroyCookie(null, 'token', { path: '/' });
@@ -78,21 +98,24 @@ const useFirebaseAuth = () => {
       }
     });
 
-    // Cleanup subscription on unmount
     return () => unsubscribe();
-  }, []);
+  }, [fetchUserProfile, handleLoading]);
 
+  // Effect to check token expiration periodically
   useEffect(() => {
     const checkTokenExpiration = async () => {
       const currentUser = auth.currentUser;
 
       if (currentUser) {
+        // Force refresh the token
         const token = await currentUser.getIdToken(true);
         const tokenResult = await currentUser.getIdTokenResult();
 
+        // Check if the token is expired
         const isExpired =
           tokenResult.expirationTime <= new Date().toISOString();
         if (isExpired) {
+          // Sign out if the token is expired
           await signOut(auth);
           setUserProfile(null);
           setProfileComplete(false);
@@ -102,10 +125,13 @@ const useFirebaseAuth = () => {
       }
     };
 
+    // Initial token expiration check
     checkTokenExpiration();
 
+    // Set interval to check token expiration every 5 minutes
     const interval = setInterval(checkTokenExpiration, 5 * 60 * 1000); // Check every 5 minutes
 
+    // Cleanup interval on component unmount
     return () => clearInterval(interval);
   }, []);
 

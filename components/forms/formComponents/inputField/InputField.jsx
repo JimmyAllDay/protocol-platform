@@ -24,7 +24,7 @@ const InputField = ({
       </label>
       <input
         type="text"
-        className="bg-primary border border-white p-1 rounded"
+        className="form-input p-1 rounded"
         id={name}
         defaultValue={defaultValue}
         autoFocus={autoFocus}

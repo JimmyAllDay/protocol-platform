@@ -1,0 +1,6 @@
+{
+  "watch": ["server.js", "pages", "components"],
+  "ignore": ["node_modules", ".next", "static"],
+  "ext": "js,jsx",
+  "exec": "node server.js"
+}

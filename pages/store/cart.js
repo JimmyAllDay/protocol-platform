@@ -41,7 +41,7 @@ function CartScreen() {
             <br />
             <br />
             <br />
-            <Link className="primary-button" href="/shop">
+            <Link className="button-primary" href="/shop">
               Go shopping
             </Link>
           </div>
@@ -112,7 +112,7 @@ function CartScreen() {
                 <li>
                   <button
                     onClick={() => router.push('/shipping')}
-                    className="primary-button w-full"
+                    className="button-primary w-full"
                   >
                     Check Out
                   </button>

@@ -291,7 +291,7 @@ export default function EventsDashboard({ user, data }) {
                   <p className="m-auto">Image</p>
                   <input
                     type="file"
-                    className="w-full ms-4 file-upload-form-input"
+                    className="w-full ms-4 form-input-file-upload"
                     name="imageFile"
                     onChange={handleImageChange}
                     ref={fileCleanUpRef}
@@ -299,7 +299,7 @@ export default function EventsDashboard({ user, data }) {
                   ></input>
                 </label>
                 <button
-                  className="primary-button p-2"
+                  className="button-primary p-2"
                   disabled={requestLoading}
                 >
                   Create Event

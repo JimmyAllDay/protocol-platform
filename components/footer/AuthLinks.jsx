@@ -1,19 +1,27 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
-
-import { useContext } from 'react';
 import { AuthContext } from 'context/AuthContext';
 
-export default function LoginButtons() {
-  const { user, error, loading, signOut } = useContext(AuthContext);
+export default function AuthLinks() {
+  const { user, signOut } = useContext(AuthContext);
 
   return (
-    <div className="hover:text-accent">
+    <li className="w-[70px]">
       {user ? (
-        <Link href="/api/auth/logout">Logout</Link>
+        <button
+          onClick={signOut}
+          className="hover:text-white dark:hover:text-accentDark"
+        >
+          Logout
+        </button>
       ) : (
-        <Link href="/api/auth/login">Login</Link>
+        <Link
+          href="/auth/login"
+          className="hover:text-white dark:hover:text-accentDark"
+        >
+          <button className="">Login</button>
+        </Link>
       )}
-    </div>
+    </li>
   );
 }

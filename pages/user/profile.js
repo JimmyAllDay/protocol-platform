@@ -2,7 +2,7 @@ import Layout from '../../components/Layout';
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
 
-import ProfileForm from 'components/profile/profileForm/ProfileForm';
+import ProfileForm from 'components/forms/profileForm/ProfileForm';
 
 import { AuthContext } from 'context/AuthContext.jsx';
 
@@ -36,7 +36,7 @@ export default function Profile() {
 
   return (
     <Layout>
-      <main className="flex flex-col items-center justify-center bg-primary text-primary font-mono space-y-4">
+      <main className="flex flex-col items-center justify-center font-mono space-y-4 p-2">
         <h1 className="text-3xl">Profile</h1>
         <ProfileForm user={user} />
       </main>

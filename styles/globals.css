@@ -2,26 +2,93 @@
 @tailwind components;
 @tailwind utilities;
 
-.primary-button {
-  @apply border border-accent px-3 rounded-md text-accent bg-accent bg-opacity-20 hover:bg-opacity-30;
-}
-.secondary-button {
-  @apply bg-accentGrey bg-opacity-50 rounded-md hover:text-accent hover:bg-opacity-90;
+/*BANNER COMPONENTS*/
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
 }
 
-.inactive-button {
+.marquee {
+  display: flex;
+  overflow: hidden;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.marquee-track {
+  display: flex;
+  animation: marquee 20s linear infinite;
+}
+
+.marquee-content {
+  display: inline-block;
+  padding-right: 100%; /* Add space to ensure smooth scrolling */
+}
+
+/* AUDIO FILE COMPONENT */
+
+.audio-file-list-item-container {
+  @apply flex border-t border-s border-b rounded-tl rounded-bl border-border dark:border-borderDark w-full p-1;
+}
+
+.audio-file-list-item-description {
+  @apply my-auto ms-2;
+}
+
+.audio-filelist-item-button-delete {
+  @apply border-t border-b border-e border-border bg-backgroundDark bg-opacity-10 hover:bg-opacity-20 text-primary dark:border-accentDark px-1 dark:bg-accentDark dark:bg-opacity-20 dark:hover:bg-opacity-30 dark:text-accentDark rounded-tr rounded-br text-xs ms-auto;
+}
+
+.audio-file-component-button-play {
+  @apply border-t border-b border-s py-1 px-3 flex border border-border bg-backgroundDark bg-opacity-10 hover:bg-opacity-20 text-primary dark:border-accentDark dark:bg-accentDark dark:bg-opacity-20 dark:hover:bg-opacity-30 dark:text-accentDark text-xs;
+}
+
+/*BUTTONS*/
+
+.button-inactive {
   @apply border border-accentGrey px-3 rounded-md text-accentGrey bg-accentGrey bg-opacity-20;
 }
 
-.form-input {
-  @apply text-primary border border-accent p-1 bg-primary rounded;
-}
-.form-input-primary {
-  @apply text-primary border border-white p-1 bg-primary rounded;
+.button-primary {
+  @apply border border-backgroundDark bg-backgroundDark text-accent hover:text-white dark:text-accentDark dark:border-accentDark dark:bg-accentDark  dark:bg-opacity-20 dark:hover:bg-opacity-30 px-3 rounded-md;
 }
 
-.file-upload-form-input {
-  @apply border border-accent bg-accent bg-opacity-10 hover:bg-opacity-20 text-accent rounded p-2 hover:cursor-pointer;
+.button-secondary {
+  @apply bg-backgroundDark text-background rounded-md dark:bg-accentGrey dark:bg-opacity-50 dark:text-accentDark dark:hover:text-accent hover:bg-opacity-90;
+}
+
+/*FORM COMPONENTS*/
+
+.form {
+  @apply flex flex-col space-y-4 p-4 max-w-xl border rounded border-border dark:border-borderDark;
+}
+
+.form-input {
+  @apply placeholder-accent3 dark:placeholder-accentGrey text-primary border border-border dark:border-borderDark dark:text-primaryDark bg-background dark:bg-backgroundDark p-1 rounded;
+}
+
+.form-input-contact {
+  @apply bg-primary text-primary dark:bg-primaryDark dark:text-primaryDark p-1 border border-black dark:border-white placeholder-accent3 dark:placeholder-accentGrey ps-2;
+}
+
+.form-input-file-upload {
+  @apply border border-border bg-backgroundDark dark:border-accentDark dark:bg-accentDark bg-opacity-10 hover:bg-opacity-20 dark:bg-opacity-10 dark:hover:bg-opacity-20 dark:text-accentDark rounded p-2 hover:cursor-pointer;
+}
+
+.form-progress-bar-container {
+  @apply h-[6px] w-full rounded overflow-hidden;
+}
+
+.form-progress-bar {
+  @apply h-full bg-primaryDark dark:bg-accentDark transition-all duration-150;
+}
+
+.form-progress-bar-message {
+  @apply text-primary dark:text-accent2Dark text-sm;
 }
 
 ::file-selector-button {
@@ -34,13 +101,38 @@
   @apply sr-only;
 }
 
+.select__control {
+  @apply dark:border-borderDark border-border placeholder:text-accentDark;
+}
+.select__indicators * {
+  @apply dark:text-primaryDark text-primary;
+}
+
+.select__multi-value {
+  @apply text-primary bg-primary border border-black;
+}
+
+/*LINKS*/
+
+.link {
+  @apply text-primary dark:text-primaryDark hover:text-primaryDark dark:hover:text-accentDark hover:cursor-pointer;
+}
+
+.navLink {
+  @apply text-primaryDark hover:text-accent dark:hover:text-accentDark hover:cursor-pointer;
+}
+
+.social-link {
+  @apply p-3 text-2xl rounded-md hover:text-white bg-primaryDark text-accent dark:bg-accentGrey dark:hover:text-accentDark dark:bg-opacity-50 dark:hover:bg-opacity-90;
+}
+
 .max-w-content {
   max-width: fit-content;
 }
+
 .card {
   @apply mb-5 block w-[250px] font-mono mx-auto rounded hover:scale-105 duration-300 ease-in-out bg-[linear-gradient(45deg,transparent_25%,rgba(80,80,80,.3)_50%,transparent_75%,transparent_100%)] relative bg-[length:250%_250%,100%_100%] bg-[position:-100%_0,0_0] bg-no-repeat shadow-2xl transition-[background-position_0s_ease] hover:bg-[position:200%_0,0_0] hover:duration-[750ms];
 }
 
-.link {
-  @apply text-accent2 hover:text-accent hover:cursor-pointer;
+.progress-bar {
 }

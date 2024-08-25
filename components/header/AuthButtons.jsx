@@ -9,14 +9,14 @@ export default function LoginButtons() {
   const { user, signOut } = useContext(AuthContext);
 
   return (
-    <div className="flex flex-col justify-center p-2">
+    <div className="flex flex-col justify-center">
       {user ? (
-        <button onClick={signOut} className="primary-button w-[85px] p-1">
+        <button onClick={signOut} className="button-primary w-[85px] p-1">
           Logout
         </button>
       ) : (
         <Link href="/auth/login">
-          <button className="primary-button w-[85px] p-1">Login</button>
+          <button className="button-primary w-[85px] p-1">Login</button>
         </Link>
       )}
     </div>

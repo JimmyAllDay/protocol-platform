@@ -4,6 +4,8 @@ import CreatableSelect from 'react-select/creatable';
 import { selectListStyles } from './SelectListStyles';
 import Tooltip from '../tooltip/Tooltip';
 
+import { useTheme } from 'context/ThemeContext';
+
 export default function SelectList({
   label,
   control,
@@ -11,7 +13,9 @@ export default function SelectList({
   options: initialOptions,
   tooltip,
 }) {
-  const styles = selectListStyles;
+  const { theme } = useTheme();
+  const styles = selectListStyles(theme);
+
   const [options, setOptions] = useState(initialOptions);
 
   const handleCreateOption = (inputValue) => {
