@@ -19,7 +19,7 @@ export default function NavMenu({ closeNav, navLinks, showNav }) {
 
   const mappedLinks = navLinks.map((link, i) => {
     return (
-      <div>
+      <div key={`NavMenu-mapped-link-${i}`}>
         <Link
           href={link.href}
           className="navLink"

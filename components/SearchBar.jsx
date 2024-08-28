@@ -19,7 +19,7 @@ export default function SearchBar({ searchHandler }) {
 
   useEffect(() => {
     focusSearchBar();
-  }, []);
+  });
 
   return (
     <div className="w-3/4 flex">

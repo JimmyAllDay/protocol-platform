@@ -1,5 +1,8 @@
 import React from 'react';
 
+import Tooltip from '../formComponents/tooltip/Tooltip';
+import { Controller } from 'react-hook-form';
+
 export default function InputFileUpload() {
   return (
     <div className="flex flex-col space-y-2">

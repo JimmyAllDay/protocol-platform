@@ -62,7 +62,7 @@ export default function Contact() {
             <div className="flex flex-col">
               <h5 className="font-bold me-auto">Phone Number</h5>
               <p className="me-auto text-left">
-                Just use email for now please - we'll get back to you asap.
+                Just use email for now please - we&apos;ll get back to you asap.
               </p>
             </div>
             <div className="flex flex-col">
