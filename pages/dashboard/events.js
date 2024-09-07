@@ -291,9 +291,10 @@ export default function EventsDashboard({ user, data }) {
               </form>
               <div className="grid-cols-1 text-primary space-y-4">
                 {events && events.length !== 0 ? (
-                  events?.map((event) => {
+                  events?.map((event, i) => {
                     return (
                       <EventListItem
+                        key={`event-list-${i}`}
                         event={event}
                         loading={requestLoading}
                         handleDelete={handleDelete}
