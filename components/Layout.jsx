@@ -57,8 +57,14 @@ const Layout = ({ title, children }) => {
     <>
       <Head>
         <title>{title ? title + ' - Pro.ground' : 'Pro.ground'}</title>
-        <meta name="description" content="" />
+        <meta name="description" content="Protocol Underground" />
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="keywords"
+          content="music, EDM, dance, djs, party, electronic, dance, music"
+        />
+        <meta name="robots" content="index,follow" />
+        <link rel="canonical" href="https://www.protocol-underground.com" />
       </Head>
       <GoogleAnalytics />
       <HotJarAnalytics />
