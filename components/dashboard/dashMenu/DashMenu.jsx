@@ -15,23 +15,24 @@ export default function DashMenu() {
   const dashButtons = [
     { name: 'Overview', icon: <MdOutlineViewKanban />, href: '/dashboard' },
     { name: 'Events', icon: <MdOutlineEventNote />, href: '/dashboard/events' },
+
+    { name: 'Patrons', icon: <RiUserSharedLine />, href: '/dashboard/patrons' },
+    { name: 'Users', icon: <FaUsers />, href: '/dashboard/users' },
     {
       name: 'Products',
       icon: <AiOutlineShoppingCart />,
       href: '/dashboard/products',
     },
-    { name: 'Patrons', icon: <RiUserSharedLine />, href: '/dashboard/patrons' },
-    { name: 'Users', icon: <FaUsers />, href: '/dashboard/users' },
   ];
 
   return (
-    <div className="border-e border-t border-b border-accent bg-accent bg-opacity-10 h-screen p-4 flex flex-col space-y-4">
+    <div className="border-e border-t border-b border-border dark:border-accentDark bg-border dark:bg-accentDark bg-opacity-10 dark:bg-opacity-10 h-screen p-4 flex flex-col space-y-4">
       {dashButtons.map((button, i) => {
         return (
           <Link
             key={`dashboard-link-${i}`}
             href={button.href}
-            className={`text-accent border-2 border-accent bg-accent bg-opacity-10 rounded flex flex-col items-center justify-center p-2 hover:cursor-pointer hover:bg-opacity-20 ${
+            className={`text-primary dark:text-accentDark border-2 border-border dark:border-accentDark dark:bg-accentDark bg-primaryDark bg-opacity-10 dark:bg-opacity-10 rounded flex flex-col items-center justify-center p-2 hover:cursor-pointer hover:bg-opacity-20 dark:hover:bg-opacity-20 ${
               router.pathname === button.href && 'bg-opacity-30'
             }`}
           >

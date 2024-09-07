@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from 'components/Layout';
 
-import DashMenu from 'components/dashboard/DashboardMenu';
+import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 
 import Image from 'next/image';
 
@@ -193,142 +193,139 @@ export default function ProductsDashboard(user, data) {
   };
 
   return (
-    console.log('products data: ', data),
-    (
-      <Layout>
-        <div className="flex">
-          <div className="w-[125px]">
-            <DashMenu />
-          </div>
-          <div className="w-full text-primary p-4">
-            <div className="text-primary">
-              <div className="flex flex-col">
-                <div>
-                  <div className="flex px-10 p-4">
-                    <h1 className="text-primary my-auto text-xl w-1/4">
-                      Add Product
+    <Layout>
+      <div className="flex">
+        <div className="w-[125px]">
+          <DashMenu />
+        </div>
+        <div className="w-full text-primary p-4">
+          <div className="text-primary">
+            <div className="flex flex-col">
+              <div>
+                <div className="flex px-10 p-4">
+                  <h1 className="text-primary my-auto text-xl w-1/4">
+                    Add Product
+                  </h1>
+                  {loading && (
+                    <h1 className="my-auto text-xl w-1/2 flex items-center justify-center text-accent2">
+                      Please wait...
                     </h1>
-                    {loading && (
-                      <h1 className="my-auto text-xl w-1/2 flex items-center justify-center text-accent2">
-                        Please wait...
-                      </h1>
-                    )}
-                  </div>
-
-                  <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
-                    <div
-                      className="h-full bg-accent transition-all duration-150"
-                      style={{ width: progress }}
-                    ></div>
-                  </div>
+                  )}
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <form
-                    className="flex flex-col bg-primary space-y-2"
-                    onSubmit={handleSubmit}
+
+                <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
+                  <div
+                    className="h-full bg-accent transition-all duration-150"
+                    style={{ width: progress }}
+                  ></div>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <form
+                  className="flex flex-col bg-primary space-y-2"
+                  onSubmit={handleSubmit}
+                >
+                  <input
+                    type="text"
+                    placeholder="Product/event name"
+                    className="form-input"
+                    name="name"
+                    onChange={handleFormChange}
+                    value={formInputs.name}
+                    required
+                  ></input>
+                  <select
+                    className="form-input"
+                    name="productType"
+                    onChange={handleFormChange}
+                    value={formInputs.productType}
+                    required
                   >
+                    <option value="" disabled hidden>
+                      Select Type
+                    </option>
+                    <option>Ticket</option>
+                    <option>Merch</option>
+                  </select>
+
+                  <input
+                    type="text"
+                    placeholder="Price"
+                    className="form-input"
+                    name="price"
+                    onChange={handleFormChange}
+                    value={formInputs.price}
+                    required
+                  ></input>
+
+                  <textarea
+                    type="text"
+                    rows="10"
+                    cols="30"
+                    placeholder="Description"
+                    className="form-input"
+                    name="description"
+                    onChange={handleFormChange}
+                    value={formInputs.venueName}
+                    required
+                  ></textarea>
+                  <label htmlFor="date" className=" text-primary flex">
+                    <p className="m-auto w-1/6">Date:</p>
                     <input
-                      type="text"
-                      placeholder="Product/event name"
-                      className="form-input"
-                      name="name"
+                      type="date"
+                      id="datePicker"
+                      className="form-input w-full ms-4"
+                      name="date"
                       onChange={handleFormChange}
-                      value={formInputs.name}
+                      value={formInputs.date}
                       required
                     ></input>
-                    <select
-                      className="form-input"
-                      name="productType"
-                      onChange={handleFormChange}
-                      value={formInputs.productType}
-                      required
-                    >
-                      <option value="" disabled hidden>
-                        Select Type
-                      </option>
-                      <option>Ticket</option>
-                      <option>Merch</option>
-                    </select>
-
+                  </label>
+                  <label
+                    htmlFor="imageFile"
+                    className="flex w-full text-primary"
+                  >
+                    <p className="m-auto w-1/6">Image:</p>
                     <input
-                      type="text"
-                      placeholder="Price"
-                      className="form-input"
-                      name="price"
-                      onChange={handleFormChange}
-                      value={formInputs.price}
+                      type="file"
+                      className="w-full ms-4 form-input-file-upload"
+                      name="imageFile"
+                      onChange={handleImageChange}
+                      ref={fileCleanUpRef}
                       required
                     ></input>
-
-                    <textarea
-                      type="text"
-                      rows="10"
-                      cols="30"
-                      placeholder="Description"
-                      className="form-input"
-                      name="description"
-                      onChange={handleFormChange}
-                      value={formInputs.venueName}
-                      required
-                    ></textarea>
-                    <label htmlFor="date" className=" text-primary flex">
-                      <p className="m-auto w-1/6">Date:</p>
-                      <input
-                        type="date"
-                        id="datePicker"
-                        className="form-input w-full ms-4"
-                        name="date"
-                        onChange={handleFormChange}
-                        value={formInputs.date}
-                        required
-                      ></input>
-                    </label>
-                    <label
-                      htmlFor="imageFile"
-                      className="flex w-full text-primary"
-                    >
-                      <p className="m-auto w-1/6">Image:</p>
-                      <input
-                        type="file"
-                        className="w-full ms-4 form-input-file-upload"
-                        name="imageFile"
-                        onChange={handleImageChange}
-                        ref={fileCleanUpRef}
-                        required
-                      ></input>
-                    </label>
-                    <button className="button-primary p-2" disabled={loading}>
-                      Submit
-                    </button>
-                  </form>
-                  <div className="rounded text-primary flex flex-col space-y-4">
-                    {products?.length !== 0 ? (
-                      products.map((product) => {
-                        return (
-                          <DashboardProduct
-                            key={product.id}
-                            id={product.id}
-                            imageUrl={product.imageUrl}
-                            name={product.name}
-                            productType={product.productType}
-                            date={product.date}
-                            handleDelete={handleDelete}
-                          />
-                        );
-                      })
-                    ) : (
-                      <p className="text-accent text-center">
-                        Add a product to see details
-                      </p>
-                    )}
-                  </div>
+                  </label>
+                  <button className="button-primary p-2" disabled={loading}>
+                    Submit
+                  </button>
+                </form>
+                <div className="rounded text-primary flex flex-col space-y-4">
+                  {products?.length !== 0 ? (
+                    products.map((product) => {
+                      return (
+                        <DashboardProduct
+                          key={product.id}
+                          id={product.id}
+                          imageUrl={product.imageUrl}
+                          name={product.name}
+                          productType={product.productType}
+                          date={product.date}
+                          handleDelete={handleDelete}
+                        />
+                      );
+                    })
+                  ) : (
+                    <p className="text-accent text-center">
+                      Add a product to see details
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </Layout>
-    )
+      </div>
+    </Layout>
   );
 }
 

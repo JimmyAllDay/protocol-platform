@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Layout from 'components/Layout';
 import axios, { Axios } from 'axios';
 
-import DashMenu from 'components/dashboard/DashboardMenu';
+import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 
 import Image from 'next/image';
 

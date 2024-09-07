@@ -3,8 +3,10 @@ import React, { useState, useContext, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Layout from 'components/Layout';
+import ProgressBar from 'components/forms/formComponents/progressBar/ProgressBar';
+import EventListItem from 'components/dashboard/eventListItem/EventListItem';
 
-import DashMenu from 'components/dashboard/DashboardMenu';
+import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 
 import admin from 'lib/firebase/server/config';
 
@@ -22,7 +24,7 @@ import { toast } from 'react-toastify';
 export default function EventsDashboard({ user, data }) {
   //set initial events data
   const [events, setEvents] = useState(data);
-  const [progress, setProgress] = useState('0%');
+  const [progress, setProgress] = useState({ progress: '0%' });
   const [requestLoading, setRequestLoading] = useState(false);
   const [formInputs, setFormInputs] = useState({
     title: '',
@@ -75,16 +77,6 @@ export default function EventsDashboard({ user, data }) {
       }
     }
   }
-
-  // const fetchEvents = async () => {
-  //   const eventsCollection = collection(firestore, 'events');
-  //   const eventsSnapshot = await getDocs(eventsCollection);
-  //   const eventsList = eventsSnapshot.docs.map((doc) => ({
-  //     id: doc.id,
-  //     ...doc.data(),
-  //   }));
-  //   return eventsList;
-  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -185,18 +177,10 @@ export default function EventsDashboard({ user, data }) {
                   </h1>
                 )}
               </div>
-              <div className="h-[6px] w-full border border-black rounded overflow-hidden mb-2">
-                <div
-                  className="h-full bg-accent transition-all duration-150"
-                  style={{ width: progress }}
-                ></div>
-              </div>
+              <ProgressBar progress={progress} />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <form
-                className="flex flex-col bg-primary space-y-2"
-                onSubmit={handleSubmit}
-              >
+              <form className="flex flex-col space-y-2" onSubmit={handleSubmit}>
                 <input
                   type="text"
                   placeholder="Title"
@@ -305,26 +289,15 @@ export default function EventsDashboard({ user, data }) {
                   Create Event
                 </button>
               </form>
-              <div className="grid-cols-1 text-primary space-y-2">
+              <div className="grid-cols-1 text-primary space-y-4">
                 {events && events.length !== 0 ? (
                   events?.map((event) => {
                     return (
-                      <div key={event._id} className="text-primary flex">
-                        <Link
-                          href={`/events/${event.id}`}
-                          className="w-full flex hover:text-accent hover:border-t-accent hover:border-b-accent border-t border-b pe-2"
-                        >
-                          <h2 className="text-xl">{event.title}</h2>
-                          <h2 className="ms-auto text-xl">{event.date}</h2>
-                        </Link>
-                        <button
-                          className="border border-accent px-1 bg-accent bg-opacity-20 hover:bg-opacity-30 text-accent rounded-tr rounded-br text-xs"
-                          onClick={() => handleDelete(event.id, event.imageUrl)}
-                          disabled={requestLoading}
-                        >
-                          Delete
-                        </button>
-                      </div>
+                      <EventListItem
+                        event={event}
+                        loading={requestLoading}
+                        handleDelete={handleDelete}
+                      />
                     );
                   })
                 ) : (

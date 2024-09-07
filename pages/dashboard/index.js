@@ -5,7 +5,7 @@ import Layout from 'components/Layout';
 
 import axios from 'axios';
 
-import DashMenu from 'components/dashboard/DashboardMenu';
+import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 
 import { AuthContext } from 'context/AuthContext';
 import { LoadingContext } from 'context/LoadingContext';
@@ -45,7 +45,7 @@ export default function Dashboard({ user }) {
         <div className="w-[125px]">
           <DashMenu />
         </div>
-        <div className="w-full text-primary p-4">
+        <div className="w-full p-4">
           This is the main dashboard page
           <br />
           <br />

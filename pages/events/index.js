@@ -4,6 +4,13 @@ import { collection, getDocs } from 'firebase/firestore';
 import Layout from 'components/Layout';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
+import replaceHyphens from 'utils/utils';
+
+//* sm (Small screens): 640px
+//* md (Medium screens): 768px
+//* lg (Large screens): 1024px
+//* xl (Extra large screens): 1280px
+//* 2xl (Double extra large screens): 1536px
 
 export default function Events() {
   const [events, setEvents] = useState(null);
@@ -22,42 +29,38 @@ export default function Events() {
   }, []);
 
   return (
-    console.log(events),
-    (
-      <Layout>
-        <main className="text-primary flex flex-col">
-          <h1 className="text-3xl my-8 ps-4">Upcoming Events</h1>
-          <div className="pt-2 pb-6 flex flex-col items-center justify-center h-screen">
-            {events !== false || events.length !== 0 ? (
-              <div className="text-accent ps-4 text-3xl mx-auto">
-                Upcoming events will be announced soon
-              </div>
-            ) : (
-              events?.map((post) => {
+    <Layout>
+      <main className="flex flex-col">
+        <h1 className="text-lg my-8 ps-2 sm:ps-4 md:text-xl lg:text-3xl">
+          Upcoming Events
+        </h1>
+        <div className="pt-2 pb-6 flex flex-col items-center justify-center h-screen">
+          {events && events.length === 0 ? (
+            <div className="text-primaryDark ps-4 text-xl md:text-3xl mx-auto">
+              Upcoming events will be announced soon
+            </div>
+          ) : (
+            <div className="w-full h-full border-t border-border dark:border-borderDark">
+              {events?.map((event) => {
                 return (
                   <Link
-                    key={post.title}
-                    href={`events/${post.id}`}
-                    className="hover:text-accent flex"
+                    key={event.title}
+                    href={`events/${event.id}`}
+                    className="hover:text-primaryDark flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl"
                   >
-                    <div className="border-b py-4 ps-4 flex w-full">
-                      <h3 className="text-8xl max-w-content flex-grow">
-                        {post.title}
-                      </h3>
-                      <div className=" flex flex-col ms-auto flex-shrink whitespace-nowrap overflow-hidde me-8">
-                        <h3 className="mt-auto ms-auto">{post.tags || null}</h3>
-                      </div>
-                      <h3 className="mt-auto ms-auto text-8xl">
-                        {post.date || null}
+                    <div className="border-b border-border dark:border-borderDark py-1 px-2 sm:px-4 md:px-6 flex w-full">
+                      <h3 className="max-w-content flex-grow">{event.title}</h3>
+                      <h3 className="mt-auto ms-auto me-4">
+                        {replaceHyphens(event.date) || null}
                       </h3>
                     </div>
                   </Link>
                 );
-              })
-            )}
-          </div>
-        </main>
-      </Layout>
-    )
+              })}
+            </div>
+          )}
+        </div>
+      </main>
+    </Layout>
   );
 }

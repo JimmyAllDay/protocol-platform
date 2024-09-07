@@ -32,12 +32,7 @@ function Footer({ links }) {
             {links.map((link, i) => {
               return (
                 <li key={i} className="mb-2 inline-block">
-                  <Link
-                    smooth
-                    key={i}
-                    href={link.href}
-                    className="link inline-block"
-                  >
+                  <Link key={i} href={link.href} className="link inline-block">
                     {link.name}
                   </Link>
                 </li>

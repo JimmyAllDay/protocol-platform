@@ -6,7 +6,7 @@ import Layout from 'components/Layout';
 
 import axios from 'axios';
 
-import DashMenu from 'components/dashboard/DashboardMenu';
+import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 
 import admin from 'lib/firebase/server/config';
 
