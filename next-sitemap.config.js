@@ -17,4 +17,5 @@ module.exports = {
       { userAgent: '*', disallow: '/user' },
       { userAgent: '*', disallow: '/admin' },
     ],
+  },
 };
