@@ -9,4 +9,12 @@ module.exports = {
     '/admin/*', // Admin-only routes (if you have any) // Exclude contact page if you don't want it
     // Add any other routes you want to exclude here
   ],
+  robotsTxtOptions: {
+    policies: [
+      { userAgent: '*', allow: '/' },
+      { userAgent: '*', disallow: '/auth' },
+      { userAgent: '*', disallow: '/dashboard' },
+      { userAgent: '*', disallow: '/user' },
+      { userAgent: '*', disallow: '/admin' },
+    ],
 };
