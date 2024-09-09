@@ -6,6 +6,7 @@ export default function News() {
     <Layout>
       <h1>EDM News</h1>
       <p>High volume, low effort EDM news</p>
+      <p>Aaah, we haven't built this yet...</p>
     </Layout>
   );
 }

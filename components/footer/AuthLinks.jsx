@@ -6,7 +6,7 @@ export default function AuthLinks() {
   const { user, signOut } = useContext(AuthContext);
 
   return (
-    <li className="w-[70px]">
+    <div className="w-[70px]">
       {user ? (
         <button
           onClick={signOut}
@@ -22,6 +22,6 @@ export default function AuthLinks() {
           <button className="">Login</button>
         </Link>
       )}
-    </li>
+    </div>
   );
 }

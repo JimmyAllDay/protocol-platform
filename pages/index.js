@@ -10,6 +10,7 @@ export default function Home() {
   const { theme } = useTheme();
   return (
     <Layout>
+      <h1 className="sr-only">Protocol Underground</h1>
       <div className="flex flex-col items-center justify-center bg-light dark:bg-primaryDark text-primary font-mono p-6 my-auto h-full">
         {theme === 'light' ? (
           <Image
@@ -30,9 +31,9 @@ export default function Home() {
             priority
           />
         )}
-        <h1 className="text-primary dark:text-primaryDark text-lg">
+        <h2 className="text-primary dark:text-primaryDark text-lg">
           Welcome to the lower level.
-        </h1>
+        </h2>
       </div>
     </Layout>
   );

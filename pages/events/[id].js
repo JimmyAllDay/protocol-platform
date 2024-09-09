@@ -12,16 +12,17 @@ export default function Page({ event }) {
   return (
     <Layout>
       <article className="flex flex-col space-y-4 p-6 gap-6">
-        <section className="flex ps-2">
-          <div>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
-              {event.title}
-            </h1>
-            <p className="md:ms-2">{`${event.desc} @${event.venueName}, ${event.venueAddress}`}</p>
-          </div>
-          <h2 className="ms-auto mb-auto text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
+        <section className="grid grid-cols-2 ps-2">
+          <h1 className="col-span-1 text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
+            {event.title}
+          </h1>
+
+          <h2 className="col-span-1 ms-auto mb-auto text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl">
             {replaceHyphens(event.date)}
           </h2>
+          <p className="col-span-2 md:ms-2">{event.desc}</p>
+          <p className="col-span-2 md:ms-2">{event.venueName}</p>
+          <p className="col-span-2 md:ms-2">{event.venueAddress}</p>
         </section>
 
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -30,12 +31,12 @@ export default function Page({ event }) {
             <p>Protocol. Welcome to the lower level.</p>
           </div>
           {event.imageUrl && (
-            <div className="col-span-1 h-96 flex flex-col relative p-auto order-1 md:order-2">
+            <div className="col-span-1 h-96 relative order-1 md:order-2">
               <Image
                 src={event.imageUrl}
                 fill={true}
                 alt="Event image"
-                className="object-contain"
+                className="object-contain object-top"
               />
             </div>
           )}

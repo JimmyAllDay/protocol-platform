@@ -27,8 +27,8 @@ function Footer({ links }) {
             </Link>
           )}
         </div>
-        <div className="flex flex-col ps-4">
-          <ul className="flex flex-col ms-4">
+        <div className="flex flex-col ps-4 ms-4">
+          <ul className="grid grid-cols-2">
             {links.map((link, i) => {
               return (
                 <li key={i} className="mb-2 inline-block">
@@ -50,7 +50,7 @@ function Footer({ links }) {
       </div>
 
       <div className="col-span-2 order-2 flex sm:col-span-6 sm:order-3 lg:col-span-1 lg:order-1 sm:mt-16 lg:mt-0 pe-2">
-        <div className="ms-auto me-4 sm:mx-auto lg:ms-auto lg:me-6">
+        <div className="ms-auto me-4 sm:mx-auto lg:ms-auto lg:me-6 mt-4">
           <SocialLinks />
         </div>
       </div>

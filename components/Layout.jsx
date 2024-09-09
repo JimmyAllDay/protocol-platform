@@ -19,6 +19,8 @@ import NavMenu from 'components/responsiveLayout/navMenu/NavMenu';
 
 import { AuthContext } from 'context/AuthContext';
 
+import headerLinks, { footerLinks, getNavMenuLinks } from 'utils/links';
+
 const Layout = ({ title, children }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [showNav, setShowNav] = useState(false);
@@ -32,26 +34,6 @@ const Layout = ({ title, children }) => {
   const closeNav = () => {
     setShowNav(false);
   };
-
-  const links = [
-    { name: 'About', href: '/about' },
-    { name: 'Contact', href: '/contact' },
-    { name: 'Events', href: '/events' },
-  ];
-
-  const navMenuLinks = user
-    ? [
-        { name: 'Profile', href: '/user/profile' },
-        { name: 'Uploads', href: '/user/uploads' },
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Events', href: '/events' },
-      ]
-    : [
-        { name: 'About', href: '/about' },
-        { name: 'Contact', href: '/contact' },
-        { name: 'Events', href: '/events' },
-      ];
 
   return (
     <>
@@ -86,7 +68,7 @@ const Layout = ({ title, children }) => {
         showNav={showNav}
         setShowNav={setShowNav}
         showNavMenu={showNavMenu}
-        links={links}
+        links={headerLinks}
       />
       {
         <CSSTransition
@@ -99,16 +81,16 @@ const Layout = ({ title, children }) => {
             <NavMenu
               showNav={showNav}
               closeNav={closeNav}
-              navLinks={navMenuLinks}
+              navLinks={getNavMenuLinks(user)}
               showNavMenu={showNavMenu}
             />
           </div>
         </CSSTransition>
       }
-      <main className="font-mono min-h-screen bg-primary dark:bg-primaryDark dark:text-primaryDark flex flex-col w-screen">
-        {loading ? <div className="text-primary">Loading...</div> : children}
+      <main className="font-mono min-h-screen bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark flex flex-col w-screen">
+        {loading ? <div>Loading...</div> : children}
       </main>
-      <Footer links={links} />
+      <Footer links={footerLinks} />
     </>
   );
 };

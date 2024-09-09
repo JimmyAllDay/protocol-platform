@@ -46,7 +46,7 @@ export default function Events() {
                   <Link
                     key={event.title}
                     href={`events/${event.id}`}
-                    className="hover:text-primaryDark flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl"
+                    className="hover:text-primaryDark flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl link"
                   >
                     <div className="border-b border-border dark:border-borderDark py-1 px-2 sm:px-4 md:px-6 flex w-full">
                       <h3 className="max-w-content flex-grow">{event.title}</h3>
