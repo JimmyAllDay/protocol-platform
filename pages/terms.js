@@ -14,7 +14,7 @@ export default function Terms() {
             If you accept our offer to place you at a gig, these are the terms
             of the agreement you enter into:
           </p>
-          <ul className="space-y-4 list-disc ps-8">
+          <ul className="space-y-4 list-disc">
             {djTerms.map((term, i) => {
               return (
                 <div key={i} className="space-y-4">
