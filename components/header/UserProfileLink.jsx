@@ -66,6 +66,12 @@ export default function UserLink() {
               >
                 Uploads
               </Link>
+              <Link
+                href="/user/account"
+                className="text-primary hover:text-primaryDark border-b dark:border-white dark:text-primaryDark dark:hover:text-accentDark border-black p-1"
+              >
+                Account
+              </Link>
               {user.isAdmin && (
                 <Link
                   href="/dashboard"

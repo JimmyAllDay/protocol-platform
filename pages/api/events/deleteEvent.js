@@ -1,6 +1,6 @@
 // pages/api/uploadEvent.js
 import { db, storage } from 'lib/firebase/server/config';
-import { getAllDocs } from 'lib/firebase/server/queries/getAllDocs';
+import { getAllDocs } from 'lib/firebase/server/ssr/getAllDocs';
 
 export default async function handler(req, res) {
   if (req.method !== 'DELETE') {

@@ -71,9 +71,9 @@ export default function EventsDashboard({ user, data }) {
         const snapshot = await uploadBytes(storageRef, file);
         const imageUrl = await getDownloadURL(snapshot.ref);
         return imageUrl;
-      } catch (err) {
-        console.error(err);
-        throw err;
+      } catch (error) {
+        console.error(error);
+        throw error;
       }
     }
   }
@@ -319,8 +319,7 @@ export const getServerSideProps = async (context) => {
   const { req } = context;
   const { cookies } = req;
 
-  // Assuming you store the Firebase Auth ID token in a cookie called 'token'
-  const token = cookies.token || '';
+  const token = cookies.p_sessionId || '';
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);

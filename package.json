@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "proxy": "local-ssl-proxy --source 3443 --target 3000 --key localhost-key.pem --cert localhost.pem",
     "build": "next build",
     "postbuild": "next-sitemap",
     "start": "node server.js",
@@ -15,6 +16,7 @@
   },
   "dependencies": {
     "@emailjs/nodejs": "^2.2.0",
+    "@hcaptcha/react-hcaptcha": "^1.11.0",
     "@heroicons/react": "^1.0.6",
     "@iconify/react": "^4.1.1",
     "@swc/helpers": "^0.5.3",
@@ -60,6 +62,7 @@
     "@types/node": "^20.10.0",
     "@types/react": "^18.2.38",
     "babel-jest": "^29.7.0",
+    "concurrently": "^9.0.1",
     "eslint": "8.37.0",
     "eslint-config-next": "13.3.0",
     "jest": "^29.7.0",

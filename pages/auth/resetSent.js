@@ -17,12 +17,12 @@ const Registered = () => {
 
   return (
     <Layout>
-      <div className="text-primary my-auto text-3xl mx-auto space-y-4 text-center">
+      <div className="my-auto text-3xl mx-auto space-y-4 text-center">
         <h1>Password reset email sent.</h1>
         <h1>Please check your inbox.</h1>
-        <h1>{`(It might take a minute or two)`}</h1>
+        <h1>{`(It might take a little while)`}</h1>
         <Link href="/auth/login">
-          <button className="button-primary mt-8 text-2xl p-1">Log In</button>
+          <button className="button-primary mt-8 p-1">Login</button>
         </Link>
       </div>
     </Layout>

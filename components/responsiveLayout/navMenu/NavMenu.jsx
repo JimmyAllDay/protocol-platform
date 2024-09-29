@@ -48,7 +48,6 @@ export default function NavMenu({ closeNav, navLinks, showNav }) {
         alt="Logo"
         width={150}
         height={'auto'}
-        priority
         className="absolute top-10 left-4"
       />
       <div className="text-right flex flex-col mx-4 space-y-6 pt-6">

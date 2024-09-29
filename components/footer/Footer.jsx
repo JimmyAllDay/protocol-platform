@@ -55,11 +55,22 @@ function Footer({ links }) {
         </div>
       </div>
 
-      <div className="flex items-center justify-center col-span-6 pt-12 order-4">
-        <p className="text-xs mt-4 flex flex-col">
+      <div className="flex flex-col items-center justify-center col-span-6 pt-12 order-4">
+        <div className="text-sm text-center">
+          This site is protected by hCaptcha and its{' '}
+          <Link className="link" href="https://www.hcaptcha.com/privacy">
+            Privacy Policy{' '}
+          </Link>
+          and{' '}
+          <Link className="link" href="https://www.hcaptcha.com/terms">
+            Terms of Service{' '}
+          </Link>
+          apply.
+        </div>
+        <div className="text-sm my-4 flex flex-col">
           &copy; 2024 Protocol Underground. All rights reserved.
           <span className="mx-auto">An All Day project.</span>
-        </p>
+        </div>
       </div>
     </footer>
   );

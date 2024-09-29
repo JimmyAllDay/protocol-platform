@@ -20,14 +20,20 @@ const Header = ({ showNav, setShowNav, showNavMenu, links }) => {
       <div className="flex max-w-7xl mx-auto">
         <Link href="/">
           {theme === 'light' ? (
-            <Image src={logo} alt="Logo" width={150} height={'auto'} priority />
+            <Image
+              src={logo}
+              alt="Logo"
+              width={150}
+              height={'auto'}
+              priority={theme === 'light'}
+            />
           ) : (
             <Image
               src={logoDark}
               alt="Logo"
               width={150}
               height={'auto'}
-              priority
+              priority={theme === 'dark'}
             />
           )}
         </Link>

@@ -1,0 +1,29 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+  // Allow admins to access all user profiles
+  match /userProfiles/{docId} {
+      allow read, write, update: if request.auth != null && 
+        get(/databases/$(database)/documents/userProfiles/$(request.auth.uid)).data.isAdmin == true;
+    }
+  // Allow users to access their profiles
+ 	match /userProfiles/{userId} {
+      allow read, write, update: if request.auth != null && request.auth.uid == userId;
+    }
+ 	match /userManagement/{userId} {
+      allow read, write, update: if request.auth != null && request.auth.uid == userId;
+    }
+  match /mailingList/{document=**} {
+      allow create: if true;
+      allow read, update, delete: if false;
+    }
+	match /events/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  match /userUploads/{userId} {
+      allow read, write, update: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

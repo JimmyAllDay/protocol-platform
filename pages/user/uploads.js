@@ -26,7 +26,7 @@ import ConfirmationModal from 'components/forms/formComponents/confirmationModal
 //TODO: See if you can stream audio directly to interface using a player component - not part of MVP
 
 export default function Uploads() {
-  const { user, profileComplete } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const { loading: userLoading } = useContext(LoadingContext);
 
   const router = useRouter();
@@ -42,15 +42,6 @@ export default function Uploads() {
   // WATCH THE INPUT VALUES TO DETERMINE IF THEY'RE FILLED
   const watchMixName = watch('name');
   const watchFile = watch('file');
-
-  useEffect(() => {
-    if (!profileComplete) {
-      router.push({
-        pathname: '/user/profile',
-        query: { profileComplete: 'false' },
-      });
-    }
-  }, [profileComplete, router]);
 
   useEffect(() => {
     const getUploads = async (user) => {
@@ -151,8 +142,12 @@ export default function Uploads() {
         <div className="max-w-xl w-full">
           <ConfirmationModal
             isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
+            onCancel={() => setIsModalOpen(false)}
             onConfirm={confirmReplace}
+            title={'Replace File?'}
+            question={
+              'A file is currently uploaded. Do you want to replace it?'
+            }
           />
           <form onSubmit={handleSubmit(onSubmit)} className="form">
             <div className="flex flex-col space-y-2">
@@ -278,3 +273,30 @@ export default function Uploads() {
     </Layout>
   );
 }
+
+export const getServerSideProps = async (context) => {
+  const verifyToken = require('lib/firebase/server/ssr/verifyToken').default;
+  const getSingleDoc = require('lib/firebase/server/ssr/getSingleDoc').default;
+  const handleError = require('lib/firebase/server/ssr/handleError').default;
+
+  try {
+    const { req } = context;
+    const { cookies } = req;
+    const token = cookies.p_sessionId || '';
+    const decodedToken = await verifyToken(token);
+    const uid = decodedToken.uid;
+
+    const userData = await getSingleDoc('userProfiles', uid);
+
+    if (!userData.profileComplete) {
+      return {
+        redirect: {
+          destination: '/user/profile?profileComplete=false',
+          permanent: false,
+        },
+      };
+    }
+  } catch (error) {
+    return handleError(error);
+  }
+};

@@ -1,94 +1,86 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { auth } from 'lib/firebase/client/config';
 import { getUserProfile } from 'lib/firebase/client/auth/signIn';
-import { auth, db } from 'lib/firebase/client/config'; // Ensure db is properly exported from your Firebase config
-import { onIdTokenChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore'; // Import Firestore doc and getDoc
-import { setCookie, destroyCookie } from 'nookies';
+// import { fetchToken } from 'lib/firebase/client/auth/fetchToken';
 import { LoadingContext } from 'context/LoadingContext';
 import { toast } from 'react-toastify';
-import { signOut } from 'firebase/auth';
+import { signOutUser } from 'lib/firebase/client/auth/signOut';
+import { setCookie, destroyCookie } from 'nookies';
 
 const useFirebaseAuth = () => {
-  // State to store the user profile
   const [userProfile, setUserProfile] = useState(null);
-  // State to track if the profile is complete
-  const [profileComplete, setProfileComplete] = useState(false);
-  // Get the handleLoading function from the LoadingContext
+  const [token, setToken] = useState(null); //* This is being logged in a useEffect hook but is otherwise redundant
   const { handleLoading } = useContext(LoadingContext);
 
-  // Function to fetch the user profile from Firestore
-  const fetchUserProfile = useCallback(async (uid) => {
-    console.log('FETCH USER PROFILE CALLED with UID:', uid);
-    try {
-      if (!uid) {
-        throw new Error('No UID provided for fetching user profile');
-      }
-
-      // Fetch user profile using the provided UID
-      const profile = await getUserProfile(uid);
-      console.log('FETCH USER PROFILE RESPONSE:', profile);
-
-      // Set the fetched profile to the state
-      setUserProfile(profile);
-
-      // Safety check to see if the profile is complete
-      const userDocRef = doc(db, 'userManagement', uid);
-      const userDoc = await getDoc(userDocRef);
-      if (userDoc.exists() && userDoc.data().userProfileUpdates?.complete) {
-        setProfileComplete(true);
-      } else {
-        setProfileComplete(false);
-      }
-
-      // Get the current user from Firebase Auth
-      const user = auth.currentUser;
-      if (user) {
-        // Get the ID token of the current user
+  // Fetch token
+  const fetchToken = useCallback(
+    async (auth) => {
+      console.log('fetchToken called');
+      try {
+        const user = auth.currentUser;
+        if (!user) {
+          throw new Error('User not authenticated');
+        }
+        // Fetch the token and its result
         const token = await user.getIdToken();
+        const tokenResult = await user.getIdTokenResult();
         // Set the token as a cookie
-        setCookie(null, 'token', token, {
+        setCookie(null, 'p_sessionId', token, {
           maxAge: 30 * 24 * 60 * 60, // 30 days
           path: '/',
-          secure: process.env.NODE_ENV === 'production', // Secure cookie in production
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
         });
+        return setToken(token); //* This is being logged in a useEffect hook but is otherwise redundant
+      } catch (error) {
+        console.error(error);
+        throw error;
       }
-    } catch (error) {
-      console.error('An error occurred during profile fetch:', error);
-      toast.error(error.message);
-    }
-  }, []);
+    },
+    [auth]
+  );
 
-  useEffect(() => {
-    if (userProfile) {
-      console.log('SET USER PROFILE UPDATE: ', userProfile);
-      // Perform any additional actions needed after userProfile is set
-    }
-  }, [userProfile]);
+  // Fetch profile
+  const fetchUserProfile = useCallback(
+    async (uid) => {
+      console.log('fetchUserProfile called');
+      try {
+        if (!uid) {
+          throw new Error('No UID provided for fetching user profile');
+        }
+        // Fetch user profile using the provided UID
+        const profile = await getUserProfile(uid);
+        if (profile) {
+          return setUserProfile(profile);
+        }
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    [auth]
+  );
 
-  // Effect to handle the user authentication state changes
+  //Monitor for login / logout, update profile and cookie
   useEffect(() => {
     handleLoading(true);
-
-    const unsubscribe = onIdTokenChanged(auth, async (user) => {
+    const unsubscribe = auth.onIdTokenChanged(async (user) => {
+      console.log('profile and token refresh triggered');
       try {
         if (user) {
           const providerId = user.providerData[0]?.providerId;
           const isEmailVerified = user.emailVerified;
-
-          // Check if the user signed in with Facebook
           const isFacebookUser = providerId === 'facebook.com';
-
           if (isFacebookUser || isEmailVerified) {
+            await fetchToken(auth);
             await fetchUserProfile(user.uid);
           } else {
             setUserProfile(null);
-            setProfileComplete(false);
-            destroyCookie(null, 'token', { path: '/' });
+            destroyCookie(null, 'p_sessionId', { path: '/' });
           }
         } else {
           setUserProfile(null);
-          setProfileComplete(false);
-          destroyCookie(null, 'token', { path: '/' });
+          destroyCookie(null, 'p_sessionId', { path: '/' });
         }
       } catch (error) {
         console.error('An error occurred during authentication: ', error);
@@ -97,49 +89,16 @@ const useFirebaseAuth = () => {
         handleLoading(false);
       }
     });
-
     return () => unsubscribe();
   }, [fetchUserProfile, handleLoading]);
 
-  // Effect to check token expiration periodically
+  //Console Log profile changes
   useEffect(() => {
-    const checkTokenExpiration = async () => {
-      const currentUser = auth.currentUser;
+    console.log('User token: ', token);
+    console.log('User Profile object: ', userProfile);
+  }, [userProfile, token]);
 
-      if (currentUser) {
-        // Force refresh the token
-        const token = await currentUser.getIdToken(true);
-        const tokenResult = await currentUser.getIdTokenResult();
-
-        // Check if the token is expired
-        const isExpired =
-          tokenResult.expirationTime <= new Date().toISOString();
-        if (isExpired) {
-          // Sign out if the token is expired
-          await signOut(auth);
-          setUserProfile(null);
-          setProfileComplete(false);
-          destroyCookie(null, 'token', { path: '/' });
-          toast.error('Session expired. Please log in again.');
-        }
-      }
-    };
-
-    // Initial token expiration check
-    checkTokenExpiration();
-
-    // Set interval to check token expiration every 5 minutes
-    const interval = setInterval(checkTokenExpiration, 5 * 60 * 1000); // Check every 5 minutes
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(interval);
-  }, []);
-
-  return {
-    userProfile,
-    profileComplete,
-    fetchUserProfile,
-  };
+  return { userProfile, fetchUserProfile, token, fetchToken };
 };
 
 export default useFirebaseAuth;

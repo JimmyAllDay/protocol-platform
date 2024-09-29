@@ -15,22 +15,21 @@ export default async function handler(req, res) {
     message: message,
   };
 
+  const serviceId = process.env.EMAILJS_SERVICE_ID;
+  const templateId = process.env.EMAILJS_TEMPLATE_ID;
+
   try {
-    await emailjs.send(
-      process.env.EMAILJS_SERVICE_ID,
-      process.env.EMAILJS_TEMPLATE_ID,
-      templateParams,
-      {
-        publicKey: process.env.EMAILJS_PUBLIC_KEY,
-        privateKey: process.env.EMAILJS_PRIVATE_KEY,
-      }
-    );
-  } catch (err) {
-    if (err instanceof EmailJSResponseStatus) {
-      console.log('EMAILJS FAILED...', err);
+    await emailjs.send(serviceId, templateId, templateParams, {
+      publicKey: process.env.EMAILJS_PUBLIC_KEY,
+      privateKey: process.env.EMAILJS_PRIVATE_KEY,
+    });
+  } catch (error) {
+    if (error instanceof EmailJSResponseStatus) {
+      console.log('EMAILJS FAILED...', error);
       return;
     }
-    console.log('ERROR', err);
+    console.log('ERROR', error);
+    res.status(error.status).json({ text: error.text });
   }
   res.status(200).json({ text: 'Form submitted' });
 }

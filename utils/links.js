@@ -26,6 +26,7 @@ export const getNavMenuLinks = (user) => {
     ? [
         { name: 'Profile', href: '/user/profile' },
         { name: 'Uploads', href: '/user/uploads' },
+        { name: 'Account', href: '/user/account' },
         { name: 'About', href: '/about' },
         { name: 'Contact', href: '/contact' },
         { name: 'Events', href: '/events' },

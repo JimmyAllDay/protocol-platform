@@ -3,7 +3,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import Head from 'next/head';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 import HotJarAnalytics from './analytics/HotJarAnalytics';
-import FacebookSDK from './facebook/FacebookSDK';
 
 import Header from './header/Header';
 import Footer from './footer/Footer';
@@ -21,7 +20,7 @@ import { AuthContext } from 'context/AuthContext';
 
 import headerLinks, { footerLinks, getNavMenuLinks } from 'utils/links';
 
-const Layout = ({ title, children }) => {
+const Layout = ({ title, children, ...rest }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [showNav, setShowNav] = useState(false);
   const { loading } = useContext(LoadingContext);
@@ -50,7 +49,6 @@ const Layout = ({ title, children }) => {
       </Head>
       <GoogleAnalytics />
       <HotJarAnalytics />
-      <FacebookSDK />
       <ToastContainer
         position="bottom-center"
         autoClose={5000}

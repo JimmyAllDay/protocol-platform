@@ -19,7 +19,7 @@ export default function Home() {
             width="auto"
             height="auto"
             className="w-full max-w-[1000px] h-auto object-contain"
-            priority
+            priority={theme === 'light'}
           />
         ) : (
           <Image
@@ -28,7 +28,7 @@ export default function Home() {
             width="auto"
             height="auto"
             className="w-full max-w-[1000px] h-auto object-contain"
-            priority
+            priority={theme === 'dark'}
           />
         )}
         <h2 className="text-primary dark:text-primaryDark text-lg">

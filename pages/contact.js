@@ -1,49 +1,62 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import SocialLinksHorizontal from 'components/socialLinks/SocialLinksHorizonal';
+import { toast } from 'react-toastify';
+
+import { useHCaptcha } from 'context/HCaptchaContext';
 
 export default function Contact() {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  async function onSubmit(e) {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null); // Clear previous errors when a new request starts
-    setSubmitted(false); // Clear previous submission;
+  // Initialize React Hook Form
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-    const name = event.target[0].value;
-    const email = event.target[1].value;
-    const phone = event.target[2].value;
-    const message = event.target[3].value;
+  const { resetCaptcha, withCaptcha } = useHCaptcha();
 
-    console.log(name, email, phone, message);
+  useEffect(() => {
+    resetCaptcha();
+  }, []);
 
-    const res = await fetch(`/api/contact/contact`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        phone,
-        message,
-      }),
-    });
+  // Submit handler
+  const submitHandler = async (data) => {
+    setLoading(true);
+    setSubmitted(false); // Clear previous submission
 
-    if (!res.ok) {
-      setError(
-        'There has been an error. Please send and email to admin@protocol-underground.com.'
-      );
-      return;
+    try {
+      const res = await fetch(`/api/contact/contact`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data), // Send form data from React Hook Form
+      });
+
+      if (!res.ok) {
+        throw new Error(
+          'There has been an error. Please send an email to admin@protocol-underground.com.'
+        );
+      }
+      toast.success(`Your message has been sent. We'll be in touch soon.`);
+      setSubmitted(true);
+    } catch (error) {
+      console.error(error);
+      toast.error(error);
+      setLoading(false);
+    } finally {
+      reset(); // Reset form fields
+      setLoading(false);
     }
-    e.target.reset();
-    setSubmitted(true);
-    setIsLoading(false);
-  }
+  };
+
+  const handleSubmitWithCaptcha = withCaptcha(submitHandler);
 
   return (
     <Layout>
@@ -74,71 +87,93 @@ export default function Contact() {
             </div>
           </div>
         </div>
+
         <div className="items-center text-center flex flex-col gap-10 col-span-2 lg:col-span-1 order-2 p-8 lg:items-start mb-24 lg:mb-0">
           <form
             id="contactForm"
-            onSubmit={onSubmit}
-            disabled={isLoading || submitted}
+            onSubmit={handleSubmit(handleSubmitWithCaptcha)} // Use React Hook Form's handleSubmit
+            disabled={loading || submitted}
             className="flex flex-col space-y-8 max-w-sm"
           >
             <h3 className="text-2xl md:text-3xl h-20">
               Or drop us a line here:
             </h3>
+
             <label className="flex flex-col gap-1 font-bold">
               Name:*
               <input
                 type="text"
-                name="name"
                 placeholder="Name"
-                disabled={isLoading || submitted}
+                disabled={loading || submitted}
                 className="form-input-contact"
-                required
+                {...register('name', { required: 'Name is required' })} // Register field with validation
               />
+              {errors.name && (
+                <span className="text-accent2 text-sm">
+                  {errors.name.message}
+                </span>
+              )}
             </label>
+
             <label className="flex flex-col gap-1 font-bold">
               Email:*
               <input
                 type="email"
-                name="email"
                 placeholder="Email"
-                disabled={isLoading || submitted}
+                disabled={loading || submitted}
                 className="form-input-contact"
-                required
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: 'Invalid email address',
+                  },
+                })}
               />
+              {errors.email && (
+                <span className="text-accent2 text-sm">
+                  {errors.email.message}
+                </span>
+              )}
             </label>
+
             <label className="flex flex-col gap-1 font-bold">
               Phone:
               <input
                 type="tel"
-                name="phone"
                 placeholder="Phone Number"
-                disabled={isLoading || submitted}
+                disabled={loading || submitted}
                 className="form-input-contact"
+                {...register('phone')}
               />
             </label>
+
             <label className="flex flex-col gap-1 font-bold">
               Message:*
               <textarea
-                type="text"
-                name="message"
                 placeholder="Message"
                 className="form-input-contact"
                 rows="6"
-                cols="33"
-                disabled={isLoading || submitted}
+                disabled={loading || submitted}
+                {...register('message', { required: 'Message is required' })}
               />
+              {errors.message && (
+                <span className="text-accent2 text-sm">
+                  {errors.message.message}
+                </span>
+              )}
             </label>
 
             <button
               type="submit"
-              disabled={isLoading || submitted}
+              disabled={loading || submitted}
               className={`${
                 submitted ? 'button-inactive' : 'button-primary'
               } p-1`}
             >
-              {isLoading ? 'Sending...' : submitted ? 'Submitted' : 'Submit'}
+              {loading ? 'Sending...' : submitted ? 'Submitted' : 'Submit'}
             </button>
-            {error && <div className="text-accent2 text-sm">{error}</div>}
+
             {submitted && (
               <div className="text-accent text-sm">{`Form submitted. We'll be in touch soon.`}</div>
             )}

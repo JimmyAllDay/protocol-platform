@@ -17,7 +17,7 @@ export default function NavProfileName() {
     user && (
       <div className="relative flex flex-col border-spacing-1">
         <div className="flex">
-          <div className="text-2xl text-accent dark:text-accent2Dark me-2 flex items-center">
+          <div className="text-2xl text-background dark:text-accent2Dark me-2 flex items-center">
             <FaRegUserCircle />
           </div>
           <h2 className="text-primaryDark">

@@ -13,7 +13,7 @@ import Image from 'next/image';
 import { MdOutlineEmail } from 'react-icons/md';
 
 import admin from 'lib/firebase/server/config';
-import { getAllDocs } from 'lib/firebase/server/queries/getAllDocs';
+import { getAllDocs } from 'lib/firebase/server/ssr/getAllDocs';
 
 //TODO: does the delete function work? How should it work?
 //TODO: You should set up a QR code so people can scan when they arrive.
@@ -181,7 +181,7 @@ export const getServerSideProps = async (context) => {
   const { cookies } = req;
 
   // Assuming you store the Firebase Auth ID token in a cookie called 'token'
-  const token = cookies.token || '';
+  const token = cookies.p_sessionId || '';
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);

@@ -8,9 +8,7 @@ import { AuthContext } from 'context/AuthContext.jsx';
 
 import { toast } from 'react-toastify';
 
-export default function Profile() {
-  const { user, loading } = useContext(AuthContext);
-
+export default function Profile({ user }) {
   const router = useRouter();
   const { profileComplete } = router.query;
 
@@ -26,14 +24,6 @@ export default function Profile() {
     }
   }, [profileComplete]);
 
-  if (loading) {
-    return (
-      <Layout>
-        <p>Loading...</p>
-      </Layout>
-    );
-  }
-
   return (
     <Layout>
       <main className="flex flex-col items-center justify-center font-mono space-y-4 p-2">
@@ -43,3 +33,36 @@ export default function Profile() {
     </Layout>
   );
 }
+
+export const getServerSideProps = async (context) => {
+  const verifyToken = require('lib/firebase/server/ssr/verifyToken').default;
+  const getSingleDoc = require('lib/firebase/server/ssr/getSingleDoc').default;
+  const handleError = require('lib/firebase/server/ssr/handleError').default;
+
+  try {
+    const { req } = context;
+    const { cookies } = req;
+    const token = cookies.p_sessionId || '';
+    const decodedToken = await verifyToken(token);
+    const uid = decodedToken.uid;
+
+    const userData = await getSingleDoc('userProfiles', uid);
+
+    if (!userData) {
+      return {
+        redirect: {
+          destination: '/',
+          permanent: false,
+        },
+      };
+    }
+
+    return {
+      props: {
+        user: userData,
+      },
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};

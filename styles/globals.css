@@ -88,7 +88,7 @@
 }
 
 .form-progress-bar-message {
-  @apply text-primary dark:text-accent2Dark text-sm;
+  @apply text-primary dark:text-accent2Dark text-sm text-center;
 }
 
 ::file-selector-button {

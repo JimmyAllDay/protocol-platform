@@ -1,10 +1,10 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { useForm } from 'react-hook-form';
-import { useState } from 'react';
 
 import { addToMailList } from 'utils/addToMailList';
+import { useHCaptcha } from 'context/HCaptchaContext';
 
 export default function SubscribeToMailingList() {
   const {
@@ -14,20 +14,25 @@ export default function SubscribeToMailingList() {
     reset,
   } = useForm();
 
+  const { resetCaptcha, withCaptcha } = useHCaptcha();
+
   const submitHandler = async ({ email }) => {
     try {
       const added = await addToMailList(email);
-      if (added) toast.info('Added to mailing list');
+      if (added) toast.info('You have been added to the mailing list');
     } catch (error) {
       toast.error('Error adding to mail list. Please wait and try again.');
     } finally {
       reset();
+      resetCaptcha();
     }
   };
 
+  const handleSubmitWithCaptcha = withCaptcha(submitHandler);
+
   return (
     <form
-      onSubmit={handleSubmit(submitHandler)}
+      onSubmit={handleSubmit(handleSubmitWithCaptcha)}
       className="flex flex-col w-full space-y-4"
     >
       <p>Join the Protocol mailing list for updates</p>

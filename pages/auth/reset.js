@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
@@ -6,13 +6,14 @@ import Image from 'next/image';
 import Link from 'next/link';
 import logo from 'public/assets/images/PULogo - black.png';
 import logoDark from 'public/assets/images/PULogo - white.png';
-import { RiArrowGoBackFill } from 'react-icons/ri';
 
 import { toast } from 'react-toastify';
 import { useTheme } from 'context/ThemeContext';
 
 import { auth } from '/lib/firebase/client/config';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+
+import { useHCaptcha } from 'context/HCaptchaContext';
 
 const Reset = () => {
   const {
@@ -25,7 +26,13 @@ const Reset = () => {
   const router = useRouter();
   const { theme } = useTheme();
 
-  const onSubmit = async (data) => {
+  const { resetCaptcha, withCaptcha } = useHCaptcha();
+
+  useEffect(() => {
+    resetCaptcha();
+  }, []);
+
+  const submitHandler = async (data) => {
     const auth = getAuth();
     sendPasswordResetEmail(auth, data.email)
       .then(() => {
@@ -39,28 +46,25 @@ const Reset = () => {
       })
       .finally(() => {
         router.push('/auth/resetSent');
+        resetCaptcha();
       });
   };
+
+  const handleSubmitWithCaptcha = withCaptcha(submitHandler);
 
   return (
     <Layout>
       <form
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(handleSubmitWithCaptcha)}
         className="flex flex-col space-y-6 border w-[300px] border-border dark:border-borderDark p-4 mx-auto mt-36 rounded"
       >
         {theme === 'light' ? (
           <Link href="/">
-            <Image src={logo} alt="logo" width={125} height={'auto'} priority />
+            <Image src={logo} alt="logo" width={125} height={'auto'} />
           </Link>
         ) : (
           <Link href="/">
-            <Image
-              src={logoDark}
-              alt="logo"
-              width={125}
-              height={'auto'}
-              priority
-            />
+            <Image src={logoDark} alt="logo" width={125} height={'auto'} />
           </Link>
         )}
         <h1 className="text-4xl mb-10 mx-auto text-center">Password Reset</h1>
@@ -75,7 +79,9 @@ const Reset = () => {
             })}
           />
           {errors.email && (
-            <div className="text-accent2 text-xs">{errors.email.message}</div>
+            <div className="text-accent2 dark:text-accent2Dark text-xs pt-1">
+              {errors.email.message}
+            </div>
           )}
         </div>
         <button
@@ -87,9 +93,6 @@ const Reset = () => {
         <div className="flex justify-between">
           <div className="w-2/3 p-1 flex">
             <Link href="/auth/login" className="link flex">
-              <div className="text-lg me-1">
-                <RiArrowGoBackFill />
-              </div>
               <p className="my-auto text-sm mx-auto">Back to Login</p>
             </Link>
           </div>

@@ -58,8 +58,7 @@ export const getServerSideProps = async (context) => {
   const { req } = context;
   const { cookies } = req;
 
-  // Assuming you store the Firebase Auth ID token in a cookie called 'token'
-  const token = cookies.token || '';
+  const token = cookies.p_sessionId || '';
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);

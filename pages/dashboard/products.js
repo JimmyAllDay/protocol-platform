@@ -12,7 +12,7 @@ import Image from 'next/image';
 import axios from 'axios';
 import admin from 'lib/firebase/server/config';
 
-import { getAllDocs } from 'lib/firebase/server/queries/getAllDocs';
+import { getAllDocs } from 'lib/firebase/server/ssr/getAllDocs';
 
 export function DashboardProduct({
   id,
@@ -333,8 +333,7 @@ export const getServerSideProps = async (context) => {
   const { req } = context;
   const { cookies } = req;
 
-  // Assuming you store the Firebase Auth ID token in a cookie called 'token'
-  const token = cookies.token || '';
+  const token = cookies.p_sessionId || '';
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
