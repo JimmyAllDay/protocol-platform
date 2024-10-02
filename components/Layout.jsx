@@ -42,7 +42,7 @@ const Layout = ({ title, children, ...rest }) => {
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="keywords"
-          content="music, EDM, dance, djs, party, electronic, dance, music"
+          content="music, EDM, dance, djs, party, electronic, dance, music, night culture"
         />
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://www.protocol-underground.com" />

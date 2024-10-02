@@ -9,7 +9,8 @@ import Link from 'next/link';
 
 import { getQueryString } from '/utils/utils';
 
-import { toast } from 'react-toastify';
+import getErrorMessage from 'utils/getErrorMessage';
+import showToast from 'utils/toastUtils';
 
 import { FaPlayCircle } from 'react-icons/fa';
 import { useForm, Controller } from 'react-hook-form';
@@ -22,11 +23,11 @@ import ProgressBar from 'components/forms/formComponents/progressBar/ProgressBar
 import AudioFileListItem from 'components/forms/formComponents/audioFileListItem/AudioFileListItem';
 import Tooltip from 'components/forms/formComponents/tooltip/Tooltip';
 import ConfirmationModal from 'components/forms/formComponents/confirmationModal/ConfirmationModal';
+import sendMixUploadNotice from 'lib/emailjs/sendMixUploadNotice';
 
 //TODO: See if you can stream audio directly to interface using a player component - not part of MVP
 
-export default function Uploads() {
-  const { user } = useContext(AuthContext);
+export default function Uploads({ user }) {
   const { loading: userLoading } = useContext(LoadingContext);
 
   const router = useRouter();
@@ -50,7 +51,8 @@ export default function Uploads() {
         setUploads(res);
       } catch (error) {
         console.error(error);
-        toast.error(error.message);
+        const message = getErrorMessage(error);
+        showToast(message, 'error');
       }
     };
     if (user) {
@@ -63,21 +65,21 @@ export default function Uploads() {
     const file = data.file[0]; // Access the file array properly
 
     if (!file) {
-      toast.error('No file selected');
+      showToast('No file selected', 'error');
       return;
     }
 
     if (!mixName) {
-      toast.error('Mix name is required');
+      showToast('Mix name is required', 'error');
       return;
     }
 
     if (!file.type.startsWith('audio/')) {
-      toast.error('The selected file is not an audio file');
+      showToast('The selected file is not an audio file', 'error');
       return;
     }
 
-    // ONLY SHOW MODAL IF BOTH FIELDS ARE FILLED AND THERE ARE EXISTING UPLOADS
+    // Only show modal if both fields are filled and there are existing uploads
     if (uploads.length !== 0 && mixName.trim() && file) {
       setPendingUpload({ mixName, file }); // Store the pending upload data
       setIsModalOpen(true);
@@ -94,12 +96,14 @@ export default function Uploads() {
       const res = await handleUpload(mixName, file, user, setProgress);
       const newUploads = res.uploads;
       if (newUploads) {
-        toast.success('Upload succeeded.');
         setUploads([...newUploads]);
+        showToast('Upload succeeded.', 'success');
       }
+      await sendMixUploadNotice(user.email);
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+      const message = getErrorMessage(error);
+      showToast(message, 'error', 'error-toast');
     } finally {
       // Always clear the file input and reset the form state, whether successful or not
       if (fileCleanUpRef.current) {
@@ -128,7 +132,8 @@ export default function Uploads() {
       setUploads(res);
     } catch (error) {
       console.error(error);
-      toast.error(error.message);
+      const message = getErrorMessage(error);
+      showToast(message, 'error');
     } finally {
       setProgress({ progress: '0%', message: '' });
       setLoading(false);
@@ -296,6 +301,12 @@ export const getServerSideProps = async (context) => {
         },
       };
     }
+
+    return {
+      props: {
+        user: userData,
+      },
+    };
   } catch (error) {
     return handleError(error);
   }

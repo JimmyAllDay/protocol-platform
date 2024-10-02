@@ -6,7 +6,9 @@ import ProfileForm from 'components/forms/profileForm/ProfileForm';
 
 import { AuthContext } from 'context/AuthContext.jsx';
 
-import { toast } from 'react-toastify';
+import { destroyCookie } from 'nookies';
+
+import showToast from 'utils/toastUtils';
 
 export default function Profile({ user }) {
   const router = useRouter();
@@ -20,7 +22,7 @@ export default function Profile({ user }) {
 
   useEffect(() => {
     if (profileComplete === 'false') {
-      toast.info('Please complete your profile before uploading a demo.');
+      showToast('Please complete your profile before uploading a mix.');
     }
   }, [profileComplete]);
 
@@ -42,7 +44,21 @@ export const getServerSideProps = async (context) => {
   try {
     const { req } = context;
     const { cookies } = req;
-    const token = cookies.p_sessionId || '';
+    const token = cookies.p_sessionId;
+
+    if (!token) {
+      // Destroy the cookie containing the token
+      console.log('Invalid or revoked token');
+      destroyCookie(null, 'p_sessionId', { path: '/' });
+
+      return {
+        redirect: {
+          destination: '/auth/login?signUserOut=true',
+          permanent: false,
+        },
+      };
+    }
+
     const decodedToken = await verifyToken(token);
     const uid = decodedToken.uid;
 

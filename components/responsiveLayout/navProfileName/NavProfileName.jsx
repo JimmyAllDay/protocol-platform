@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import Link from 'next/link';
 
 import { FaRegUserCircle } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 
 import { AuthContext } from 'context/AuthContext';
 import { LoadingContext } from 'context/LoadingContext';

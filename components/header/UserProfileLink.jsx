@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import Link from 'next/link';
 
 import { FaRegUserCircle } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 
 import { AuthContext } from 'context/AuthContext';
 import { LoadingContext } from 'context/LoadingContext';
@@ -39,7 +38,7 @@ export default function UserLink() {
             <h2 className="hover:text-primaryDark hover:dark:text-accentDark dark">
               Hi,{' '}
               {user.displayName ||
-                user?.email.substring(0, user?.email.indexOf('@')) ||
+                user?.email?.substring(0, user?.email?.indexOf('@')) ||
                 'user'}
             </h2>
             <div className={iconStyles}>

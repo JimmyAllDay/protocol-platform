@@ -17,8 +17,7 @@ const errorMessages = {
   'auth/unauthorized-domain': 'Unauthorized domain. Please contact support.',
 
   // Sign-in Errors
-  'auth/user-disabled':
-    'This account has been deleted. Please contact support.',
+  'auth/user-disabled': 'This account has been deleted.',
   'auth/user-token-expired':
     'Your login session has expired. Please sign in again.',
   'auth/web-storage-unsupported':
@@ -32,7 +31,7 @@ const errorMessages = {
 
   // Email/Password Errors
   'auth/invalid-email':
-    'The email address is badly formatted. Please enter a valid email.',
+    'The email address is not valid. Please enter a valid email.',
   'auth/user-not-found':
     'No user found with this email. Please sign up or try again.',
   'auth/wrong-password': 'Incorrect password. Please try again.',
@@ -75,8 +74,7 @@ const errorMessages = {
     'The verification ID is missing. Please try again.',
 
   // Reauthentication Errors
-  'auth/user-disabled':
-    'This account has been disabled. Please contact support.',
+  'auth/user-disabled': 'This account has been deleted.',
   'auth/requires-recent-login': 'Please log in again to proceed.',
 
   // Default for unknown errors
@@ -97,10 +95,6 @@ export default function getErrorMessage(error) {
 catch (error) {
   // Log the full error to the console for debugging (or send it to your server)
 console.error('Detailed Error Log:', error);
-
-  // Get a user-friendly error message
 const message = getErrorMessage(error);
-
-  // Show the user-friendly message to the user
 toast.error(message);
 } */

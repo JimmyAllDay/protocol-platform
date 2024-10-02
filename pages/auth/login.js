@@ -20,12 +20,22 @@ import { useHCaptcha } from 'context/HCaptchaContext';
 
 import getErrorMessage from 'utils/getErrorMessage';
 
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
 
 const Login = () => {
   const { theme } = useTheme();
-  const { signIn, fbSignIn, user, loading, fetchUserProfile } =
-    useContext(AuthContext);
+  const {
+    signIn,
+    fbSignIn,
+    user,
+    loading,
+    fetchUserProfile,
+    setUserProfile,
+    signOut,
+  } = useContext(AuthContext);
+
+  const router = useRouter();
+  const { signUserOut } = router.query;
 
   const {
     reset,
@@ -35,12 +45,41 @@ const Login = () => {
   } = useForm();
 
   const [progress, setProgress] = useState({ progress: '0%', message: '' });
-  const router = useRouter();
 
   const { resetCaptcha, withCaptcha } = useHCaptcha();
 
+  // Log user out based on signUserOut query params
   useEffect(() => {
-    if (!loading && user) {
+    const handleLogOut = async () => {
+      try {
+        setUserProfile(null);
+        await signOut();
+      } catch (error) {
+        const message = getErrorMessage(error);
+        showToast(message, 'error');
+      } finally {
+        //Display user message
+        showToast('User signed out');
+        //Update query params
+        const updatedQuery = { ...router.query };
+        delete updatedQuery.signUserOut;
+        router.replace(
+          { pathname: router.pathname, query: updatedQuery },
+          undefined,
+          {
+            shallow: true,
+          }
+        );
+      }
+    };
+    if (signUserOut) {
+      handleLogOut();
+    }
+  }, [signUserOut]);
+
+  useEffect(() => {
+    if (!loading && user && !signUserOut) {
+      console.log('sign in redirect called');
       router.push('/');
     }
   }, [user, router, loading]);
@@ -62,7 +101,7 @@ const Login = () => {
     } catch (error) {
       console.error('Detailed Error Log:', error);
       const message = getErrorMessage(error);
-      toast.error(message);
+      showToast(message, 'error');
     } finally {
       reset();
       resetCaptcha();

@@ -3,14 +3,10 @@ import { db } from 'lib/firebase/client/config';
 import { collection, getDocs } from 'firebase/firestore';
 import Layout from 'components/Layout';
 import Link from 'next/link';
-import { toast } from 'react-toastify';
+
 import replaceHyphens from 'utils/utils';
 
-//* sm (Small screens): 640px
-//* md (Medium screens): 768px
-//* lg (Large screens): 1024px
-//* xl (Extra large screens): 1280px
-//* 2xl (Double extra large screens): 1536px
+//TODO:You might want to fetch the events on the server here and possibly cache them
 
 export default function Events() {
   const [events, setEvents] = useState(null);

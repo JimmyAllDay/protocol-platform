@@ -5,7 +5,8 @@ import Layout from '../../components/Layout';
 
 import { sendEmailVerification, signOut, getAuth } from 'firebase/auth';
 
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
+import getErrorMessage from 'utils/getErrorMessage';
 
 const NotVerified = () => {
   const [user, setUser] = useState(null);
@@ -21,18 +22,22 @@ const NotVerified = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const auth = await getAuth();
-      const user = auth.currentUser;
-      console.log(user);
-      if (!user || user === null) {
-        router.push('/');
-        signOut(auth); //TODO:Error: do I need to handle errors here?
-      }
-      if (user?.emailVerified) {
-        router.push('auth/login');
-      }
-      if (!user?.emailVerified) {
-        setUser(user);
+      try {
+        const auth = await getAuth();
+        const user = auth.currentUser;
+        if (!user || user === null) {
+          router.push('/');
+          signOut(auth);
+        }
+        if (user?.emailVerified) {
+          router.push('auth/login');
+        }
+        if (!user?.emailVerified) {
+          setUser(user);
+        }
+      } catch (error) {
+        const message = getErrorMessage(error);
+        showToast(message, 'error');
       }
     };
     checkAuth();
@@ -45,24 +50,20 @@ const NotVerified = () => {
       user;
       router.push('/');
     };
-
     window.addEventListener('blur', handleBlur);
-
     return () => {
       window.removeEventListener('blur', handleBlur);
     };
   }, []);
 
+  //TODO:Clean this function up - it looks like you're handling error message conversion in the clickHandler
   const clickHandler = async () => {
     try {
       await sendEmailVerification(user);
-      toast.info(`email sent to ${user.email}`);
+      showToast(`email sent to ${user.email}`);
     } catch (error) {
-      if (error.message.includes('Firebase: Error (auth/too-many-requests)')) {
-        toast.error('Too many requests');
-      } else {
-        toast.error(error.message);
-      }
+      const message = getErrorMessage(error);
+      showToast(message, 'error');
     }
   };
 

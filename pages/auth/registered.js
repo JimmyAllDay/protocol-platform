@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 import Layout from '../../components/Layout';
 
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
 
 const Registered = () => {
   const router = useRouter();
@@ -12,7 +12,7 @@ const Registered = () => {
   useEffect(() => {
     const { registered } = router.query;
     if (registered) {
-      toast.info('Email sent to inbox.');
+      showToast('Email sent to inbox.');
     }
   }, [router.query]);
 

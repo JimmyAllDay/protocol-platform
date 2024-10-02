@@ -13,7 +13,7 @@ import Tooltip from '../formComponents/tooltip/Tooltip';
 import SelectList from '../formComponents/selectList/SelectList';
 import CheckInput from '../formComponents/checkInput/CheckInput';
 
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
 
 import { genreOptions } from './genreOptions';
 import { equipmentOptions } from './equipmentOptions';
@@ -52,27 +52,24 @@ export default function ProfileForm({ user }) {
 
   const submitHandler = async (data) => {
     setButtonLoading(true);
-    console.log('form data: ', data);
-
     try {
       const response = await updateUserProfile(data, userData.uid);
       if (response.error) {
         // Handle error case, possibly set an error message state to show in the UI
         console.error('Error updating document: ', response.error);
-        toast.error(response.error);
+        showToast(response.error, 'error');
       } else if (response.message) {
         // Handle no-change case
-        toast.info(response.message);
+        showToast(response.message, 'info');
       } else {
         await fetchUserProfile(userData.uid, true);
         setUserData(response);
-        toast.success('Profile updated successfully!');
+        showToast('Profile updated successfully.', 'success');
       }
     } catch (error) {
       console.error('Unhandled error: ', error);
-      toast.error('An error occurred while updating your profile.');
+      showToast('An error occurred while updating your profile.', 'error');
     }
-
     setButtonLoading(false);
   };
 

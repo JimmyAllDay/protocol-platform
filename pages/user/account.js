@@ -54,7 +54,7 @@ export default function Account({ user }) {
         signOut();
         router.push({
           pathname: '/auth/login',
-          query: { userProfileDeleted: 'true' },
+          query: { signUserOut: 'true' },
         });
       }
     } catch (error) {
@@ -146,6 +146,20 @@ export const getServerSideProps = async (context) => {
     const { req } = context;
     const { cookies } = req;
     const token = cookies.p_sessionId || '';
+
+    if (!token) {
+      // Destroy the cookie containing the token
+      console.log('Invalid or revoked token');
+      destroyCookie(null, 'p_sessionId', { path: '/' });
+
+      return {
+        redirect: {
+          destination: '/auth/login?signUserOut=true',
+          permanent: false,
+        },
+      };
+    }
+
     const decodedToken = await verifyToken(token);
     const uid = decodedToken.uid;
 

@@ -3,9 +3,9 @@ import { useForm } from 'react-hook-form';
 import Layout from '../components/Layout';
 import Link from 'next/link';
 import SocialLinksHorizontal from 'components/socialLinks/SocialLinksHorizonal';
-import { toast } from 'react-toastify';
-
+import showToast from 'utils/toastUtils';
 import { useHCaptcha } from 'context/HCaptchaContext';
+import getErrorMessage from 'utils/getErrorMessage';
 
 export default function Contact() {
   const [loading, setLoading] = useState(false);
@@ -44,11 +44,15 @@ export default function Contact() {
           'There has been an error. Please send an email to admin@protocol-underground.com.'
         );
       }
-      toast.success(`Your message has been sent. We'll be in touch soon.`);
+      showToast(
+        `Your message has been sent. We'll be in touch soon.`,
+        'success'
+      );
       setSubmitted(true);
     } catch (error) {
       console.error(error);
-      toast.error(error);
+      const message = getErrorMessage(error);
+      showToast(message, 'error');
       setLoading(false);
     } finally {
       reset(); // Reset form fields

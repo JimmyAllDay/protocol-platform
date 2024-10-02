@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { FaFacebook } from 'react-icons/fa';
-import { toast } from 'react-toastify';
 import { useFacebookSDK } from 'context/FacebookSDKContext'; // Adjust as needed
 import { useRouter } from 'next/router'; // Assuming Next.js
 import signInWithFacebookHandler from 'lib/firebase/client/auth/facebookSignIn'; // Path to your existing handler
+
+import showToast from 'utils/toastUtils';
 import getErrorMessage from 'utils/getErrorMessage';
 
 const FacebookLoginButton = ({ updateProgress }) => {
@@ -13,7 +14,7 @@ const FacebookLoginButton = ({ updateProgress }) => {
 
   const handleFacebookLogin = useCallback(async () => {
     if (!sdkLoaded) {
-      toast.error('Facebook login not ready. Please try again.');
+      showToast('Facebook login not ready. Please try again.', 'error');
       return;
     }
 
@@ -28,10 +29,8 @@ const FacebookLoginButton = ({ updateProgress }) => {
       }
     } catch (error) {
       console.error('Detailed Error Log:', error);
-      // Get a user-friendly error message
       const message = getErrorMessage(error);
-      // Show the user-friendly message to the user
-      toast.error(message);
+      showToast(message, 'error');
     } finally {
       setLoading(false);
     }

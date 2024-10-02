@@ -11,11 +11,9 @@ import FacebookLoginButton from 'components/facebook/FacebookLoginButton';
 import ProgressBar from 'components/forms/formComponents/progressBar/ProgressBar';
 import { useTheme } from 'context/ThemeContext';
 import { useHCaptcha } from 'context/HCaptchaContext';
-import sendRegistrationNotice from 'lib/emailjs/sendRegistrationNotice';
-
-import { toast } from 'react-toastify';
 
 import getErrorMessage from 'utils/getErrorMessage';
+import showToast from 'utils/toastUtils';
 
 const Register = () => {
   const { theme } = useTheme();
@@ -59,13 +57,12 @@ const Register = () => {
 
       const profile = await createUser(data.email, data.password1, setProgress);
       if (profile) {
-        sendRegistrationNotice(data.email);
         router.push('/auth/registered');
       }
     } catch (error) {
       console.error('Detailed Error Log:', error);
       const message = getErrorMessage(error);
-      toast.error(message);
+      showToast(message, 'error');
     } finally {
       reset();
       resetCaptcha();

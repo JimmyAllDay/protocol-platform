@@ -7,7 +7,7 @@ import Link from 'next/link';
 import logo from 'public/assets/images/PULogo - black.png';
 import logoDark from 'public/assets/images/PULogo - white.png';
 
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
 import { useTheme } from 'context/ThemeContext';
 
 import { auth } from '/lib/firebase/client/config';
@@ -36,13 +36,11 @@ const Reset = () => {
     const auth = getAuth();
     sendPasswordResetEmail(auth, data.email)
       .then(() => {
-        toast.info(`Email sent to ${data.email}`);
+        showToast(`email sent to ${user.email}`);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.error(error);
-        toast.error(`${errorMessage}`);
+        const message = getErrorMessage(error);
+        showToast(message, 'error');
       })
       .finally(() => {
         router.push('/auth/resetSent');

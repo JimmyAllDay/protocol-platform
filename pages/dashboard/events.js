@@ -19,7 +19,9 @@ import {
   getDocs,
 } from 'firebase/firestore';
 import axios from 'axios';
-import { toast } from 'react-toastify';
+
+import getErrorMessage from 'utils/getErrorMessage';
+import showToast from 'utils/toastUtils';
 
 export default function EventsDashboard({ user, data }) {
   //set initial events data
@@ -116,14 +118,15 @@ export default function EventsDashboard({ user, data }) {
         },
       });
 
-      const message = res.data.message;
       const events = res.data.data;
-
-      toast.success(message);
       setEvents(events);
+
+      const message = res.data.message;
+      showToast(message, 'success');
     } catch (error) {
       console.error(error);
-      toast.error(error);
+      const message = getErrorMessage(error);
+      showToast(message, 'error');
     } finally {
       setLoadingHandler(false);
       setFormInputs({

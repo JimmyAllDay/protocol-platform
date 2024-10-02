@@ -3,7 +3,8 @@ import React from 'react';
 import { useContext } from 'react';
 import { AuthContext } from 'context/AuthContext';
 import { useHCaptcha } from 'context/HCaptchaContext';
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
+import getErrorMessage from 'utils/getErrorMessage';
 
 import Link from 'next/link';
 
@@ -15,8 +16,9 @@ export default function LoginButtons() {
     try {
       signOut();
     } catch (error) {
-      console.error(error);
-      toast.error(error);
+      console.error('Error signing out: ', error);
+      const message = getErrorMessage(error);
+      showToast(message, 'error');
     } finally {
       resetCaptcha();
     }

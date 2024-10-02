@@ -10,7 +10,7 @@ import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 import { AuthContext } from 'context/AuthContext';
 import { LoadingContext } from 'context/LoadingContext';
 
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
 
 //TODO: use meta api to return facebook info
 //TODO: use meta api to return instagram info

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import showToast from 'utils/toastUtils';
 import { useForm } from 'react-hook-form';
 
 import { addToMailList } from 'utils/addToMailList';
@@ -21,7 +21,10 @@ export default function SubscribeToMailingList() {
       const added = await addToMailList(email);
       if (added) toast.info('You have been added to the mailing list');
     } catch (error) {
-      toast.error('Error adding to mail list. Please wait and try again.');
+      showToast(
+        'Error adding to mail list. Please wait and try again.',
+        'error'
+      );
     } finally {
       reset();
       resetCaptcha();
