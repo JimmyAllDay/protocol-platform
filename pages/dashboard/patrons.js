@@ -12,19 +12,18 @@ import Image from 'next/image';
 
 import { MdOutlineEmail } from 'react-icons/md';
 
-import admin from 'lib/firebase/server/config';
-import { getAllDocs } from 'lib/firebase/server/ssr/getAllDocs';
+import { AuthContext } from 'context/AuthContext';
+import useAuthGuard from 'components/auth/useAuthGuard';
 
 //TODO: does the delete function work? How should it work?
 //TODO: You should set up a QR code so people can scan when they arrive.
 //TODO: Error handling for different errors in getServerSideProps needs updating. Error handling for failure of coded token will be different to if.the patrons collection isn't fetched
 
-export default function PatronsDashboard({ user, patronsList, eventsList }) {
+export default function PatronsDashboard({ patronsList, eventsList }) {
   const router = useRouter();
 
-  if (user?.isAdmin === false || user === {}) {
-    router.push('/');
-  }
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
 
   const [progress, setProgress] = useState('0%');
   const [loading, setLoading] = useState(false);
@@ -116,7 +115,7 @@ export default function PatronsDashboard({ user, patronsList, eventsList }) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <form
-                  className="flex flex-col bg-primary space-y-2"
+                  className="flex flex-col space-y-2"
                   onSubmit={handleSubmit}
                 >
                   <select className="form-input">
@@ -177,22 +176,25 @@ export default function PatronsDashboard({ user, patronsList, eventsList }) {
 }
 
 export const getServerSideProps = async (context) => {
+  const verifyToken = require('lib/firebase/server/ssr/verifyToken').default;
+  const checkAdmin = require('lib/firebase/server/ssr/checkAdmin').default;
+  const handleError = require('lib/firebase/server/ssr/handleError').default;
+  const getAllDocs = require('lib/firebase/server/ssr/getAllDocs').default;
+
   const { req } = context;
   const { cookies } = req;
 
-  // Assuming you store the Firebase Auth ID token in a cookie called 'token'
   const token = cookies.p_sessionId || '';
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    // Verify the token using your verifyToken helper
+    const decodedToken = await verifyToken(token);
     const uid = decodedToken.uid;
-    const userDoc = await admin
-      .firestore()
-      .collection('userProfiles')
-      .doc(uid)
-      .get();
 
-    if (!userDoc.exists || !userDoc.data().isAdmin) {
+    // Use the checkAdmin helper function to check if the user is an admin
+    const isAdmin = await checkAdmin(uid);
+
+    if (!isAdmin) {
       return {
         redirect: {
           destination: '/',
@@ -201,23 +203,17 @@ export const getServerSideProps = async (context) => {
       };
     }
 
+    // Use getAllDocs helper to fetch patrons and events data
     const patrons = await getAllDocs('patrons');
     const events = await getAllDocs('events');
 
     return {
       props: {
-        user: decodedToken,
         patronList: patrons,
         eventsList: events,
       },
     };
   } catch (error) {
-    console.error('Error verifying token:', error);
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
+    return handleError(error);
   }
 };

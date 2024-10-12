@@ -9,22 +9,24 @@ import axios from 'axios';
 import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 
 import admin from 'lib/firebase/server/config';
+import { AuthContext } from 'context/AuthContext';
 
-export default function Dashboard({ user, userProfiles }) {
+import useAuthGuard from 'components/auth/useAuthGuard';
+
+export default function Dashboard({ userProfiles }) {
   const [loading, setLoading] = useState(false);
   const [uiError, setUiError] = useState('');
 
   const [profiles, setProfiles] = useState();
+
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
 
   useEffect(() => {
     setProfiles(userProfiles);
   }, []);
 
   const router = useRouter();
-
-  if (user?.isAdmin === false || user === {}) {
-    router.push('/');
-  }
 
   return (
     <Layout>
@@ -55,6 +57,11 @@ export default function Dashboard({ user, userProfiles }) {
 }
 
 export const getServerSideProps = async (context) => {
+  const verifyToken = require('lib/firebase/server/ssr/verifyToken').default;
+  const checkAdmin = require('lib/firebase/server/ssr/checkAdmin').default;
+  const handleError = require('lib/firebase/server/ssr/handleError').default;
+  const getAllDocs = require('lib/firebase/server/ssr/getAllDocs').default;
+
   const { req } = context;
   const { cookies } = req;
 

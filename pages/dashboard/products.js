@@ -10,9 +10,9 @@ import DashMenu from 'components/dashboard/dashMenu/DashMenu';
 import Image from 'next/image';
 
 import axios from 'axios';
-import admin from 'lib/firebase/server/config';
 
-import { getAllDocs } from 'lib/firebase/server/ssr/getAllDocs';
+import { AuthContext } from 'context/AuthContext';
+import useAuthGuard from 'components/auth/useAuthGuard';
 
 export function DashboardProduct({
   id,
@@ -77,14 +77,11 @@ export function DashboardProduct({
   );
 }
 
-export default function ProductsDashboard(user, data) {
-  const router = useRouter();
-  //TODO: fix this when auth solution is fixed
-  //TODO: this won't cover all cases
-  if (user?.isAdmin === false || user === {}) {
-    router.push('/');
-  }
+export default function ProductsDashboard(data) {
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
 
+  const router = useRouter();
   const fileCleanUpRef = React.useRef();
 
   const [progress, setProgress] = useState('0%');
@@ -222,7 +219,7 @@ export default function ProductsDashboard(user, data) {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <form
-                  className="flex flex-col bg-primary space-y-2"
+                  className="flex flex-col space-y-2"
                   onSubmit={handleSubmit}
                 >
                   <input
@@ -330,21 +327,25 @@ export default function ProductsDashboard(user, data) {
 }
 
 export const getServerSideProps = async (context) => {
+  const verifyToken = require('lib/firebase/server/ssr/verifyToken').default;
+  const checkAdmin = require('lib/firebase/server/ssr/checkAdmin').default;
+  const handleError = require('lib/firebase/server/ssr/handleError').default;
+  const getAllDocs = require('lib/firebase/server/ssr/getAllDocs').default;
+
   const { req } = context;
   const { cookies } = req;
 
   const token = cookies.p_sessionId || '';
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
+    // Verify the token using the verifyToken helper
+    const decodedToken = await verifyToken(token);
     const uid = decodedToken.uid;
-    const userDoc = await admin
-      .firestore()
-      .collection('userProfiles')
-      .doc(uid)
-      .get();
 
-    if (!userDoc.exists || !userDoc.data().isAdmin) {
+    // Use the checkAdmin helper to verify the user's admin status
+    const isAdmin = await checkAdmin(uid);
+
+    if (!isAdmin) {
       return {
         redirect: {
           destination: '/',
@@ -353,23 +354,18 @@ export const getServerSideProps = async (context) => {
       };
     }
 
+    // Fetch products data using the getAllDocs helper
     const products = await getAllDocs('products');
 
     console.log('getServerSideProps: ', products);
 
     return {
       props: {
-        user: decodedToken,
         data: products,
       },
     };
   } catch (error) {
     console.error('Error verifying token:', error);
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    };
+    return handleError(error); // Using handleError helper to handle errors and redirect
   }
 };

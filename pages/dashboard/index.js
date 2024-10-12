@@ -13,10 +13,15 @@ import { LoadingContext } from 'context/LoadingContext';
 
 import showToast from 'utils/toastUtils';
 
+import useAuthGuard from 'components/auth/useAuthGuard';
+
 //TODO: use meta api to return facebook info
 //TODO: use meta api to return instagram info
 
-export default function Dashboard({ user, events, users }) {
+export default function Dashboard({ events, users }) {
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
+
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 

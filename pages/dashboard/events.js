@@ -24,7 +24,13 @@ import axios from 'axios';
 import getErrorMessage from 'utils/getErrorMessage';
 import showToast from 'utils/toastUtils';
 
-export default function EventsDashboard({ user, data }) {
+import { AuthContext } from 'context/AuthContext';
+import useAuthGuard from 'components/auth/useAuthGuard';
+
+export default function EventsDashboard({ data }) {
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
+
   //set initial events data
   const [events, setEvents] = useState(data);
   const [progress, setProgress] = useState({ progress: '0%' });
@@ -349,7 +355,6 @@ export const getServerSideProps = async (context) => {
 
     return {
       props: {
-        user: decodedToken,
         data: events,
       },
     };
