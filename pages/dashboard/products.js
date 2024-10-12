@@ -1,4 +1,4 @@
-'use client';
+//* Protected Page
 import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import Link from 'next/link';

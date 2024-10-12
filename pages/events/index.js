@@ -1,3 +1,4 @@
+//* Public Page
 import React, { useEffect, useState } from 'react';
 import { db } from 'lib/firebase/client/config';
 import { collection, getDocs } from 'firebase/firestore';

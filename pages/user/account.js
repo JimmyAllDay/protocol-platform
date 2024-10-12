@@ -1,3 +1,4 @@
+//* Protected Page
 import React, { useState, useContext, useEffect } from 'react';
 
 import { useRouter } from 'next/router';
@@ -11,9 +12,13 @@ import { LoadingContext } from 'context/LoadingContext';
 
 import { useForm, Controller } from 'react-hook-form';
 
+import useAuthGuard from 'components/auth/useAuthGuard';
+
 import axios from 'axios';
 
-export default function Account({ user }) {
+export default function Account() {
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
   const { loading: userLoading } = useContext(LoadingContext);
   const { signOut } = useContext(AuthContext);
   const {
@@ -175,9 +180,7 @@ export const getServerSideProps = async (context) => {
     }
 
     return {
-      props: {
-        user: userData,
-      },
+      props: {},
     };
   } catch (error) {
     return handleError(error);

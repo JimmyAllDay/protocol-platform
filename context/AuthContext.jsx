@@ -5,19 +5,26 @@ import signInWithFacebook from 'lib/firebase/client/auth/facebookSignIn';
 import { signOutUser } from 'lib/firebase/client/auth/signOut';
 import useFirebaseAuth from 'components/auth/useFirebaseAuth';
 import { LoadingContext } from 'context/LoadingContext';
+// import { useRouter } from 'next/router';
 
 const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
-  const { userProfile, fetchUserProfile, setUserProfile, token, fetchToken } =
-    useFirebaseAuth();
   const { loading } = useContext(LoadingContext);
+  const {
+    userProfile,
+    fetchUserProfile,
+    setUserProfile,
+    token,
+    fetchToken,
+    handleSignOut,
+  } = useFirebaseAuth();
 
   const contextValue = {
     createUser: register,
     signIn: manageSignIn,
     fbSignIn: signInWithFacebook,
-    signOut: signOutUser,
+    signOut: handleSignOut,
     user: userProfile,
     fetchUserProfile,
     setUserProfile,

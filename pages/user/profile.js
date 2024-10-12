@@ -1,3 +1,4 @@
+//* Protected Page
 import Layout from '../../components/Layout';
 import React, { useState, useEffect, useContext } from 'react';
 import { useRouter } from 'next/router';
@@ -10,21 +11,23 @@ import { destroyCookie } from 'nookies';
 
 import showToast from 'utils/toastUtils';
 
-export default function Profile({ user }) {
-  const router = useRouter();
-  const { profileComplete } = router.query;
+import useAuthGuard from 'components/auth/useAuthGuard';
 
-  useEffect(() => {
-    if (!user) {
-      router.push('/');
-    }
-  }, [router, user]);
+export default function Profile() {
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
+  const router = useRouter();
+  const { profileComplete, redirect } = router.query;
 
   useEffect(() => {
     if (profileComplete === 'false') {
-      showToast('Please complete your profile before uploading a mix.');
+      showToast(
+        'Please complete your profile before uploading a mix.',
+        'info',
+        redirect
+      );
     }
-  }, [profileComplete]);
+  }, [profileComplete, redirect]);
 
   return (
     <Layout>
@@ -74,9 +77,7 @@ export const getServerSideProps = async (context) => {
     }
 
     return {
-      props: {
-        user: userData,
-      },
+      props: {},
     };
   } catch (error) {
     return handleError(error);

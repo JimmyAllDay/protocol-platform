@@ -1,4 +1,3 @@
-'use client';
 import React, { useState, useEffect } from 'react';
 import showToast from 'utils/toastUtils';
 import { useForm } from 'react-hook-form';
@@ -19,7 +18,7 @@ export default function SubscribeToMailingList() {
   const submitHandler = async ({ email }) => {
     try {
       const added = await addToMailList(email);
-      if (added) toast.info('You have been added to the mailing list');
+      if (added) showToast('You have been added to the mailing list');
     } catch (error) {
       showToast(
         'Error adding to mail list. Please wait and try again.',

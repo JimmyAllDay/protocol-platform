@@ -20,6 +20,8 @@ import { AuthContext } from 'context/AuthContext';
 
 import headerLinks, { footerLinks, getNavMenuLinks } from 'utils/links';
 
+import { useRouter } from 'next/router';
+
 const Layout = ({ title, children, ...rest }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [showNav, setShowNav] = useState(false);

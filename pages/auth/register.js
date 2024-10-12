@@ -1,3 +1,4 @@
+//* Partially Protected Page
 import React, { useState, useContext, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
@@ -169,3 +170,46 @@ const Register = () => {
 };
 
 export default Register;
+
+export const getServerSideProps = async (context) => {
+  const verifyToken = require('lib/firebase/server/ssr/verifyToken').default;
+  const getSingleDoc = require('lib/firebase/server/ssr/getSingleDoc').default;
+  const handleError = require('lib/firebase/server/ssr/handleError').default;
+
+  try {
+    const { req } = context;
+    const { cookies } = req;
+    const token = cookies.p_sessionId || '';
+
+    // If a token exists, verify it and redirect the user if logged in
+    if (token) {
+      const decodedToken = await verifyToken(token);
+      const uid = decodedToken.uid;
+
+      try {
+        const userData = await getSingleDoc('userProfiles', uid);
+
+        // If the user data is valid, redirect to the main page
+        if (userData) {
+          return {
+            redirect: {
+              destination: '/',
+              permanent: false,
+            },
+          };
+        }
+      } catch (error) {
+        console.error('Invalid or revoked token');
+        // Destroy the cookie if token or user data is invalid/revoked
+        destroyCookie(context, 'p_sessionId', { path: '/' });
+      }
+    }
+
+    // If the token doesn't exist or is invalid, let the user proceed to the login page
+    return {
+      props: {},
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};

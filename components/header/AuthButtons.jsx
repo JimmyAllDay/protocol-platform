@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import { useContext } from 'react';
 import { AuthContext } from 'context/AuthContext';
@@ -8,13 +7,16 @@ import getErrorMessage from 'utils/getErrorMessage';
 
 import Link from 'next/link';
 
+import { useRouter } from 'next/router';
+
 export default function LoginButtons() {
   const { user, signOut } = useContext(AuthContext);
   const { resetCaptcha } = useHCaptcha();
+  const router = useRouter();
 
-  function handleLogOut() {
+  async function handleLogOut() {
     try {
-      signOut();
+      await signOut();
     } catch (error) {
       console.error('Error signing out: ', error);
       const message = getErrorMessage(error);

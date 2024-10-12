@@ -96,5 +96,5 @@ catch (error) {
   // Log the full error to the console for debugging (or send it to your server)
 console.error('Detailed Error Log:', error);
 const message = getErrorMessage(error);
-toast.error(message);
+ShowToast(message, 'error');
 } */

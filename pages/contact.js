@@ -1,3 +1,4 @@
+//* Public Page
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import Layout from '../components/Layout';

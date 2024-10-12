@@ -1,4 +1,4 @@
-'use client';
+//* Protected Page
 import React, { useState, useContext, useEffect } from 'react';
 
 import { useRouter } from 'next/router';

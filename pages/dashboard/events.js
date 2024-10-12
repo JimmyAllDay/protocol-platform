@@ -1,3 +1,4 @@
+//* Protected Page
 import React, { useState, useContext, useEffect, useRef } from 'react';
 
 import Link from 'next/link';
@@ -153,7 +154,7 @@ export default function EventsDashboard({ user, data }) {
       const events = res.data.events;
       const message = res.data.message;
       setEvents(events);
-      toast.info(message);
+      showToast(message);
     } catch (error) {
       console.error(error);
     } finally {

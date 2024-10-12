@@ -1,3 +1,4 @@
+//* Protected Page
 import React, { useState, useEffect, useContext, useRef } from 'react';
 
 import { AuthContext } from 'context/AuthContext';
@@ -25,9 +26,15 @@ import Tooltip from 'components/forms/formComponents/tooltip/Tooltip';
 import ConfirmationModal from 'components/forms/formComponents/confirmationModal/ConfirmationModal';
 import sendMixUploadNotice from 'lib/emailjs/sendMixUploadNotice';
 
+import cryptoRandomString from 'crypto-random-string';
+
+import useAuthGuard from 'components/auth/useAuthGuard';
+
 //TODO: See if you can stream audio directly to interface using a player component - not part of MVP
 
-export default function Uploads({ user }) {
+export default function Uploads() {
+  const { user } = useContext(AuthContext);
+  useAuthGuard(user);
   const { loading: userLoading } = useContext(LoadingContext);
 
   const router = useRouter();
@@ -43,6 +50,13 @@ export default function Uploads({ user }) {
   // WATCH THE INPUT VALUES TO DETERMINE IF THEY'RE FILLED
   const watchMixName = watch('name');
   const watchFile = watch('file');
+
+  useEffect(() => {
+    console.log(user);
+    if (!user) {
+      router.push('/');
+    }
+  }, [user]);
 
   useEffect(() => {
     const getUploads = async (user) => {
@@ -284,6 +298,8 @@ export const getServerSideProps = async (context) => {
   const getSingleDoc = require('lib/firebase/server/ssr/getSingleDoc').default;
   const handleError = require('lib/firebase/server/ssr/handleError').default;
 
+  const randomString = cryptoRandomString({ length: 12 });
+
   try {
     const { req } = context;
     const { cookies } = req;
@@ -291,21 +307,19 @@ export const getServerSideProps = async (context) => {
     const decodedToken = await verifyToken(token);
     const uid = decodedToken.uid;
 
-    const userData = await getSingleDoc('userProfiles', uid);
+    const userManagementData = await getSingleDoc('userManagement', uid);
 
-    if (!userData.profileComplete) {
+    if (!userManagementData.userProfileUpdates.profileComplete) {
       return {
         redirect: {
-          destination: '/user/profile?profileComplete=false',
+          destination: `/user/profile?profileComplete=false&redirect=${randomString}`,
           permanent: false,
         },
       };
     }
 
     return {
-      props: {
-        user: userData,
-      },
+      props: {},
     };
   } catch (error) {
     return handleError(error);

@@ -3,13 +3,15 @@ import { auth } from 'lib/firebase/client/config';
 import { getUserProfile } from 'lib/firebase/client/auth/signIn/getUserProfile';
 import { LoadingContext } from 'context/LoadingContext';
 import showToast from 'utils/toastUtils';
-import { signOutUser } from 'lib/firebase/client/auth/signOut';
 import { setCookie, destroyCookie } from 'nookies';
+import { signOutUser } from 'lib/firebase/client/auth/signOut';
+import { useRouter } from 'next/router';
 
 const useFirebaseAuth = () => {
   const [userProfile, setUserProfile] = useState(null);
   const [token, setToken] = useState(null); //* This is being logged in a useEffect hook but is otherwise redundant
   const { handleLoading } = useContext(LoadingContext);
+  const router = useRouter();
 
   // Fetch token
   const fetchToken = useCallback(
@@ -90,6 +92,16 @@ const useFirebaseAuth = () => {
     return () => unsubscribe();
   }, [fetchUserProfile, handleLoading]);
 
+  // Wrapped signOut for syncing server and client state (pushes to login page where getServerSideProps runs a profile check to match state)
+  const handleSignOut = async () => {
+    try {
+      await signOutUser();
+      router.push('/auth/login?userLoggedOut=true');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
+
   // //  Console Log profile changes
   // useEffect(() => {
   //   console.log(
@@ -100,7 +112,14 @@ const useFirebaseAuth = () => {
   //   console.log('User Profile object: ', userProfile);
   // }, [userProfile, token]);
 
-  return { userProfile, fetchUserProfile, setUserProfile, token, fetchToken };
+  return {
+    userProfile,
+    fetchUserProfile,
+    setUserProfile,
+    token,
+    fetchToken,
+    handleSignOut,
+  };
 };
 
 export default useFirebaseAuth;

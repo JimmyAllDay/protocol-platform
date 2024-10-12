@@ -1,3 +1,4 @@
+//* Public Page
 import React from 'react';
 import Layout from '../components/Layout';
 import privacyPolicyInfo from '/utils/privacyPolicy';

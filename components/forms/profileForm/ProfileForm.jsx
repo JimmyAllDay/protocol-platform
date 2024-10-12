@@ -64,7 +64,10 @@ export default function ProfileForm({ user }) {
       } else {
         await fetchUserProfile(userData.uid, true);
         setUserData(response);
-        showToast('Profile updated successfully.', 'success');
+        showToast(
+          `Profile updated successfully. Upload a demo if you haven't already done so.`,
+          'success'
+        );
       }
     } catch (error) {
       console.error('Unhandled error: ', error);
@@ -157,7 +160,7 @@ export default function ProfileForm({ user }) {
             },
           }}
           autoFocus={false}
-          onClick={() => toast.info(`Email can't be changed right now. Sorry.`)} //*Email change not implemented. If the user wants to change their email, it will have to sync with firebase auth.
+          onClick={() => showToast(`Email can't be changed right now. Sorry.`)} //*Email change not implemented. If the user wants to change their email, it will have to sync with firebase auth.
           register={register}
           errors={errors}
           readOnly={true}
