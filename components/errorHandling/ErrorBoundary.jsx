@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Link from 'next/link';
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -19,7 +20,27 @@ class ErrorBoundary extends Component {
   render() {
     if (this.state.hasError) {
       // You can render any custom fallback UI
-      return <h1>Something went wrong.</h1>;
+      return (
+        <div className="error-fallback">
+          <h1>Oops! Something went wrong.</h1>
+          <p>You can try either returning to the home page.</p>
+          <button
+            className="button-primary"
+            onClick={() => (window.location.href = '/')}
+          >
+            Go to Home
+          </button>
+          <p>
+            If the error keeps happening, contact{' '}
+            <a
+              className="mailLink"
+              href="mailto:protocol.underground@gmail.com?subject=Protocol%20App%20Error&body=The%20Protocol%20Underground%20App%20Crashed..."
+            >
+              support.
+            </a>
+          </p>
+        </div>
+      );
     }
 
     return this.props.children;

@@ -6,6 +6,7 @@ import Layout from '../components/Layout';
 import championLogo from '../public/assets/images/PULogo - cutout - abbrev - solid.png';
 import championLogoDark from '../public/assets/images/PULogo - cutout - abbrev.png';
 import { useTheme } from 'context/ThemeContext';
+import ErrorTestComponent from 'components/errorHandling/ErrorTestComponent';
 
 export default function Home() {
   const { theme } = useTheme();

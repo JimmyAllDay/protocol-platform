@@ -118,6 +118,10 @@
   @apply text-primary dark:text-primaryDark hover:text-primaryDark dark:hover:text-accentDark hover:cursor-pointer;
 }
 
+.mailLink {
+  @apply text-accent2 dark:text-accentDark hover:text-accent hover:dark:text-accent2Dark;
+}
+
 .navLink {
   @apply text-primaryDark hover:text-accent dark:hover:text-accentDark hover:cursor-pointer;
 }
@@ -135,4 +139,8 @@
 }
 
 .progress-bar {
+}
+
+.error-fallback {
+  @apply bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark space-y-10 space-x-2 h-screen;
 }
