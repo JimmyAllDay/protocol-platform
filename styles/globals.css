@@ -68,7 +68,7 @@
 }
 
 .form-input {
-  @apply placeholder-accent3 dark:placeholder-accentGrey text-primary border border-border dark:border-borderDark dark:text-primaryDark bg-background dark:bg-backgroundDark p-1 rounded;
+  @apply placeholder-accent3 dark:placeholder-accentGrey border border-border dark:border-borderDark bg-background dark:bg-backgroundDark p-1 rounded;
 }
 
 .form-input-contact {
@@ -145,5 +145,5 @@
   @apply bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark space-y-10 space-x-2 h-screen;
 }
 .form-error-text {
-  @apply text-accent2 dark:text-red-600 text-xs;
+  @apply text-accent2 dark:text-red-700 opacity-70 text-xs p-2;
 }

@@ -100,7 +100,7 @@ export default function Account() {
                 defaultValue=""
                 placeholder={user?.email}
                 rules={{
-                  required: 'Email address is required',
+                  required: 'Email address is required to delete account',
                   validate: (value) => {
                     if (!value.trim()) {
                       return 'email address cannot be empty or contain only spaces';
@@ -112,18 +112,21 @@ export default function Account() {
                   },
                 }}
                 render={({ field, fieldState }) => (
-                  <>
+                  <div className="flex flex-col">
+                    <p className="text-md p-1 text-accent2 dark:text-red-700 opacity-70">
+                      {user?.email}
+                    </p>
                     <input
                       className="form-input"
                       placeholder={user?.email}
                       {...field}
                     />
                     {fieldState?.error && (
-                      <p className="text-accent2 dark:text-red-500">
+                      <p className="form-error-text">
                         {fieldState.error.message}
                       </p>
                     )}
-                  </>
+                  </div>
                 )}
               />
 

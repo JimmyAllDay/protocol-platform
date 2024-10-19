@@ -24,9 +24,13 @@ const InputField = ({
       </label>
       <input
         type="text"
-        className="form-input p-1 rounded"
+        className={`form-input p-1 rounded ${
+          readOnly
+            ? 'text-gray-500 cursor-not-allowed'
+            : 'text-primary dark:text-primaryDark'
+        }`}
         id={name}
-        defaultValue={defaultValue}
+        value={defaultValue}
         autoFocus={autoFocus}
         onClick={onClick}
         readOnly={readOnly}

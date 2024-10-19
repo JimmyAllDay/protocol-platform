@@ -22,7 +22,7 @@ This flow leads to the below possible outcomes for subsequent log in attempts. T
 
 ## Attempt to Sign In Without Registering
 
-A firebase error is returned to the user stating that the account does not exist
+An error is returned to the user stating that the account does not exist
 
 ## Attempt to Sign In Without Email Verification
 
@@ -40,13 +40,13 @@ The user is redirected to the main page of the application.
 
 ## Multiple Sign-Up Attempts With the Same Email After Email Verification
 
-## Email Change Request Before Verification
+## Email Change Request Before or after verification
 
 This is not handled by the app.
 
-## Account Deletion Request Before Or After Email Verification
+## Account Deletion Request After Email Verification
 
-This is not handled by the app.
+Users can delete their account if they wish by going to the Account page.
 
 ## Attempting to Use the Verification Link After It Expires
 
