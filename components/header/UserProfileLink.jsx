@@ -48,11 +48,11 @@ export default function UserLink() {
         </Link>
         {hover && (
           <div
-            className="absolute w-[160px] top-7 right-4 bg-primary dark:bg-primaryDark dark:border-white dark:text-primaryDark dark:hover:text-accentDark"
+            className="absolute w-[180px] top-7 right-4 dark:text-primaryDark dark:hover:text-accentDark"
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >
-            <div className="border-t border-s border-e border dark:border-white border-black flex flex-col">
+            <div className="border-t border-s border-e border dark:border-borderDark border-border flex flex-col">
               <Link
                 href="/user/profile"
                 className="text-primary hover:text-primaryDark border-b border-black  dark:border-white dark:text-primaryDark dark:hover:text-accentDark p-1"
@@ -67,18 +67,10 @@ export default function UserLink() {
               </Link>
               <Link
                 href="/user/account"
-                className="text-primary hover:text-primaryDark border-b dark:border-white dark:text-primaryDark dark:hover:text-accentDark border-black p-1"
+                className="text-primary hover:text-primaryDark dark:text-primaryDark dark:hover:text-accentDark p-1"
               >
                 Account
               </Link>
-              {user.isAdmin && (
-                <Link
-                  href="/dashboard"
-                  className="text-primary hover:text-primaryDark dark:border-white dark:text-primaryDark dark:hover:text-accentDark p-1"
-                >
-                  Dashboard
-                </Link>
-              )}
             </div>
           </div>
         )}
