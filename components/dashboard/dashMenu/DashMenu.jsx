@@ -8,6 +8,7 @@ import { FaUsers } from 'react-icons/fa';
 import { IoTicketSharp } from 'react-icons/io5';
 import { MdOutlineViewKanban } from 'react-icons/md';
 import { RiUserSharedLine } from 'react-icons/ri';
+import { FaGear } from 'react-icons/fa6';
 
 export default function DashMenu() {
   const router = useRouter();
@@ -22,6 +23,11 @@ export default function DashMenu() {
       name: 'Products',
       icon: <AiOutlineShoppingCart />,
       href: '/dashboard/products',
+    },
+    {
+      name: 'Settings',
+      icon: <FaGear />,
+      href: '/dashboard/settings',
     },
   ];
 
