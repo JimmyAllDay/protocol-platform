@@ -26,7 +26,7 @@ export default function CheckInput({
         </label>
       </div>
       {errors[name] && (
-        <div className="text-accent2 text-xs">This field is required</div>
+        <div className="form-error-text">This field is required</div>
       )}
     </div>
   );

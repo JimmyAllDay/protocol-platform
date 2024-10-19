@@ -29,7 +29,7 @@ export default function Page({ event }) {
         <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div className="col-span-1 text-md md:text-lg text-justify space-y-6 order-2 md:order-1 p-2">
             <p>{event.content}</p>
-            <p>Protocol. Welcome to the lower level.</p>
+            <p>Pro.ground. The lower level.</p>
           </div>
           {event.imageUrl && (
             <div className="col-span-1 h-96 relative order-1 md:order-2">
@@ -54,7 +54,6 @@ export async function getServerSideProps(context) {
 
   try {
     const docSnap = await docRef.get();
-    console.log('prop data: ', docSnap.data());
 
     if (!docSnap.exists) {
       return { notFound: true };

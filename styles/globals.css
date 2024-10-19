@@ -144,3 +144,6 @@
 .error-fallback {
   @apply bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark space-y-10 space-x-2 h-screen;
 }
+.form-error-text {
+  @apply text-accent2 dark:text-red-600 text-xs;
+}

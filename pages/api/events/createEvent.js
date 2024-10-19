@@ -9,7 +9,16 @@ const makeFilePublic = async (filePath) => {
   console.log(`gs://${bucket.name}/${file.name} is now public.`);
 };
 
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: '5mb',
+    },
+  },
+};
+
 export default async function handler(req, res) {
+  console.log(req.body);
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -58,9 +67,9 @@ export default async function handler(req, res) {
       createdBy,
       createdAt,
     });
-
+    console.log('event ref: ', eventRef);
     const eventId = eventRef.id;
-
+    console.log('event id: ', eventId);
     // Update the event document to include the ID
     await eventRef.update({ id: eventId });
 

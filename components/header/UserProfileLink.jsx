@@ -48,7 +48,7 @@ export default function UserLink() {
         </Link>
         {hover && (
           <div
-            className="absolute w-[160px] top-7 left-4 bg-primary dark:bg-primaryDark dark:border-white dark:text-primaryDark dark:hover:text-accentDark"
+            className="absolute w-[160px] top-7 right-4 bg-primary dark:bg-primaryDark dark:border-white dark:text-primaryDark dark:hover:text-accentDark"
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >

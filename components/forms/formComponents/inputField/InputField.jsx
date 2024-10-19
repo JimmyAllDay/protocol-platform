@@ -33,7 +33,7 @@ const InputField = ({
         {...register(name, validation)}
       />
       {errors[name] && (
-        <div className="text-accent2 text-xs">{errors[name].message}</div>
+        <div className="form-error-text">{errors[name].message}</div>
       )}
     </div>
   );

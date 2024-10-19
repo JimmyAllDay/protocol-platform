@@ -58,9 +58,9 @@ const Header = ({ showNav, setShowNav, showNavMenu, links }) => {
           </div>
         </nav>
         <div
-          className={`ms-auto md:hidden border-2 rounded dark:border-white z-50 w-13 w-[52px] ${
-            showNav ? 'text-primaryDark border-white' : 'border-black'
-          }`}
+          className={`ms-auto md:hidden border-2 rounded dark:border-white border-black z-50 w-13 w-[52px] ${
+            showNav ? 'text-primaryDark border-white fixed' : 'absolute'
+          } top-10 right-4`}
         >
           <Hamburger
             toggled={showNav}

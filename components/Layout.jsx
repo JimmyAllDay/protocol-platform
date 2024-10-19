@@ -3,6 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import Head from 'next/head';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 import HotJarAnalytics from './analytics/HotJarAnalytics';
+import Metricool from './analytics/Metricool';
 
 import Header from './header/Header';
 import Footer from './footer/Footer';
@@ -51,6 +52,7 @@ const Layout = ({ title, children, ...rest }) => {
       </Head>
       <GoogleAnalytics />
       <HotJarAnalytics />
+      <Metricool />
       <ToastContainer
         position="bottom-center"
         autoClose={5000}

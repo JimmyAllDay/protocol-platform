@@ -52,13 +52,6 @@ export default function Uploads() {
   const watchFile = watch('file');
 
   useEffect(() => {
-    console.log(user);
-    if (!user) {
-      router.push('/');
-    }
-  }, [user]);
-
-  useEffect(() => {
     const getUploads = async (user) => {
       try {
         const res = await fetchUploads(user);

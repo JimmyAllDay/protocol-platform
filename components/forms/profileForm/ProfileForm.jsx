@@ -19,6 +19,9 @@ import { genreOptions } from './genreOptions';
 import { equipmentOptions } from './equipmentOptions';
 import { locationOptions } from './locationOptions';
 
+import cryptoRandomString from 'crypto-random-string';
+import { random } from 'lodash';
+
 export default function ProfileForm({ user }) {
   const [buttonLoading, setButtonLoading] = useState(false);
   const [userData, setUserData] = useState(user || {});
@@ -39,16 +42,19 @@ export default function ProfileForm({ user }) {
       email: userData?.email,
       equipmentUsed: userData.equipmentUsed || null,
       genresPlayed: userData.genresPlayed || null,
-      willTravelTo: userData.willTravelTo || null,
+      isCheckedWillTravelTo: userData.isCheckedWillTravelTo || null,
       isCheckedEquipment: userData.isCheckedEquipment || false,
       isCheckedPromo: userData?.isCheckedPromo || false,
       instagramHandle: userData?.instagramHandle || '',
       isCheckedInstagram: userData?.isCheckedInstagram || false,
+      tiktokHandle: userData?.isCheckedFacebook || false,
+      isCheckedTikTok: userData?.isCheckedTikTok || false,
       facebookName: userData?.facebookName || '',
       isCheckedFacebook: userData?.isCheckedFacebook || false,
-      stageName: userData?.stageName || '',
     },
   });
+
+  const randomString = cryptoRandomString({ length: 12 });
 
   const submitHandler = async (data) => {
     setButtonLoading(true);
@@ -57,7 +63,7 @@ export default function ProfileForm({ user }) {
       if (response.error) {
         // Handle error case, possibly set an error message state to show in the UI
         console.error('Error updating document: ', response.error);
-        showToast(response.error, 'error');
+        showToast(response.error, 'error', randomString);
       } else if (response.message) {
         // Handle no-change case
         showToast(response.message, 'info');
@@ -65,13 +71,18 @@ export default function ProfileForm({ user }) {
         await fetchUserProfile(userData.uid, true);
         setUserData(response);
         showToast(
-          `Profile updated successfully. Upload a demo if you haven't already done so.`,
-          'success'
+          `Profile updated successfully. Upload a demo if you haven't already.`,
+          'success',
+          randomString
         );
       }
     } catch (error) {
       console.error('Unhandled error: ', error);
-      showToast('An error occurred while updating your profile.', 'error');
+      showToast(
+        'An error occurred while updating your profile.',
+        'error',
+        randomString
+      );
     }
     setButtonLoading(false);
   };
@@ -83,7 +94,6 @@ export default function ProfileForm({ user }) {
         className="flex flex-col space-y-4 p-4 max-w-xl border border-primary rounded form"
       >
         <Heading label="Personal" />
-
         <InputField
           name="firstName"
           label="First Name"
@@ -95,7 +105,6 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={false}
         />
-
         <InputField
           name="surname"
           label="Surname"
@@ -107,16 +116,15 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={false}
         />
-
         <InputField
-          name="displayName" //* This is described as 'displayName' and not 'userName' because this identifier mirrors a property on the firebase auth object. It may be the case that you want to update this auth object with this value in the future.
-          label="Username"
-          tooltip="Enter Username"
+          name="displayName" //* This is described as 'displayName' and not 'stageName' because this identifier mirrors a property on the firebase auth object. It may be the case that you want to update this auth object with this value in the future.
+          label="Stage Name"
+          tooltip="Enter Stage Name. This will be your username on the Pro.ground site and will appear on promotional material."
           validation={{
-            required: 'Please enter a username',
+            required: 'Please enter a stage name',
             minLength: {
               value: 3,
-              message: 'Username should be at least 3 characters',
+              message: 'Stage name should be at least 3 characters',
             },
           }}
           autoFocus={false}
@@ -125,7 +133,6 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={false}
         />
-
         <InputField
           name="phone"
           label="Phone Number"
@@ -147,7 +154,6 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={false}
         />
-
         <InputField
           name="email"
           label="Email"
@@ -165,9 +171,7 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={true}
         />
-
         <Heading label="Logistical" />
-
         <SelectList
           name="genresPlayed"
           label="Genres I play"
@@ -176,21 +180,12 @@ export default function ProfileForm({ user }) {
           options={genreOptions}
         />
         <SelectList
-          name="willTravelTo"
-          label="I can travel to"
-          tooltip="We need to know how far you can travel for a gig"
-          control={control}
-          options={locationOptions}
-        />
-
-        <SelectList
           name="equipmentUsed"
           label="Equipment I use"
           tooltip="We need to know what equipment you use, so we can set up at gigs."
           control={control}
           options={equipmentOptions}
         />
-
         <CheckInput
           name="isCheckedEquipment"
           label="If the equipment I use is non-standard, I can bring it to gigs."
@@ -201,27 +196,25 @@ export default function ProfileForm({ user }) {
           register={register}
           errors={errors}
         />
-
-        <Heading label="Promotional" />
-
-        <InputField
-          name="stageName"
-          label="Stage Name"
-          tooltip="This is the name we'll put on promo material"
+        <CheckInput
+          name="isCheckedWillTravelTo"
+          label="I can travel to Melbourne CB for gigs."
           validation={{
-            required: 'Please enter a stage name',
-            minLength: {
-              value: 3,
-              message: 'Stage name should be at least 3 characters',
-            },
+            required: true,
           }}
-          autoFocus={false}
-          onClick={null}
+          toolTip="We will ask you to travel to Melbourne CBD and the surrounding areas for gigs."
           register={register}
           errors={errors}
-          readOnly={false}
         />
-
+        {/* //* This is commented out for mvp and may change later
+        <SelectList
+          name="isCheckedWillTravelTo"
+          label="I can travel to"
+          tooltip="We need to know how far you can travel for a gig"
+          control={control}
+          options={locationOptions}
+        /> */}
+        <Heading label="Promotional" />
         <CheckInput
           name="isCheckedPromo"
           label=" I will assist to promote myself and protocol events by
@@ -233,7 +226,6 @@ export default function ProfileForm({ user }) {
           register={register}
           errors={errors}
         />
-
         <InputField
           name="instagramHandle"
           label="Instagram Handle"
@@ -256,7 +248,6 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={false}
         />
-
         <CheckInput
           name="isCheckedInstagram"
           label="I have followed protocol underground on instagram."
@@ -267,21 +258,24 @@ export default function ProfileForm({ user }) {
           register={register}
           errors={errors}
         />
-
         <InputField
-          name="facebookName"
-          label="Facebook Name"
-          tooltip="We need this to verify you've followed us on Facebook"
+          name="tiktokName"
+          label="Tiktok Handle"
+          tooltip="We need this to verify you've followed us on Tiktok"
           validation={{
-            required: 'Facebook username is required',
+            required: 'TikTok username is required',
             minLength: {
-              value: 5,
-              message: 'Username must be at least 5 characters',
+              value: 2,
+              message: 'TikTok username must be at least 2 characters',
+            },
+            maxLength: {
+              value: 24,
+              message: 'TikTok username must be no longer than 24 characters',
             },
             pattern: {
-              value: /^[a-zA-Z0-9._]+$/,
+              value: /^(?!.*\.\.)(?!.*\.$)[a-z0-9._]*(@[a-zA-Z]+)[a-z0-9._]*$/,
               message:
-                'Username can only contain alphanumeric characters, periods, and underscores',
+                'TikTok username must contain an @ symbol followed by letters. It can only contain alphanumeric characters, underscores, full stops (no consecutive or trailing periods)',
             },
           }}
           autoFocus={false}
@@ -290,10 +284,41 @@ export default function ProfileForm({ user }) {
           errors={errors}
           readOnly={false}
         />
-
+        <CheckInput
+          name="isCheckedTikTok"
+          label="I have followed protocol underground on Tiktok."
+          validation={{
+            required: true,
+          }}
+          toolTip="We want you to follow us so we can raise the profile of our events. This will ultimately help us promote you."
+          register={register}
+          errors={errors}
+        />
+        <InputField
+          name="facebookName"
+          label="Facebook Name"
+          tooltip="We need this to verify you've followed us on Facebook"
+          validation={{
+            required: 'Facebook username is required',
+            minLength: {
+              value: 5,
+              message: 'Facebook username must be at least 5 characters',
+            },
+            pattern: {
+              value: /^[a-zA-Z0-9\.]+$/,
+              message:
+                'Facebook username can only contain alphanumeric characters and full stops',
+            },
+          }}
+          autoFocus={false}
+          onClick={null}
+          register={register}
+          errors={errors}
+          readOnly={false}
+        />
         <CheckInput
           name="isCheckedFacebook"
-          label="I have followed protocol underground on facebook."
+          label="I have followed protocol underground on Facebook."
           validation={{
             required: true,
           }}
