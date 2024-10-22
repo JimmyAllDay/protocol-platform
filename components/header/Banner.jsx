@@ -7,7 +7,7 @@ export default function Banner() {
     <div className="bg-primary dark:bg-primaryDark flex items-center justify-center text-center w-screen">
       <div className="marquee w-full">
         <div className="marquee-track w-full">
-          <p className="text-primaryDark dark:text-accent2Dark marquee-content">
+          <p className="text-accent dark:text-accent2Dark marquee-content">
             {bannerMessage}
           </p>
         </div>
