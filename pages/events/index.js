@@ -50,7 +50,6 @@ export default function Events() {
             <>
               {futureEvents && futureEvents.length > 0 && (
                 <div>
-                  <h2 className="text-lg md:text-xl lg:text-xl ps-8">Future</h2>
                   <div className="w-full h-full border-t border-border dark:border-borderDark">
                     {futureEvents.map((event) => (
                       <Link
@@ -74,7 +73,6 @@ export default function Events() {
 
               {pastEvents && pastEvents.length > 0 && (
                 <div>
-                  <h2 className="text-lg md:text-xl lg:text-xl ps-8">Past</h2>
                   <div className="w-full h-full border-t border-border dark:border-borderDark">
                     {pastEvents.map((event) => (
                       <Link
