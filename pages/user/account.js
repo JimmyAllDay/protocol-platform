@@ -113,7 +113,7 @@ export default function Account() {
                 }}
                 render={({ field, fieldState }) => (
                   <div className="flex flex-col">
-                    <p className="text-md p-1 text-accent2 dark:text-red-700 opacity-70">
+                    <p className="text-md p-1 text-red-700 opacity-70">
                       {user?.email}
                     </p>
                     <input

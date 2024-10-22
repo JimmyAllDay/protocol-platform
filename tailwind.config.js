@@ -24,11 +24,11 @@ module.exports = {
         black: 900,
       },
       colors: {
-        accent: '#C0C0C0',
+        accent: '#8C8B8B',
         accentDark: '#B4FEE7',
         accent2: '#404040',
         accent2Dark: '#FFADD3',
-        accent3: '#00000066',
+        accent3: '#000000',
         accent3Dark: '#6495ED',
         accentGrey: '#3C3C3C',
         accentGreyDark: '#3C3C3C',
@@ -38,7 +38,7 @@ module.exports = {
         borderDark: '#FFFFFF',
       },
       backgroundColor: {
-        primary: '#FF6347',
+        primary: '#FFFFFF',
         primaryDark: '#000000',
       },
       textColor: {
