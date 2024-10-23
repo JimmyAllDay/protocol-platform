@@ -54,7 +54,7 @@
 }
 
 .button-primary {
-  @apply border border-backgroundDark bg-backgroundDark text-accent hover:text-white dark:text-accentDark dark:border-accentDark dark:bg-accentDark  dark:bg-opacity-20 dark:hover:bg-opacity-30 px-3 rounded-md;
+  @apply border border-backgroundDark bg-backgroundDark text-primaryDark hover:text-accent dark:text-accentDark dark:border-accentDark dark:bg-accentDark  dark:bg-opacity-20 dark:hover:bg-opacity-30 px-3 rounded-md;
 }
 
 .button-secondary {
@@ -68,7 +68,7 @@
 }
 
 .form-input {
-  @apply placeholder-accent3 dark:placeholder-accentGrey text-primary border border-border dark:border-borderDark dark:text-primaryDark bg-background dark:bg-backgroundDark p-1 rounded;
+  @apply placeholder-accent dark:placeholder-accentGrey border border-border dark:border-borderDark dark:bg-backgroundDark p-1 rounded;
 }
 
 .form-input-contact {
@@ -115,7 +115,7 @@
 /*LINKS*/
 
 .link {
-  @apply text-primary dark:text-primaryDark hover:text-primaryDark dark:hover:text-accentDark hover:cursor-pointer;
+  @apply text-primary dark:text-primaryDark hover:text-accent dark:hover:text-accentDark hover:cursor-pointer;
 }
 
 .mailLink {
@@ -127,7 +127,7 @@
 }
 
 .social-link {
-  @apply p-3 text-2xl rounded-md hover:text-white bg-primaryDark text-accent dark:bg-accentGrey dark:hover:text-accentDark dark:bg-opacity-50 dark:hover:bg-opacity-90;
+  @apply p-3 text-2xl rounded-md hover:text-accent bg-primaryDark text-primaryDark dark:bg-accentGrey dark:hover:text-accentDark dark:bg-opacity-50 dark:hover:bg-opacity-90;
 }
 
 .max-w-content {
@@ -145,5 +145,5 @@
   @apply bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark space-y-10 space-x-2 h-screen;
 }
 .form-error-text {
-  @apply text-accent2 dark:text-red-600 text-xs;
+  @apply text-accent2 dark:text-red-700 opacity-70 text-xs p-2;
 }

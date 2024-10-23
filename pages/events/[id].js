@@ -49,7 +49,6 @@ export default function Page({ event }) {
 
 export async function getServerSideProps(context) {
   const { id } = context.params;
-  console.log('route params: ', id);
   const docRef = admin.firestore().doc(`events/${id}`);
 
   try {

@@ -33,7 +33,7 @@ export default function Home() {
             priority={theme === 'dark'}
           />
         )}
-        <h2 className="text-primary dark:text-primaryDark text-lg">
+        <h2 className="text-primary dark:text-primaryDark text-lg p-3">
           Welcome to the lower level.
         </h2>
       </div>

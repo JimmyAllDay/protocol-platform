@@ -22,8 +22,10 @@ export default function UserLink() {
 
   if (loading) return <div className="my-auto text-sm p-2">Loading...</div>;
 
-  const iconStyles = `mx-auto text-2xl text-primary dark:text-accentDark dark:bg-accentDark ${
-    hover ? 'dark:bg-opacity-50' : 'dark:bg-opacity-30'
+  const iconStyles = `mx-auto text-2xl text-primary dark:text-accentDark dark:bg-accentDark bg-black ${
+    hover
+      ? 'bg-opacity-50 dark:bg-opacity-50'
+      : 'bg-opacity-30 dark:bg-opacity-30'
   } rounded-xl ms-2`;
 
   return (
@@ -35,7 +37,7 @@ export default function UserLink() {
             onMouseLeave={handleHoverLeave}
             className="flex"
           >
-            <h2 className="hover:text-primaryDark hover:dark:text-accentDark dark">
+            <h2 className="link">
               Hi,{' '}
               {user.displayName ||
                 user?.email?.substring(0, user?.email?.indexOf('@')) ||
@@ -48,27 +50,24 @@ export default function UserLink() {
         </Link>
         {hover && (
           <div
-            className="absolute w-[180px] top-7 right-4 dark:text-primaryDark dark:hover:text-accentDark"
+            className="absolute w-[180px] top-7 right-4 dark:text-primaryDark dark:hover:text-accentDark bg-primary dark:bg-primaryDark"
             onMouseEnter={handleHoverEnter}
             onMouseLeave={handleHoverLeave}
           >
             <div className="border-t border-s border-e border dark:border-borderDark border-border flex flex-col">
               <Link
                 href="/user/profile"
-                className="text-primary hover:text-primaryDark border-b border-black  dark:border-white dark:text-primaryDark dark:hover:text-accentDark p-1"
+                className="link border-b border-black dark:border-b-white p-1"
               >
                 Profile
               </Link>
               <Link
                 href="/user/uploads"
-                className="text-primary hover:text-primaryDark border-b dark:border-white dark:text-primaryDark dark:hover:text-accentDark border-black p-1"
+                className="link border-b border-black dark:border-b-white p-1"
               >
                 Uploads
               </Link>
-              <Link
-                href="/user/account"
-                className="text-primary hover:text-primaryDark dark:text-primaryDark dark:hover:text-accentDark p-1"
-              >
+              <Link href="/user/account" className="link p-1">
                 Account
               </Link>
             </div>

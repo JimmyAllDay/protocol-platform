@@ -47,7 +47,7 @@ export default function ProfileForm({ user }) {
       isCheckedPromo: userData?.isCheckedPromo || false,
       instagramHandle: userData?.instagramHandle || '',
       isCheckedInstagram: userData?.isCheckedInstagram || false,
-      tiktokHandle: userData?.isCheckedFacebook || false,
+      tiktokHandle: userData?.tiktokHandle || false,
       isCheckedTikTok: userData?.isCheckedTikTok || false,
       facebookName: userData?.facebookName || '',
       isCheckedFacebook: userData?.isCheckedFacebook || false,
@@ -91,7 +91,7 @@ export default function ProfileForm({ user }) {
     <FormProvider>
       <form
         onSubmit={handleSubmit(submitHandler)}
-        className="flex flex-col space-y-4 p-4 max-w-xl border border-primary rounded form"
+        className="flex flex-col space-y-4 p-4 max-w-xl rounded form"
       >
         <Heading label="Personal" />
         <InputField
@@ -198,7 +198,7 @@ export default function ProfileForm({ user }) {
         />
         <CheckInput
           name="isCheckedWillTravelTo"
-          label="I can travel to Melbourne CB for gigs."
+          label="I can travel to Melbourne CBD for gigs."
           validation={{
             required: true,
           }}
@@ -250,32 +250,33 @@ export default function ProfileForm({ user }) {
         />
         <CheckInput
           name="isCheckedInstagram"
-          label="I have followed protocol underground on instagram."
+          label="I agree to follow pro.ground on instagram."
           validation={{
             required: true,
           }}
           toolTip="We want you to follow us so we can raise the profile of our events. This will ultimately help us promote you."
           register={register}
           errors={errors}
+          url="https://www.instagram.com"
         />
         <InputField
-          name="tiktokName"
+          name="tiktokHandle"
           label="Tiktok Handle"
           tooltip="We need this to verify you've followed us on Tiktok"
           validation={{
-            required: 'TikTok username is required',
+            required: 'TikTok handle is required',
             minLength: {
               value: 2,
-              message: 'TikTok username must be at least 2 characters',
+              message: 'TikTok handle must be at least 2 characters',
             },
             maxLength: {
               value: 24,
-              message: 'TikTok username must be no longer than 24 characters',
+              message: 'TikTok handle must be no longer than 24 characters',
             },
             pattern: {
               value: /^(?!.*\.\.)(?!.*\.$)[a-z0-9._]*(@[a-zA-Z]+)[a-z0-9._]*$/,
               message:
-                'TikTok username must contain an @ symbol followed by letters. It can only contain alphanumeric characters, underscores, full stops (no consecutive or trailing periods)',
+                'TikTok handle must contain an @ symbol followed by letters. It can only contain alphanumeric characters, underscores, full stops (no consecutive or trailing periods)',
             },
           }}
           autoFocus={false}
@@ -286,13 +287,14 @@ export default function ProfileForm({ user }) {
         />
         <CheckInput
           name="isCheckedTikTok"
-          label="I have followed protocol underground on Tiktok."
+          label="I agree to follow pro.ground on Tiktok."
           validation={{
             required: true,
           }}
           toolTip="We want you to follow us so we can raise the profile of our events. This will ultimately help us promote you."
           register={register}
           errors={errors}
+          url="https://www.tiktok.com/"
         />
         <InputField
           name="facebookName"
@@ -318,13 +320,14 @@ export default function ProfileForm({ user }) {
         />
         <CheckInput
           name="isCheckedFacebook"
-          label="I have followed protocol underground on Facebook."
+          label="I agree to follow pro.ground on Facebook."
           validation={{
             required: true,
           }}
           toolTip="We want you to follow us so we can raise the profile of our events. This will ultimately help us promote you."
           register={register}
           errors={errors}
+          url="https://www.facebook.com/"
         />
         <div className="w-full flex flex-col pt-6 pb-4">
           <button

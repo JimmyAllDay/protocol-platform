@@ -37,7 +37,7 @@ export default function SubscribeToMailingList() {
       onSubmit={handleSubmit(handleSubmitWithCaptcha)}
       className="flex flex-col w-full space-y-4"
     >
-      <p>Join the Protocol mailing list for updates</p>
+      <p>Join the Pro.ground mailing list for updates</p>
       <input
         type="email"
         {...register('email', {

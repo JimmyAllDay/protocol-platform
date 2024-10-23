@@ -50,13 +50,12 @@ export default function Events() {
             <>
               {futureEvents && futureEvents.length > 0 && (
                 <div>
-                  <h2 className="text-lg md:text-xl lg:text-xl ps-8">Future</h2>
                   <div className="w-full h-full border-t border-border dark:border-borderDark">
                     {futureEvents.map((event) => (
                       <Link
                         key={event.id}
                         href={`events/${event.id}`}
-                        className="hover:text-primaryDark flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl link"
+                        className="flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl link"
                       >
                         <div className="border-b border-border dark:border-borderDark py-1 px-2 sm:px-4 md:px-6 flex w-full">
                           <h3 className="max-w-content flex-grow">
@@ -74,13 +73,12 @@ export default function Events() {
 
               {pastEvents && pastEvents.length > 0 && (
                 <div>
-                  <h2 className="text-lg md:text-xl lg:text-xl ps-8">Past</h2>
                   <div className="w-full h-full border-t border-border dark:border-borderDark">
                     {pastEvents.map((event) => (
                       <Link
                         key={event.id}
                         href={`events/${event.id}`}
-                        className="hover:text-primaryDark flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl link"
+                        className="flex w-full text-xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl link"
                       >
                         <div className="border-b border-border dark:border-borderDark py-1 px-2 sm:px-4 md:px-6 flex w-full">
                           <h3 className="max-w-content flex-grow">

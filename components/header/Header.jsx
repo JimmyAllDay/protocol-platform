@@ -42,11 +42,7 @@ const Header = ({ showNav, setShowNav, showNavMenu, links }) => {
           <ul className="flex my-auto">
             {links.map((link, i) => {
               return (
-                <Link
-                  key={i}
-                  href={link.href}
-                  className="hover:text-white dark:hover:text-accentDark mx-2"
-                >
+                <Link key={i} href={link.href} className="link mx-2">
                   {link.name}
                 </Link>
               );
