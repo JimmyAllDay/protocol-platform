@@ -7,33 +7,13 @@ const ThemeToggle = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <>
-      <label className="flex cursor-pointer select-none items-center">
-        <div className="relative">
-          <input
-            type="checkbox"
-            checked={theme === 'dark'}
-            onChange={() => {
-              toggleTheme();
-            }}
-            className="sr-only"
-          />
-          <div className={`box block h-5 w-9 rounded-full bg-primaryDark`}>
-            <div className="flex border border-accent text-primaryDark justify-between items-center w-full h-full p-0.5 rounded-full text-sm">
-              <FaRegMoon />
-              <div className="text-primaryDark">
-                <LuSun />
-              </div>
-            </div>
-          </div>
-          <div
-            className={`absolute left-0.5 top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-accent transition ${
-              theme === 'dark' ? 'translate-x-full' : ''
-            }`}
-          ></div>
-        </div>
-      </label>
-    </>
+    <button
+      onClick={toggleTheme}
+      aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+      className="text-lg transition-transform duration-200 ease-in-out border p-[2px] rounded"
+    >
+      {theme === 'dark' ? <LuSun /> : <FaRegMoon />}
+    </button>
   );
 };
 

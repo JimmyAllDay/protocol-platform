@@ -15,10 +15,7 @@ export default function AuthLinks() {
           Logout
         </button>
       ) : (
-        <Link
-          href="/auth/login"
-          className="hover:text-white dark:hover:text-accentDark"
-        >
+        <Link href="/auth/login" className="link">
           <button className="">Login</button>
         </Link>
       )}

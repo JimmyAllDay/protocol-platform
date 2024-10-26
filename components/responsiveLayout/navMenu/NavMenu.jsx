@@ -59,7 +59,7 @@ export default function NavMenu({ closeNav, navLinks, showNav }) {
           <LoginButtons />
         </div>
       </div>
-      <div className="ms-auto mt-24 me-6">
+      <div className="ms-auto mt-6 me-6">
         <ThemeToggle />
       </div>
     </div>
