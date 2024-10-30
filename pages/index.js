@@ -34,7 +34,7 @@ export default function Home() {
           />
         )}
         <h2 className="text-primary dark:text-primaryDark text-lg p-3">
-          Welcome to the lower level.
+          Welcome to the next level.
         </h2>
       </div>
     </Layout>
