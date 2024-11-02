@@ -1,50 +1,55 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Store } from 'context/Store';
-import Link from 'next/link';
-import { Icon } from '@iconify/react'; //TODO: Use the same icon package for all icons if possible
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-export default function Cart() {
-  const { state, dispatch } = useContext(Store);
+const ThemeContext = createContext();
 
-  const { cart } = state;
-  const [cartItemsCount, setCartItemsCount] = useState(0);
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState('light');
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Set the theme on initial load based on system preference
   useEffect(() => {
-    setCartItemsCount(cart.cartItems.reduce((a, c) => a + c.quantity, 0));
-  }, [cart.cartItems]);
+    const systemPrefersDark = window.matchMedia(
+      '(prefers-color-scheme: dark)'
+    ).matches;
+    setTheme(systemPrefersDark ? 'dark' : 'light');
+    setIsMounted(true);
+  }, []);
 
-  const [hover, setHover] = useState(false);
+  // Sync the theme to document and update it based on `theme` state
+  useEffect(() => {
+    if (isMounted) {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    }
+  }, [theme, isMounted]);
 
-  const handleMouseOver = () => {
-    setHover(true);
+  // Listen for real-time system theme changes
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+    const handleChange = (e) => {
+      const systemPrefersDark = e.matches;
+      setTheme(systemPrefersDark ? 'dark' : 'light');
+    };
+
+    mediaQuery.addListener(handleChange);
+    return () => {
+      mediaQuery.removeListener(handleChange);
+    };
+  }, []);
+
+  // Toggle theme manually (temporary override that resets on reload)
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
   };
 
-  const handleMouseExit = () => {
-    setHover(false);
-  };
+  if (!isMounted) return null;
+
   return (
-    <Link
-      href="/cart"
-      className="text-2xl flex"
-      onMouseOver={handleMouseOver}
-      onMouseLeave={handleMouseExit}
-    >
-      <div className="relative">
-        {hover ? (
-          <Icon icon="clarity:shopping-cart-solid" />
-        ) : (
-          <Icon icon="clarity:shopping-cart-line" />
-        )}
-      </div>
-      <div className="w-[20px] flex flex-col">
-        <div className={`text-base items-center justify-center`}>
-          <span
-            style={{ position: 'relative', top: '10%' }}
-            className={`${hover ? 'border-b' : 'text-primary'} mx-auto`}
-          >
-            {cartItemsCount}
-          </span>
-        </div>
-      </div>
-    </Link>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
   );
-}
+};
+
+export const useTheme = () => useContext(ThemeContext);

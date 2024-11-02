@@ -86,7 +86,7 @@ const Register = () => {
         )}
         <h1 className="text-4xl mb-10 mx-auto">Register</h1>
         <div className="space-y-6 px-4">
-          <FacebookLoginButton updateProgress={setProgress} />
+          {/* <FacebookLoginButton updateProgress={setProgress} /> */}
           <form
             onSubmit={handleSubmit(handleSubmitWithCaptcha)}
             // onSubmit={handleSubmit(submitHandler)} //*For testing

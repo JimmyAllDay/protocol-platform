@@ -125,7 +125,7 @@ const Login = () => {
 
         <h1 className="text-4xl mx-auto">Login</h1>
         <div className="space-y-6 px-4">
-          <FacebookLoginButton updateProgress={setProgress} />
+          {/* <FacebookLoginButton updateProgress={setProgress} /> */}
           <form
             onSubmit={handleSubmit(handleSubmitWithCaptcha)}
             className="flex flex-col space-y-6"
