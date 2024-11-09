@@ -3,10 +3,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import Layout from '../../components/Layout';
-import Image from 'next/image';
 import Link from 'next/link';
-import logo from 'public/assets/images/PULogo - black.png';
-import logoDark from 'public/assets/images/PULogo - white.png';
+import Logo from 'components/logo/Logo';
 
 import showToast from 'utils/toastUtils';
 import getErrorMessage from 'utils/getErrorMessage';
@@ -67,15 +65,7 @@ const Reset = () => {
         onSubmit={handleSubmit(handleSubmitWithCaptcha)}
         className="flex flex-col space-y-6 border w-[300px] border-border dark:border-borderDark p-4 mx-auto mt-36 rounded"
       >
-        {theme === 'light' ? (
-          <Link href="/">
-            <Image src={logo} alt="logo" width={125} height={'auto'} />
-          </Link>
-        ) : (
-          <Link href="/">
-            <Image src={logoDark} alt="logo" width={125} height={'auto'} />
-          </Link>
-        )}
+        <Logo stacked={true} width={120} />
         <h1 className="text-4xl mb-10 mx-auto text-center">Password Reset</h1>
         <div className="flex flex-col">
           <input

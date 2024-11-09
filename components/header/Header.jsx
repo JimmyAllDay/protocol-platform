@@ -1,14 +1,13 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from 'public/assets/images/PULogo - black.png';
-import logoDark from 'public/assets/images/PULogo - white.png';
 import UserProfileLink from './UserProfileLink';
 import AuthButtons from './AuthButtons';
 import AdminLink from './AdminLink';
 import Cart from './Cart';
 import ThemeToggle from 'components/themetoggle/ThemeToggle';
 import { useTheme } from 'context/ThemeContext';
+import Logo from 'components/logo/Logo';
 
 import { Spin as Hamburger } from 'hamburger-react';
 
@@ -18,26 +17,7 @@ const Header = ({ showNav, setShowNav, showNavMenu, links }) => {
   return (
     <header className="bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark p-6 w-screen">
       <div className="flex max-w-7xl mx-auto">
-        <Link href="/">
-          {theme === 'light' ? (
-            <Image
-              src={logo}
-              alt="Logo"
-              width={150}
-              height={'auto'}
-              priority={theme === 'light'}
-            />
-          ) : (
-            <Image
-              src={logoDark}
-              alt="Logo"
-              width={150}
-              height={'auto'}
-              priority={theme === 'dark'}
-            />
-          )}
-        </Link>
-
+        <Logo stacked={true} width={120} />
         <nav className="ms-auto h-full hidden md:flex max-w-xl my-auto">
           <ul className="flex my-auto">
             {links.map((link, i) => {

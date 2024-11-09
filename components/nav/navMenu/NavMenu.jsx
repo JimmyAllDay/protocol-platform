@@ -3,8 +3,7 @@ import Link from 'next/link';
 import LoginButtons from 'components/header/AuthButtons';
 import NavProfileName from 'components/responsiveLayout/navProfileName/NavProfileName';
 import ThemeToggle from 'components/themetoggle/ThemeToggle';
-
-import logoDark from 'public/assets/images/PULogo - white.png';
+import Logo from 'components/logo/Logo';
 
 import Image from 'next/image';
 
@@ -43,13 +42,9 @@ export default function NavMenu({ closeNav, navLinks, showNav }) {
           : 'translate-x-full'
       } transition-transform duration-300 ease-in-out`}
     >
-      <Image
-        src={logoDark}
-        alt="Logo"
-        width={150}
-        height={'auto'}
-        className="absolute top-10 left-4"
-      />
+      <div className="absolute top-12 left-4">
+        <Logo width={120} preferred={'darkStacked'} />
+      </div>
       <div className="text-right flex flex-col mx-4 space-y-6 pt-6">
         <div className="ms-auto">
           <NavProfileName />

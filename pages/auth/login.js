@@ -10,14 +10,13 @@ import { useForm } from 'react-hook-form';
 import Layout from '../../components/Layout';
 import Image from 'next/image';
 import Link from 'next/link';
-import logo from 'public/assets/images/PULogo - black.png';
-import logoDark from 'public/assets/images/PULogo - white.png';
 import { AuthContext } from 'context/AuthContext';
 import { useRouter } from 'next/router';
 import FacebookLoginButton from 'components/facebook/FacebookLoginButton';
 import ProgressBar from 'components/forms/formComponents/progressBar/ProgressBar';
 import { useTheme } from 'context/ThemeContext';
 import { useHCaptcha } from 'context/HCaptchaContext';
+import Logo from 'components/logo/Logo';
 
 import getErrorMessage from 'utils/getErrorMessage';
 
@@ -113,15 +112,7 @@ const Login = () => {
   return (
     <Layout>
       <div className="flex flex-col space-y-6 border w-[300px] border-border dark:border-borderDark p-4 mx-auto mt-36 rounded">
-        {theme === 'light' ? (
-          <Link href="/">
-            <Image src={logo} alt="logo" width={125} height={'auto'} />
-          </Link>
-        ) : (
-          <Link href="/">
-            <Image src={logoDark} alt="logo" width={125} height={'auto'} />
-          </Link>
-        )}
+        <Logo stacked={true} width={120} />
 
         <h1 className="text-4xl mx-auto">Login</h1>
         <div className="space-y-6 px-4">
