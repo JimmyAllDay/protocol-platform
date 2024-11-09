@@ -4,6 +4,7 @@ import Head from 'next/head';
 import GoogleAnalytics from './analytics/GoogleAnalytics';
 import HotJarAnalytics from './analytics/HotJarAnalytics';
 import Metricool from './analytics/Metricool';
+import MetaPixel from './analytics/MetaPixel';
 
 import Header from './header/Header';
 import Footer from './footer/Footer';
@@ -15,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { LoadingContext } from 'context/LoadingContext';
 
 import { CSSTransition } from 'react-transition-group';
-import NavMenu from 'components/responsiveLayout/navMenu/NavMenu';
+import NavMenu from 'components/nav/navMenu/NavMenu';
 
 import { AuthContext } from 'context/AuthContext';
 
@@ -50,6 +51,7 @@ const Layout = ({ title, children, ...rest }) => {
         <meta name="robots" content="index,follow" />
         <link rel="canonical" href="https://www.protocol-underground.com" />
       </Head>
+      <MetaPixel />
       <GoogleAnalytics />
       <HotJarAnalytics />
       <Metricool />

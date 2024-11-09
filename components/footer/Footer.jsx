@@ -2,9 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import SocialLinks from '../socialLinks/SocialLinks';
 import AuthLinks from './AuthLinks';
-import Image from 'next/image';
-import logo from 'public/assets/images/PULogo - black.png';
-import logoDark from 'public/assets/images/PULogo - white.png';
+import Logo from 'components/logo/Logo';
 
 import { useTheme } from 'context/ThemeContext';
 
@@ -17,15 +15,7 @@ function Footer({ links }) {
     <footer className="grid grid-cols-6 w-screen bg-primary dark:bg-primaryDark text-primary dark:text-primaryDark pt-24">
       <div className="flex flex-col space-y-2 col-span-4 sm:col-span-2 order-2 lg:col-span-2 lg:order-1 m-4">
         <div className="ms-4">
-          {theme === 'light' ? (
-            <Link href="/">
-              <Image src={logo} alt="Logo" width={200} height={'auto'} />
-            </Link>
-          ) : (
-            <Link href="/">
-              <Image src={logoDark} alt="Logo" width={200} height={'auto'} />
-            </Link>
-          )}
+          <Logo stacked={true} width={140} />
         </div>
         <div className="flex flex-col ps-4 ms-4">
           <ul className="grid grid-cols-2">
